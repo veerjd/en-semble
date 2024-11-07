@@ -43,7 +43,7 @@ execute procedure public.handle_new_user ();
 
 
 
-ADD USER TO WORKSPACE
+-- ADD USER TO WORKSPACE
 create
 or replace function add_workspace_to_user (user_id uuid, new_workspace text) returns void as $$
 BEGIN
@@ -52,7 +52,7 @@ BEGIN
 END;
 $$ language plpgsql;
 
-CREATE CHANNELS
+-- CREATE CHANNELS
 create table
   channels (
     id uuid primary key default gen_random_uuid () not null,
@@ -78,7 +78,7 @@ with
   check (auth.uid () = user_id);
 
 
-UPDATE USER CHANNELS
+-- UPDATE USER CHANNELS
 create
 or replace function update_user_channels (user_id uuid, channel_id text) returns void as $$
 BEGIN
@@ -87,7 +87,7 @@ BEGIN
 END;
 $$ language plpgsql;
 
-UPDATE CHANNEL MEMBERS
+-- UPDATE CHANNEL MEMBERS
 create
 or replace function update_channel_members (new_member text, channel_id uuid) returns void as $$
 BEGIN
@@ -97,7 +97,7 @@ END;
 $$ language plpgsql;
 
 
-UPDATE WORKSPACE CHANNEL
+-- UPDATE WORKSPACE CHANNEL
 create
 or replace function add_channel_to_workspace (channel_id text, workspace_id uuid) returns void as $$
 begin
@@ -106,7 +106,7 @@ begin
 end;
 $$ language plpgsql;
 
-UPDATE CHANNEL REGULATORS
+-- UPDATE CHANNEL REGULATORS
 create
 or replace function update_channel_regulators (new_regulator text, channel_id uuid) returns void as $$
 BEGIN
