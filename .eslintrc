@@ -1,0 +1,38 @@
+{
+    "extends": ["eslint:recommended", "prettier"],
+    "env": {
+        "commonjs": true,
+        "node": true,
+        "es6": true
+        // "es2020": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "rules": {
+        "handle-callback-err": "off",
+        "max-nested-callbacks": [
+            "error",
+            {
+                "max": 4
+            }
+        ],
+        "no-console": [
+            "error",
+            {
+                "allow": ["warn", "error"]
+            }
+        ],
+        "no-shadow": [
+            "error",
+            {
+                "allow": ["err", "resolve", "reject"]
+            }
+        ],
+        "no-useless-catch": "off",
+        "no-var": "error",
+        "prefer-const": "error",
+        "yoda": "error"
+    }
+}
