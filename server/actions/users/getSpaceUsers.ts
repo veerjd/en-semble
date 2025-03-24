@@ -1,7 +1,7 @@
 import { serverSupabaseClient } from '#supabase/server'
 import type { UserDTO } from '~/shared/types/UserDTOs'
 
-export const getCompanyUsers = async (
+export const getSpaceUsers = async (
     event: any,
     spaceId: string,
 ): Promise<UserDTO[]> => {
@@ -35,7 +35,7 @@ export const getCompanyUsers = async (
     if (!data || data.length === 0) {
         throw createError({
             statusCode: 404,
-            message: 'No users found for this company',
+            message: 'No users found for this space',
         })
     }
 

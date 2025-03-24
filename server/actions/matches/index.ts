@@ -1,0 +1,7 @@
+export * from './deleteMatch'
+export * from './getOneMatch'
+export * from './getUserMatches'
+export * from './getSpaceMatches'
+export * from './postMatch'
+export * from './patchMatch'
+export * from './softDeleteMatch'

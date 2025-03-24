@@ -1,0 +1,72 @@
+import { serverSupabaseClient } from '#supabase/server'
+import type { MatchDTO } from '~/shared/types/MatchDTOs'
+
+export const getUserMatches = async (
+    event: any,
+    userId: string,
+): Promise<MatchDTO[]> => {
+    if (!userId) {
+        throw createError({ statusCode: 400, message: 'User ID is required' })
+    }
+
+    const supabase = await serverSupabaseClient(event)
+    const { data, error } = await supabase
+        .from('matches')
+        .select(
+            `
+        id,
+        status,
+        created_at,
+        user1:user1_id (
+            id,
+            username,
+            bio,
+            interest:interests (id, name),
+            space:spaces (id, name, description),
+            last_active,
+            created_at
+        ),
+        user2:user2_id (
+            id,
+            username,
+            bio,
+            interest:interests (id, name),
+            space:spaces (id, name, description),
+            last_active,
+            created_at
+        )
+    `,
+        )
+        .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+
+    if (error) {
+        throw createError({ statusCode: 500, message: error.message })
+    }
+
+    // Transform data to DTOs
+    const matches: MatchDTO[] = data.map((match: any) => ({
+        id: match.id,
+        user1: {
+            id: match.user1.id,
+            username: match.user1.username,
+            bio: match.user1.bio,
+            interest: match.user1.interest,
+            space: match.user1.space,
+            created_at: match.user1.created_at,
+            last_active: match.user1.last_active,
+        },
+        user2: {
+            id: match.user2.id,
+            username: match.user2.username,
+            bio: match.user2.bio,
+            interest: match.user2.interest,
+            space: match.user2.space,
+            created_at: match.user2.created_at,
+            last_active: match.user2.last_active,
+        },
+        status: match.status,
+        createdAt: match.created_at,
+    }))
+
+    return matches
+}

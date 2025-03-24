@@ -1,0 +1,6 @@
+export * from './deleteUserInterest'
+export * from './getOneUserInterest'
+export * from './getUserInterests'
+export * from './postUserInterest'
+export * from './bulkAddUserInterests'
+export * from './replaceUserInterest'

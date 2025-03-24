@@ -1,6 +1,6 @@
 export * from './deleteUser'
 export * from './getAllUsers'
-export * from './getCompanyUsers'
+export * from './getSpaceUsers'
 export * from './getOneUser'
 export * from './patchUser'
 export * from './postUser'
