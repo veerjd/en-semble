@@ -1,5 +1,5 @@
 import type { MatchDTO } from './MatchDTOs'
-import type { UserDTO } from '../UserDTOs'
+import type { UserDTO } from './UserDTOs'
 
 export interface MessageDTO {
     id: string
