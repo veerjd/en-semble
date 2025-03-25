@@ -1,0 +1,6 @@
+export * from './getAllSpaces'
+export * from './getOneSpace'
+export * from './postSpace'
+export * from './patchSpace'
+export * from './deleteSpace'
+export * from './softDeleteSpace'
