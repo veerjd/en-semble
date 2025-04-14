@@ -1,4 +1,4 @@
-import type { UserDTO } from '../UserDTOs'
+import type { UserDTO } from './UserDTOs'
 
 export interface MatchDTO {
     id: string

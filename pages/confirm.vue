@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 const user = useSupabaseUser()
 
 // Get redirect path from cookies
