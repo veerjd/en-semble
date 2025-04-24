@@ -5,6 +5,7 @@ import type {
     DeleteInterestDTO,
     SoftDeleteInterestDTO,
 } from '~/shared/types/InterestDTOs'
+import type { UserInterestDTO } from '~/shared/types/UserInterestDTOs'
 
 export const useInterests = () => {
     const interests: Ref<InterestDTO[]> = ref([])
@@ -177,6 +178,7 @@ export const useInterests = () => {
                 `/api/interest/${id}`,
                 {
                     method: 'DELETE',
+                    query: { hard: 'true' },
                     headers: useRequestHeaders(['cookie']),
                 },
             )
@@ -213,17 +215,17 @@ export const useInterests = () => {
      * Soft delete an interest (mark as deleted but keep in database)
      */
     const softDeleteInterest = async (
-        dto: SoftDeleteInterestDTO,
+        id: string,
+        deletedAt?: string,
     ): Promise<boolean> => {
         isLoading.value = true
         error.value = null
 
         try {
             const { error: fetchError } = await useFetch(
-                '/api/interest/soft-delete',
+                `/api/interest/${id}`,
                 {
-                    method: 'POST',
-                    body: dto,
+                    method: 'DELETE',
                     headers: useRequestHeaders(['cookie']),
                 },
             )
@@ -234,7 +236,7 @@ export const useInterests = () => {
 
             // Update the local cache (remove from UI but don't actually delete the data)
             interests.value = interests.value.filter(
-                (interest) => interest.id !== dto.id,
+                (interest) => interest.id !== id,
             )
 
             // Invalidate the interests cache
@@ -261,10 +263,10 @@ export const useInterests = () => {
 
         try {
             const { error: fetchError } = await useFetch(
-                `/api/user/${userId}/interest`,
+                `/api/user/${userId}/interests`,
                 {
                     method: 'POST',
-                    body: { interestId },
+                    body: { interest_id: interestId },
                     headers: useRequestHeaders(['cookie']),
                 },
             )
@@ -303,7 +305,7 @@ export const useInterests = () => {
 
         try {
             const { error: fetchError } = await useFetch(
-                `/api/user/${userId}/interest/${interestId}`,
+                `/api/user/${userId}/interests/${interestId}`,
                 {
                     method: 'DELETE',
                     headers: useRequestHeaders(['cookie']),
@@ -331,19 +333,21 @@ export const useInterests = () => {
     }
 
     /**
-     * Remove all interests from a user
+     * Replace all user interests with new ones
      */
-    const removeAllInterestsFromUser = async (
+    const replaceUserInterests = async (
         userId: string,
+        interestIds: string[],
     ): Promise<boolean> => {
         isLoading.value = true
         error.value = null
 
         try {
             const { error: fetchError } = await useFetch(
-                `/api/user/${userId}/interests`,
+                `/api/user/${userId}/interests/replace`,
                 {
-                    method: 'DELETE',
+                    method: 'POST',
+                    body: { interestIds },
                     headers: useRequestHeaders(['cookie']),
                 },
             )
@@ -353,9 +357,29 @@ export const useInterests = () => {
             }
 
             // Update local state
-            userInterests.value[userId] = []
+            userInterests.value[userId] = [...interestIds]
 
             return true
+        } catch (err: any) {
+            error.value = err
+            return false
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    /**
+     * Remove all interests from a user
+     */
+    const removeAllInterestsFromUser = async (
+        userId: string,
+    ): Promise<boolean> => {
+        isLoading.value = true
+        error.value = null
+
+        try {
+            // We can use the replaceUserInterests method with an empty array
+            return await replaceUserInterests(userId, [])
         } catch (err: any) {
             error.value = err
             return false
@@ -385,14 +409,25 @@ export const useInterests = () => {
                 throw new Error(fetchError.value.message)
             }
 
-            const userInterestData = data.value as InterestDTO[]
+            const userInterestData = data.value as UserInterestDTO[]
 
             // Update local state
             userInterests.value[userId] = userInterestData.map(
-                (interest) => interest.id,
+                (interest) => interest.interest_id,
             )
 
-            return userInterestData
+            // Convert user interest DTOs to actual interest objects
+            // We need to fetch the full interest data for each ID
+            const fullInterests: InterestDTO[] = []
+
+            for (const interestData of userInterestData) {
+                const interest = await getInterestById(interestData.interest_id)
+                if (interest) {
+                    fullInterests.push(interest)
+                }
+            }
+
+            return fullInterests
         } catch (err: any) {
             error.value = err
             return []
@@ -434,6 +469,7 @@ export const useInterests = () => {
         assignInterestToUser,
         removeInterestFromUser,
         removeAllInterestsFromUser,
+        replaceUserInterests,
         fetchUserInterests,
         getUserInterests,
     }
