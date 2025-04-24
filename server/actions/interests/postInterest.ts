@@ -5,7 +5,7 @@ export const postInterest = async (
     event: any,
     dto: PostInterestDTO,
 ): Promise<InterestDTO> => {
-    if (!dto.name) {
+    if (!dto.slug) {
         throw createError({
             statusCode: 400,
             message: 'Interest name is required',
@@ -16,7 +16,7 @@ export const postInterest = async (
 
     const { data, error } = await supabase
         .from('interests')
-        .insert({ name: dto.name })
+        .insert({ slug: dto.slug })
         .select()
         .single()
 
@@ -26,7 +26,8 @@ export const postInterest = async (
 
     return {
         id: data.id,
-        name: data.name,
+        slug: data.slug,
+        category: data.category,
         createdAt: data.created_at,
     }
 }

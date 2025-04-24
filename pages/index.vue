@@ -104,16 +104,17 @@ const loadPotentialMatches = async () => {
                 ).data?.map((m) => m.user2_id) || [],
             )
 
-        potentialMatches.value = matches
-            .map((match) => ({
-                ...match,
-                interests: match.user_interests.map((ui) => ui.interests),
-            }))
-            .filter((match) =>
-                match.interests.some((interest) =>
-                    interestIds.includes(interest.id),
-                ),
-            )
+        if (matches || matches?.length > 0)
+            potentialMatches.value = matches
+                .map((match) => ({
+                    ...match,
+                    interests: match.user_interests.map((ui) => ui.interests),
+                }))
+                .filter((match) =>
+                    match.interests.some((interest) =>
+                        interestIds.includes(interest.id),
+                    ),
+                )
     } catch (error) {
         console.error('Error loading matches:', error)
     } finally {

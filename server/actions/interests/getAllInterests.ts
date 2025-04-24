@@ -12,7 +12,8 @@ export const getAllInterests = async (event: any): Promise<InterestDTO[]> => {
     // Transform data to DTOs
     const interests: InterestDTO[] = data.map((interest: any) => ({
         id: interest.id,
-        name: interest.name,
+        slug: interest.slug,
+        category: interest.category,
         createdAt: interest.created_at,
     }))
 

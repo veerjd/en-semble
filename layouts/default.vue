@@ -1,80 +1,117 @@
 <template>
-    <div class="flex flex-col min-h-screen">
-        <header class="bg-white shadow-sm dark:bg-slate-700">
-            <div
-                class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center"
-            >
-                <NuxtLink
-                    to="/"
-                    class="text-2xl font-bold text-blue-600 dark:text-blue-400"
+    <div class="flex flex-col h-full w-full">
+        <header class="bg-white shadow-sm dark:bg-slate-700 w-full">
+            <div class="card">
+                <Menubar
+                    :model="menuItems"
+                    :pt="{
+                        root: {
+                            class: 'border-0 border-b border-gray-600 bg-slate-200 dark:bg-slate-900 dark:text-white text-gray-900 rounded-none',
+                        },
+                    }"
                 >
-                    Interest Matcher
-                </NuxtLink>
-
-                <nav v-if="user" class="flex items-center space-x-6">
-                    <NuxtLink
-                        to="/"
-                        class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
-                        active-class="text-blue-600 dark:text-blue-400"
-                    >
-                        Discover
-                    </NuxtLink>
-                    <NuxtLink
-                        to="/matches"
-                        class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 relative"
-                        active-class="text-blue-600 dark:text-blue-400"
-                    >
-                        Matches
-                        <span
-                            v-if="unreadMessages > 0"
-                            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                    <template #start>
+                        <svg
+                            width="35"
+                            height="40"
+                            viewBox="0 0 35 40"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-8"
                         >
-                            {{ unreadMessages }}
-                        </span>
-                    </NuxtLink>
-                    <NuxtLink
-                        to="/user"
-                        class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
-                        active-class="text-blue-600 dark:text-blue-400"
-                    >
-                        User
-                    </NuxtLink>
-                    <button
-                        @click="logout"
-                        class="text-gray-700 hover:text-red-600 dark:text-gray-300 dark:hover:text-red-400"
-                    >
-                        Logout
-                    </button>
-                </nav>
-
-                <div v-else class="flex gap-4">
-                    <NuxtLink
-                        to="/login"
-                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                        Login / Sign Up
-                    </NuxtLink>
-                </div>
+                            <path d="..." fill="var(--p-primary-color)" />
+                            <path d="..." fill="var(--p-text-color)" />
+                        </svg>
+                    </template>
+                    <template #item="{ item, props }">
+                        <a
+                            v-ripple
+                            :class="[
+                                'flex items-center gap-2',
+                                { 'text-emphasis': item.url === $route.path },
+                            ]"
+                            v-bind="props.action"
+                            :href="item.to"
+                        >
+                            <i :class="item.icon"></i>
+                            <span>{{ item.label }}</span>
+                        </a>
+                    </template>
+                    <template #end>
+                        <div class="flex items-center justify-center gap-8">
+                            <a
+                                v-ripple
+                                v-for="setting in settings"
+                                :class="['flex items-center gap-2']"
+                                :href="setting.to"
+                            >
+                                <i :class="setting.icon"></i>
+                                <span>{{ setting.label }}</span>
+                            </a>
+                        </div>
+                    </template>
+                </Menubar>
             </div>
         </header>
 
-        <main class="flex-grow p-4">
+        <main class="flex-grow p-4 h-auto w-full">
             <slot />
         </main>
 
         <footer
-            class="bg-white py-4 text-center text-gray-500 text-sm border-t dark:bg-slate-700 dark:text-gray-400 dark:border-slate-600"
+            class="bg-white py-4 pe-4 text-right text-gray-500 text-sm border-t dark:bg-slate-700 dark:text-gray-400 dark:border-slate-600 w-full"
         >
-            &copy; {{ new Date().getFullYear() }} Interest Matcher. All rights
+            &copy; {{ new Date().getFullYear() }} En-Semble. All rights
             reserved.
         </footer>
     </div>
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
+
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const unreadMessages = ref(0)
+
+const menuItems = computed(() => {
+    if (!user.value) {
+        return []
+    }
+
+    return [
+        {
+            label: 'Discover',
+            icon: 'pi pi-compass',
+            to: '/',
+        },
+        {
+            label: 'Matches',
+            icon: 'pi pi-users',
+            to: '/matches',
+            badge: unreadMessages.value ? unreadMessages.value : undefined,
+            badgeClass: 'bg-red-500 text-white',
+        },
+        {
+            label: 'User',
+            icon: 'pi pi-user',
+            to: '/user',
+        },
+        {
+            label: 'Logout',
+            icon: 'pi pi-sign-out',
+            command: () => logout(),
+        },
+    ]
+})
+
+const settings = [
+    {
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        url: '/logout',
+    },
+]
 
 onMounted(() => {
     if (user.value) {
@@ -84,7 +121,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    const supabase = useSupabaseClient()
     supabase.removeAllChannels()
 })
 
@@ -142,3 +178,47 @@ const logout = async () => {
     }
 }
 </script>
+
+<style scoped>
+/* Override PrimeVue menubar background */
+:deep(.p-menubar) {
+    background: transparent;
+    padding: 0.5rem 0;
+    width: 100%;
+}
+
+/* Ensure menu items match your theme */
+:deep(.p-menuitem-link) {
+    color: #4b5563 !important; /* text-gray-700 */
+}
+
+:deep(.p-menuitem-link:hover) {
+    color: #2563eb !important; /* text-blue-600 */
+    background: transparent !important;
+}
+
+:deep(.p-menuitem-link .p-menuitem-text) {
+    color: inherit;
+}
+
+:deep(.p-menuitem-link .p-menuitem-icon) {
+    color: inherit;
+}
+
+/* Dark mode overrides */
+.dark :deep(.p-menubar) {
+    background: transparent;
+}
+
+.dark :deep(.p-menuitem-link) {
+    color: #cbd5e1 !important; /* dark:text-gray-300 */
+}
+
+.dark :deep(.p-menuitem-link:hover) {
+    color: #60a5fa !important; /* dark:text-blue-400 */
+}
+
+.dark :deep(.p-menuitem-link .p-badge) {
+    background: #ef4444; /* bg-red-500 */
+}
+</style>

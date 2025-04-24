@@ -14,7 +14,7 @@ export const getOneUser = async (event: any, id: string): Promise<UserDTO> => {
         id,
         username,
         bio,
-        interest:interests ( id, name ),
+        interests ( id, slug, category:interest_category_id ( id, slug ) ),
         space:spaces ( id, name, description ),
         last_active,
         created_at
@@ -34,7 +34,7 @@ export const getOneUser = async (event: any, id: string): Promise<UserDTO> => {
             id: data.id,
             username: data.username,
             bio: data.bio,
-            interest: data.interest,
+            interests: data.interests,
             space: data.space,
             created_at: data.created_at,
             last_active: data.last_active,

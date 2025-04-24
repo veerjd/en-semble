@@ -8,7 +8,7 @@ export const getAllUsers = async (event: any): Promise<UserDTO[]> => {
         id,
         username,
         bio,
-        interest:interests ( id, name ),
+        interests ( id, slug, category:interest_category_id ( id, slug ) ),
         space:spaces ( id, name, description ),
         last_active,
         created_at
@@ -24,7 +24,7 @@ export const getAllUsers = async (event: any): Promise<UserDTO[]> => {
         id: user.id,
         username: user.username,
         bio: user.bio,
-        interest: user.interest,
+        interests: user.interests,
         space: user.space,
         last_active: user.last_active,
         created_at: user.created_at,

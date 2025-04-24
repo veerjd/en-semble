@@ -20,7 +20,7 @@ export const getSpaceUsers = async (
         id,
         username,
         bio,
-        interest:interests ( id, name ),
+        interests ( id, slug, category:interest_category_id ( id, slug ) ),
         space:spaces ( id, name, description ),
         last_active,
         created_at
@@ -44,7 +44,7 @@ export const getSpaceUsers = async (
         id: user.id,
         username: user.username,
         bio: user.bio,
-        interest: user.interest,
+        interests: user.interests,
         space: user.space,
         last_active: user.last_active,
         created_at: user.created_at,

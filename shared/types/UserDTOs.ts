@@ -9,7 +9,7 @@ export interface UserDTO {
     id: string
     username: string
     bio?: string
-    interest: InterestDTO[]
+    interests: InterestDTO[]
     space: SpaceDTO
     created_at?: string
     last_active?: string

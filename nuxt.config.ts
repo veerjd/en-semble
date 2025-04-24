@@ -47,14 +47,23 @@ export default defineNuxtConfig({
         '@nuxtjs/color-mode',
         '@nuxtjs/supabase',
         'nuxt-icon',
+        '@nuxtjs/i18n',
     ],
+    i18n: {
+        defaultLocale: 'en',
+        strategy: 'no_prefix',
+        locales: [
+            { code: 'en', file: 'en.json' },
+            { code: 'fr', file: 'fr.json' },
+        ],
+    },
     primevue: {
         autoImport: true,
         usePrimeVue: true,
         options: {
             ripple: true,
             theme: {
-                preset: Lara,
+                preset: Aura,
                 darkModeSelector: 'media',
                 cssLayer: false,
             },

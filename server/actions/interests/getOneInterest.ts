@@ -28,7 +28,8 @@ export const getOneInterest = async (
     } else {
         return {
             id: data.id,
-            name: data.name,
+            slug: data.slug,
+            category: data.category,
             createdAt: data.created_at,
         }
     }

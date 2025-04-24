@@ -18,7 +18,7 @@ export const patchInterest = async (
 
     const { error } = await supabase
         .from('interests')
-        .update({ name: dto.name })
+        .update({ slug: dto.slug, category_id: dto.category_id })
         .eq('id', id)
 
     if (error) {

@@ -66,10 +66,19 @@ CREATE TABLE IF NOT EXISTS users (
   deleted_at timestamptz
 );
 
+-- Create interest categories table
+CREATE TABLE IF NOT EXISTS interest_categories (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug text NOT NULL,
+  created_at timestamptz DEFAULT now(),
+  deleted_at timestamptz
+);
+
 -- Create interests table
 CREATE TABLE IF NOT EXISTS interests (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name text UNIQUE NOT NULL,
+  slug text UNIQUE NOT NULL,
+  interest_category_id uuid REFERENCES interest_categories,
   created_at timestamptz DEFAULT now(),
   deleted_at timestamptz
 );
