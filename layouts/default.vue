@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col h-full w-full">
+    <div class="flex flex-col min-h-screen w-full">
         <header class="bg-white shadow-sm dark:bg-slate-700 w-full">
             <div class="card">
                 <Menubar
@@ -109,7 +109,7 @@ const settings = [
     {
         label: 'Logout',
         icon: 'pi pi-sign-out',
-        url: '/logout',
+        command: () => logout(),
     },
 ]
 
