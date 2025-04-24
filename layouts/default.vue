@@ -38,7 +38,9 @@
                         </a>
                     </template>
                     <template #end>
-                        <div class="flex items-center justify-center gap-8">
+                        <div
+                            class="flex items-center justify-center gap-8 me-12"
+                        >
                             <a
                                 v-ripple
                                 v-for="setting in settings"
@@ -96,11 +98,6 @@ const menuItems = computed(() => {
             label: 'User',
             icon: 'pi pi-user',
             to: '/user',
-        },
-        {
-            label: 'Logout',
-            icon: 'pi pi-sign-out',
-            command: () => logout(),
         },
     ]
 })
