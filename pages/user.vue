@@ -35,15 +35,16 @@
                 <label class="font-medium block mb-2">Interests</label>
                 <div class="flex flex-wrap gap-2">
                     <Skeleton
-                        v-if="loading"
+                        v-if="isLoading"
                         v-for="i in 5"
+                        :key="i"
                         height="40px"
                         width="77px"
                         borderRadius="16px"
                     />
                     <Chip
                         v-else
-                        v-for="interest in availableInterests"
+                        v-for="interest in interests"
                         :key="interest.id"
                         :label="$t(interest.slug)"
                         :class="
@@ -94,12 +95,15 @@ import { useRouter } from 'vue-router'
 const client = useSupabaseClient()
 const router = useRouter()
 const { data: user } = await useUser()
-const { interests: availableInterests } = await useInterests()
+const { interests, isLoading, fetchAllInterests } = useInterests()
 const loading = ref(true)
 const selectedInterests = ref(
     user.value?.interests?.map((interest) => interest.id) || [],
 )
 const error = ref(null)
+
+// Fetch interests data immediately rather than waiting for onMounted
+await fetchAllInterests()
 
 onMounted(() => {
     loading.value = false
