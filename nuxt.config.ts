@@ -50,7 +50,7 @@ export default defineNuxtConfig({
         '@nuxtjs/i18n',
     ],
     i18n: {
-        defaultLocale: 'en',
+        defaultLocale: 'fr',
         strategy: 'no_prefix',
         locales: [
             { code: 'en', file: 'en.json' },

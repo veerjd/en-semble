@@ -26,7 +26,7 @@ export const useInterests = () => {
         // First check if we have cached data
         const { data: cachedData } = useNuxtData('interests')
 
-        if (cachedData.value) {
+        if (cachedData.value || cachedData.value?.length > 0) {
             interests.value = cachedData.value
             isLoading.value = false
             return cachedData.value

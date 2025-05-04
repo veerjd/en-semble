@@ -94,7 +94,7 @@ import { useRouter } from 'vue-router'
 const client = useSupabaseClient()
 const router = useRouter()
 const { data: user } = await useUser()
-const { data: availableInterests } = await useInterests()
+const { interests: availableInterests } = await useInterests()
 const loading = ref(true)
 const selectedInterests = ref(
     user.value?.interests?.map((interest) => interest.id) || [],
