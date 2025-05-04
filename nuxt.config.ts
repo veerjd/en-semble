@@ -8,14 +8,6 @@ export default defineNuxtConfig({
             title: 'MachinOps',
         },
     },
-    // Move nuxtIcon configuration outside of app.config
-    // nuxtIcon: {
-    //     size: '24px', // default icon size
-    //     class: '', // default CSS class
-    //     aliases: {
-    //         // any icon aliases you want to define
-    //     },
-    // },
     vue: {
         propsDestructure: true,
     },
