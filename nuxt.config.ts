@@ -4,6 +4,16 @@ import Lara from '@primeuix/themes/lara'
 export default defineNuxtConfig({
     // debug: true,
     app: {
+        config: {
+            // Add the nuxtIcon configuration
+            nuxtIcon: {
+                size: '24px', // default icon size
+                class: '', // default CSS class
+                aliases: {
+          // any icon aliases you want to define
+                }
+            }
+        },
         head: {
             title: 'MachinOps',
         },
@@ -28,6 +38,7 @@ export default defineNuxtConfig({
             exclude: ['/update-password', '/logout', '/api/*', '/signup*'],
             cookieRedirect: true,
         },
+        saveRedirectToCookie: true
     },
     devtools: {
         enabled: true,
