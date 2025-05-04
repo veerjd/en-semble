@@ -9,13 +9,13 @@ export default defineNuxtConfig({
         },
     },
     // Move nuxtIcon configuration outside of app.config
-    nuxtIcon: {
-        size: '24px', // default icon size
-        class: '', // default CSS class
-        aliases: {
-            // any icon aliases you want to define
-        },
-    },
+    // nuxtIcon: {
+    //     size: '24px', // default icon size
+    //     class: '', // default CSS class
+    //     aliases: {
+    //         // any icon aliases you want to define
+    //     },
+    // },
     vue: {
         propsDestructure: true,
     },
@@ -34,8 +34,8 @@ export default defineNuxtConfig({
             callback: '/confirm',
             include: undefined,
             exclude: ['/update-password', '/logout', '/api/*', '/signup*'],
+            saveRedirectToCookie: true,
         },
-        saveRedirectToCookie: true,
     },
     devtools: {
         enabled: true,
@@ -56,6 +56,7 @@ export default defineNuxtConfig({
         '@nuxtjs/supabase',
         'nuxt-icon',
         '@nuxtjs/i18n',
+        '@nuxt/icon',
     ],
     i18n: {
         defaultLocale: 'fr',
