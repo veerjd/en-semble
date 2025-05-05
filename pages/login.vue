@@ -4,12 +4,13 @@
 
         <form @submit.prevent="handleLogin" class="space-y-6">
             <div>
-                <label
-                    for="email"
-                    class="block text-sm font-medium text-gray-700"
-                    >Email</label
-                >
-                <input
+                <label for="email" class="font-medium">Email</label>
+                <InputText
+                    :pt="{
+                        root: {
+                            class: 'text-black rounded',
+                        },
+                    }"
                     id="email"
                     v-model="email"
                     type="email"
@@ -19,12 +20,13 @@
             </div>
 
             <div>
-                <label
-                    for="password"
-                    class="block text-sm font-medium text-gray-700"
-                    >Password</label
-                >
-                <input
+                <label for="password" class="font-medium">Password</label>
+                <InputText
+                    :pt="{
+                        root: {
+                            class: 'text-black rounded',
+                        },
+                    }"
                     id="password"
                     v-model="password"
                     type="password"

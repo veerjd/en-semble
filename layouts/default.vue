@@ -83,30 +83,30 @@ const menuItems = computed(() => {
 
     return [
         {
-            label: 'Discover',
-            icon: 'pi pi-compass',
+            label: 'Chats',
+            icon: 'pi pi-comments',
             to: '/',
-        },
-        {
-            label: 'Matches',
-            icon: 'pi pi-users',
-            to: '/matches',
             badge: unreadMessages.value ? unreadMessages.value : undefined,
             badgeClass: 'bg-red-500 text-white',
         },
         {
-            label: 'User',
-            icon: 'pi pi-user',
-            to: '/user',
+            label: 'Find a new match',
+            icon: 'pi pi-user-plus',
+            to: '/new-match',
         },
     ]
 })
 
 const settings = [
     {
+        label: 'Profile',
+        icon: 'pi pi-user',
+        to: '/profile',
+    },
+    {
         label: 'Logout',
         icon: 'pi pi-sign-out',
-        command: () => logout(),
+        to: '/logout',
     },
 ]
 

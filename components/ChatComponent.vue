@@ -11,7 +11,7 @@
         <div v-else class="h-screen flex flex-col">
             <!-- Chat header -->
             <div class="bg-white shadow p-4 flex items-center">
-                <NuxtLink to="/matches" class="mr-4 text-blue-600">
+                <NuxtLink to="/chats" class="mr-4 text-blue-600">
                     <i class="pi pi-arrow-left"></i>
                 </NuxtLink>
                 <div>
@@ -136,10 +136,10 @@ const loadChannel = async () => {
             .select(
                 `
         *,
-        matches (
+        chats (
           user1_id,
           user2_id,
-          users!matches_user1_id_fkey (
+          users!chats_user1_id_fkey (
             username,
             user_interests (
               interests (
@@ -148,7 +148,7 @@ const loadChannel = async () => {
               )
             )
           ),
-          users!matches_user2_id_fkey (
+          users!chats_user2_id_fkey (
             username,
             user_interests (
               interests (
@@ -171,13 +171,13 @@ const loadChannel = async () => {
             return
         }
 
-        const match = data.matches
+        const match = data.chats
         const otherUserId =
             match.user1_id === user.value.id ? match.user2_id : match.user1_id
         const otherUserUser =
             match.user1_id === user.value.id
-                ? match.users_matches_user2_id_fkey
-                : match.users_matches_user1_id_fkey
+                ? match.users_chats_user2_id_fkey
+                : match.users_chats_user1_id_fkey
 
         matchUser.value = {
             ...otherUserUser,
