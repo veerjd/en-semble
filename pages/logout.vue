@@ -3,8 +3,6 @@ definePageMeta({
     layout: 'unauthenticated',
 })
 
-import { H1, Button } from '#components'
-
 const supabase = useSupabaseClient()
 
 const { error } = await supabase.auth.signOut()
@@ -15,9 +13,10 @@ const { error } = await supabase.auth.signOut()
         <h1 v-if="error" class="text-3xl font-bold mb-8">{{ error }}</h1>
         <h1 v-else>Disconnection successful!</h1>
         <Button
-            color="primary"
+            type="button"
             label="Log back in"
-            @navigate="navigateTo('/login')"
+            @click="navigateTo('/login')"
+            class="w-full"
         />
     </div>
 </template>
