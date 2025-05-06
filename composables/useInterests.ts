@@ -26,7 +26,7 @@ export const useInterests = () => {
         // First check if we have cached data
         const { data: cachedData } = useNuxtData('interests')
 
-        if (cachedData.value || cachedData.value?.length > 0) {
+        if (cachedData.value?.length > 0) {
             interests.value = cachedData.value
             isLoading.value = false
             return cachedData.value
@@ -34,7 +34,7 @@ export const useInterests = () => {
 
         try {
             // Otherwise fetch from API
-            const { data, error: fetchError } = await useFetch(
+            const { data, error: fetchError } = await useFetch<InterestDTO[]>(
                 '/api/interest',
                 {
                     headers: useRequestHeaders(['cookie']),
@@ -46,7 +46,7 @@ export const useInterests = () => {
                 throw new Error(fetchError.value.message)
             }
 
-            interests.value = data.value as InterestDTO[]
+            interests.value = data.value || []
             return interests.value
         } catch (err: any) {
             error.value = err
@@ -64,7 +64,7 @@ export const useInterests = () => {
         error.value = null
 
         try {
-            const { data, error: fetchError } = await useFetch(
+            const { data, error: fetchError } = await useFetch<InterestDTO>(
                 `/api/interest/${id}`,
                 {
                     headers: useRequestHeaders(['cookie']),
@@ -75,7 +75,7 @@ export const useInterests = () => {
                 throw new Error(fetchError.value.message)
             }
 
-            currentInterest.value = data.value as InterestDTO
+            currentInterest.value = data.value || null
             return currentInterest.value
         } catch (err: any) {
             error.value = err
@@ -95,7 +95,7 @@ export const useInterests = () => {
         error.value = null
 
         try {
-            const { data, error: fetchError } = await useFetch(
+            const { data, error: fetchError } = await useFetch<InterestDTO>(
                 '/api/interest',
                 {
                     method: 'POST',
@@ -109,13 +109,14 @@ export const useInterests = () => {
             }
 
             // Update the local cache
-            const newInterest = data.value as InterestDTO
-            interests.value = [...interests.value, newInterest]
+            const newInterest = data.value
+            if (newInterest) {
+                interests.value = [...interests.value, newInterest]
+                // Invalidate the interests cache to ensure fresh data on next fetch
+                clearNuxtData('interests')
+            }
 
-            // Invalidate the interests cache to ensure fresh data on next fetch
-            clearNuxtData('interests')
-
-            return newInterest
+            return newInterest || null
         } catch (err: any) {
             error.value = err
             return null
@@ -135,7 +136,7 @@ export const useInterests = () => {
         error.value = null
 
         try {
-            const { data, error: fetchError } = await useFetch(
+            const { data, error: fetchError } = await useFetch<InterestDTO>(
                 `/api/interest/${id}`,
                 {
                     method: 'PATCH',
@@ -149,15 +150,16 @@ export const useInterests = () => {
             }
 
             // Update the local cache
-            const updatedInterest = data.value as InterestDTO
-            interests.value = interests.value.map((interest) =>
-                interest.id === id ? updatedInterest : interest,
-            )
+            const updatedInterest = data.value
+            if (updatedInterest) {
+                interests.value = interests.value.map((interest) =>
+                    interest.id === id ? updatedInterest : interest,
+                )
+                // Invalidate the interests cache
+                clearNuxtData('interests')
+            }
 
-            // Invalidate the interests cache
-            clearNuxtData('interests')
-
-            return updatedInterest
+            return updatedInterest || null
         } catch (err: any) {
             error.value = err
             return null
@@ -174,7 +176,7 @@ export const useInterests = () => {
         error.value = null
 
         try {
-            const { error: fetchError } = await useFetch(
+            const { error: fetchError } = await useFetch<{ success: boolean }>(
                 `/api/interest/${id}`,
                 {
                     method: 'DELETE',
@@ -214,15 +216,12 @@ export const useInterests = () => {
     /**
      * Soft delete an interest (mark as deleted but keep in database)
      */
-    const softDeleteInterest = async (
-        id: string,
-        deletedAt?: string,
-    ): Promise<boolean> => {
+    const softDeleteInterest = async (id: string): Promise<boolean> => {
         isLoading.value = true
         error.value = null
 
         try {
-            const { error: fetchError } = await useFetch(
+            const { error: fetchError } = await useFetch<{ success: boolean }>(
                 `/api/interest/${id}`,
                 {
                     method: 'DELETE',
@@ -262,7 +261,7 @@ export const useInterests = () => {
         error.value = null
 
         try {
-            const { error: fetchError } = await useFetch(
+            const { error: fetchError } = await useFetch<{ success: boolean }>(
                 `/api/user/${userId}/interests`,
                 {
                     method: 'POST',
@@ -304,7 +303,7 @@ export const useInterests = () => {
         error.value = null
 
         try {
-            const { error: fetchError } = await useFetch(
+            const { error: fetchError } = await useFetch<{ success: boolean }>(
                 `/api/user/${userId}/interests/${interestId}`,
                 {
                     method: 'DELETE',
@@ -343,7 +342,7 @@ export const useInterests = () => {
         error.value = null
 
         try {
-            const { error: fetchError } = await useFetch(
+            const { error: fetchError } = await useFetch<{ success: boolean }>(
                 `/api/user/${userId}/interests/replace`,
                 {
                     method: 'POST',
@@ -374,18 +373,7 @@ export const useInterests = () => {
     const removeAllInterestsFromUser = async (
         userId: string,
     ): Promise<boolean> => {
-        isLoading.value = true
-        error.value = null
-
-        try {
-            // We can use the replaceUserInterests method with an empty array
-            return await replaceUserInterests(userId, [])
-        } catch (err: any) {
-            error.value = err
-            return false
-        } finally {
-            isLoading.value = false
-        }
+        return await replaceUserInterests(userId, [])
     }
 
     /**
@@ -398,28 +386,32 @@ export const useInterests = () => {
         error.value = null
 
         try {
-            const { data, error: fetchError } = await useFetch(
-                `/api/user/${userId}/interests`,
-                {
-                    headers: useRequestHeaders(['cookie']),
-                },
-            )
+            const { data, error: fetchError } = await useFetch<
+                UserInterestDTO[]
+            >(`/api/user/${userId}/interests`, {
+                headers: useRequestHeaders(['cookie']),
+            })
 
             if (fetchError.value) {
                 throw new Error(fetchError.value.message)
             }
 
-            const userInterestData = data.value as UserInterestDTO[]
+            const userInterestData = data.value || []
 
             // Update local state
             userInterests.value[userId] = userInterestData.map(
                 (interest) => interest.interest_id,
             )
 
-            // Convert user interest DTOs to actual interest objects
-            // We need to fetch the full interest data for each ID
-            const fullInterests: InterestDTO[] = []
+            // If interests are already loaded, filter them rather than making individual requests
+            if (interests.value.length > 0) {
+                return interests.value.filter((interest) =>
+                    userInterests.value[userId].includes(interest.id),
+                )
+            }
 
+            // Otherwise fetch each interest individually
+            const fullInterests: InterestDTO[] = []
             for (const interestData of userInterestData) {
                 const interest = await getInterestById(interestData.interest_id)
                 if (interest) {
@@ -447,9 +439,22 @@ export const useInterests = () => {
         )
     }
 
+    // Preload interests when the composable is used
+    const preloadInterests = async () => {
+        if (!interests.value.length) {
+            await fetchAllInterests()
+        }
+        return interests.value
+    }
+
     // Initialize by fetching all interests
+    let initialized = false
+
     onMounted(() => {
-        fetchAllInterests()
+        if (!initialized) {
+            preloadInterests()
+            initialized = true
+        }
     })
 
     return {
@@ -472,5 +477,6 @@ export const useInterests = () => {
         replaceUserInterests,
         fetchUserInterests,
         getUserInterests,
+        preloadInterests,
     }
 }
