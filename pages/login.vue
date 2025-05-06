@@ -107,7 +107,7 @@ const handleLogin = async () => {
 
         if (authError) throw authError
 
-        navigateTo(isSignUp.value ? '/user' : '/')
+        navigateTo(isSignUp.value ? '/profile' : '/')
     } catch (e) {
         error.value = e.message
     }

@@ -1,0 +1,20 @@
+-- Clean up existing data if any
+DROP TABLE IF EXISTS chat_messages CASCADE;
+
+DROP TABLE IF EXISTS chat_participants CASCADE;
+
+DROP TABLE IF EXISTS chats CASCADE;
+
+DROP TABLE IF EXISTS matches CASCADE;
+
+DROP TABLE IF EXISTS user_interests CASCADE;
+
+DROP TABLE IF EXISTS interests CASCADE;
+
+DROP TABLE IF EXISTS interest_categories CASCADE;
+
+DROP TABLE IF EXISTS users CASCADE;
+
+DROP TABLE IF EXISTS spaces CASCADE;
+
+DROP TABLE IF EXISTS match_statuses CASCADE;

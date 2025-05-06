@@ -1,223 +1,1095 @@
-INSERT INTO spaces (id, name, description)
-VALUES ('c74bc511-e68f-4ce3-95a4-6770024ba172', 'Église le Portail', 'Tout à toujours rapport avec Jésus');
+-- Insert default match statuses first
+INSERT INTO
+  match_statuses (slug)
+VALUES
+  ('pending'),
+  ('accepted'),
+  ('rejected'),
+  ('expired');
 
-INSERT INTO users (id, space_id, username, bio)
-VALUES ('fbdaaa39-cc3e-4a64-aba9-dcf90f3f065c', 'c74bc511-e68f-4ce3-95a4-6770024ba172', 'veerjd', 'Soli Deo Gloria');
+-- Insert spaces
+INSERT INTO
+  spaces (id, name, description)
+VALUES
+  (
+    'c74bc511-e68f-4ce3-95a4-6770024ba172',
+    'Église le Portail',
+    'Tout à toujours rapport avec Jésus'
+  );
 
-INSERT INTO interest_categories (id, slug) VALUES
-('6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'faith_and_spiritual_life'),
-('0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'family_and_relationships'),
-('2637bb18-ceaa-463c-b572-cc514efcb02c', 'culture_and_politics'),
-('3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'arts_and_entertainment'),
-('64d8b235-2305-4435-a92f-812602861f0a', 'education_and_learning'),
-('1d324584-570e-4005-bbd4-cecd23703ce0', 'outdoor_and_recreation'),
-('b1502fc2-05fe-43c4-ad37-e41b5f052993', 'food_and_hospitality'),
-('928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'personal_development'),
-('184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'health_and_wellness'),
-('9192daf8-f698-48c8-922b-40857c3f9e6c', 'community_service_and_outreach'),
-('c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'practical_skills_and_hobbies'),
-('ad25e2dc-2562-4245-aa86-401a21b3f426', 'science_and_technology'),
-('9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'music_and_creative_expression'),
-('fd586148-850d-4946-92c1-0eaa7ad69a50', 'intellectual_and_social_connection');
+-- Insert users
+INSERT INTO
+  users (id, space_id, username, bio)
+VALUES
+  (
+    'bcbab6c4-182c-41a1-9e3e-5eaa711117b0',
+    'c74bc511-e68f-4ce3-95a4-6770024ba172',
+    'veerjd',
+    'Soli Deo Gloria'
+  );
 
-INSERT INTO interests (id, interest_category_id, slug) VALUES
-('8858337c-f4fc-47d4-8a28-6b427894f99b', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'bible_study_methodology'),
-('17fbff75-b356-437a-b37c-a92165b4141b', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'apologetics_training'),
-('e2684c6e-cf4b-420b-8678-1715564cc67a', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'worship_music_composition'),
-('f27eb46d-8447-4d41-931b-0bb2375ca020', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'prayer_journaling'),
-('bceb986c-275b-4342-8927-a24313931593', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'church_history_exploration'),
-('789bdf67-74e5-499b-8398-5a527456e892', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'theological_debate'),
-('8368bcb8-f4d7-4331-ac55-2d5fd836ead6', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'faith_based_community_service'),
-('6d83e959-5cfd-4202-934a-449a382515bd', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'christian_literature_analysis'),
-('755a7249-a294-4e78-954e-a421848bb9fc', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'spiritual_retreat_planning'),
-('2640a832-4e74-421c-873e-307256a68d4d', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'religious_art_appreciation'),
-('adbb3430-e850-4b6d-b36f-4ea01498475a', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'christian_meditation_practices'),
-('f32ea01d-9f66-455b-9db0-52283397924d', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'hymn_restoration'),
-('a2d707d0-0b2c-43a7-90c8-57794e431679', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'seminary_education'),
-('d066a649-4adb-48bd-ada5-1a66c603557e', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'missionary_work_experiences'),
-('236b2363-9f20-4d98-95ea-91873219b686', '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684', 'religious_symbolism_study'),
-('cb1559ec-de60-4d46-b5a0-0047fcbdc661', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'traditional_courtship_approaches'),
-('33fa843a-9999-478f-bea1-0ec3ab503071', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'marriage_preparation_counseling'),
-('86c41481-d809-4815-bf34-83179c0dd8f1', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'family_devotional_leadership'),
-('1f00ce8b-bbec-4d27-b0fc-999e889e3916', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'generational_storytelling'),
-('c3dee611-6f59-45a6-8f79-7b26cda42e00', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'adoption_advocacy'),
-('8dac712d-8d92-40ad-91bf-360b7b2d54f3', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'christian_parenting_techniques'),
-('c1060922-e82a-47ae-8e73-a405fe6b85af', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'family_business_development'),
-('750964d8-0333-4b40-a03f-49d68b3d8e7a', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'honoring_elders_initiatives'),
-('053c998b-9fa7-47ce-aec8-2e722ea9be26', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'sibling_relationship_building'),
-('4c95f080-cd56-4eb4-a702-4816b9770465', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'faith_based_marriage_enrichment'),
-('91eca2be-06c6-4ac2-a487-e4910349cd39', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'multigenerational_household_management'),
-('c07776fd-db9e-4566-8ac6-14fc58a00001', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'virtue_based_child_education'),
-('6a257455-5359-4a27-915b-e32ec632f5dd', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'heritage_preservation'),
-('2b8bf686-c282-4c72-8647-24a597e06320', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'biblical_conflict_resolution'),
-('d93c1f6f-db96-4311-9de9-9cccdfe81715', '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb', 'family_prayer_traditions'),
-('e8c36de4-b976-4d0a-8a49-c1d0b6604e8c', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'constitutional_originalism'),
-('fafd996b-16e0-4420-85b0-adb5da7d6f35', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'free_market_economics'),
-('8c26e83f-710e-4a5e-975f-a46c7d7fdb98', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'religious_liberty_advocacy'),
-('984110c3-2ba2-4058-9e35-40633c560d57', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'traditional_value_promotion'),
-('d3d7063e-7888-432d-9489-2e1fa0ac7eda', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'political_philosophy_study'),
-('47bfec43-457c-4250-ad29-c884eb00a52d', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'classical_western_civilization'),
-('890ae9b1-c7ac-43a2-b3bc-61f077f24b3a', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'american_founding_principles'),
-('23f7f5de-c683-4dcd-8640-2fe406cdee00', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'local_governance_participation'),
-('08403328-9cab-4340-a0da-ac1b2c48e89c', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'pro_life_activism'),
-('9a585c77-3761-4ca0-8c0a-1d6c2c27b755', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'military_appreciation_initiatives'),
-('eed7b625-e48b-415d-aa9b-637ba9739421', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'rural_community_revitalization'),
-('e5a3d7cb-ee26-45e3-a589-2ea98d2a7781', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'small_business_entrepreneurship'),
-('c64db594-703f-4fda-b678-615967684cac', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'faith_in_public_square_discussions'),
-('133fbe46-d945-4d36-a9a7-da3afd74c51c', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'second_amendment_education'),
-('f4ab9eef-b394-4cae-b985-be4e329417a0', '2637bb18-ceaa-463c-b572-cc514efcb02c', 'media_bias_analysis'),
-('ca518364-08fc-40c3-aa8f-7e3ad577c1c6', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'sacred_architecture_tours'),
-('39504845-7bee-4a8f-8b19-0d6efe2d942d', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'christian_film_production'),
-('b2e3698b-8f47-49f3-a06e-7c3e198a10b0', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'conservative_comedy_appreciation'),
-('27f84ae0-0332-4cd4-95cc-d62f594bd486', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'classical_music_performance'),
-('817c8afd-04a1-499e-b10e-a8728422b412', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'traditional_dance_instruction'),
-('eb741b64-0579-464e-bed1-3a60f3b7cb18', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'christian_fiction_writing'),
-('f7444ae7-ee1d-445f-80c0-8ef995a124b3', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'folk_art_creation'),
-('42af5f0c-d9fd-462b-bbcd-f91ce27d2b4e', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'historical_reenactment'),
-('6c99f124-6f40-4b0a-a564-a010ec966656', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'sacred_choral_singing'),
-('836f1a31-c415-474b-bb04-7b56d6cb28f9', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'family_friendly_theatre_groups'),
-('0e8af17a-ffd0-4471-9ae9-570ef2a16f60', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'stained_glass_crafting'),
-('a2b7ae89-9f5f-4ac4-b7df-86121f62efc3', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'hymn_composition'),
-('ba6f7637-c1ac-419d-b06e-83edbda971bc', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'traditional_craftsmanship'),
-('c2f22935-ddac-44d0-badd-045ffb488ab3', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'rural_photography'),
-('adebd027-f5bf-41a3-ace3-ea1fb968b3c4', '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9', 'faith_inspired_poetry'),
-('c218801e-1e0d-4001-83d1-49b20cec83af', '64d8b235-2305-4435-a92f-812602861f0a', 'classical_education_methods'),
-('c335c690-3a06-4fb2-8d66-ddb19f3098d5', '64d8b235-2305-4435-a92f-812602861f0a', 'homeschooling_curriculum_development'),
-('a874a2ab-e9ae-4cae-b86a-ebdac33ff767', '64d8b235-2305-4435-a92f-812602861f0a', 'western_canon_literature_discussion'),
-('554ac530-1a74-4fa7-a582-bcabf8f2793d', '64d8b235-2305-4435-a92f-812602861f0a', 'latin_language_study'),
-('579f02d3-9fa9-4a81-8c53-f45a4bae35c3', '64d8b235-2305-4435-a92f-812602861f0a', 'great_books_programs'),
-('82c8c25f-a824-4be6-810c-aae2eb783c1c', '64d8b235-2305-4435-a92f-812602861f0a', 'religious_philosophy_exploration'),
-('de1c7218-9342-4330-b501-c9f70ff4c940', '64d8b235-2305-4435-a92f-812602861f0a', 'socratic_dialogue_facilitation'),
-('a1731fd7-9e6a-4751-a9f4-28ef9754f4c9', '64d8b235-2305-4435-a92f-812602861f0a', 'logic_and_rhetoric_skills'),
-('1746d3bd-6fef-46ea-b3a5-320175eafc4e', '64d8b235-2305-4435-a92f-812602861f0a', 'academic_freedom_advocacy'),
-('3c8d8d01-b0d6-4684-b9fd-c597dbf9e5b2', '64d8b235-2305-4435-a92f-812602861f0a', 'character_education_development'),
-('92f8a6b2-4a48-4441-8a41-0ff662e8f262', '64d8b235-2305-4435-a92f-812602861f0a', 'historical_primary_source_analysis'),
-('836b031c-53f0-4d1a-bef9-3d4bc5035a4d', '64d8b235-2305-4435-a92f-812602861f0a', 'creation_science_study'),
-('d2b5441d-fbe7-42f1-9f5d-bbf4ca90bc44', '64d8b235-2305-4435-a92f-812602861f0a', 'christian_college_counseling'),
-('7169fed6-0624-405f-b7ea-d39970f064b3', '64d8b235-2305-4435-a92f-812602861f0a', 'ancient_language_preservation'),
-('d530bd45-42bc-4fea-b12e-442fba6fca22', '64d8b235-2305-4435-a92f-812602861f0a', 'educational_policy_reform'),
-('8dac29fd-1aa9-404e-a9e9-58d19cc7ce91', '1d324584-570e-4005-bbd4-cecd23703ce0', 'wilderness_survival_skills'),
-('5ba82c2e-2db1-4d45-9313-d8699e05697d', '1d324584-570e-4005-bbd4-cecd23703ce0', 'family_camping_excursions'),
-('87a1ae06-42ae-432b-9f1d-44898a385708', '1d324584-570e-4005-bbd4-cecd23703ce0', 'sport_shooting_competitions'),
-('8f0de7e4-3fe3-4872-a1bb-af1c7e3fd119', '1d324584-570e-4005-bbd4-cecd23703ce0', 'fishing_retreats'),
-('7b54eed3-3f38-41b3-9e27-7320f249e4ef', '1d324584-570e-4005-bbd4-cecd23703ce0', 'horseback_riding'),
-('b393122c-00bd-4fe9-a126-ba3580c6993a', '1d324584-570e-4005-bbd4-cecd23703ce0', 'national_park_exploration'),
-('da98a372-c548-4d8e-9e45-12513170ed8e', '1d324584-570e-4005-bbd4-cecd23703ce0', 'mountain_climbing_challenges'),
-('35cad0ac-69e2-48a8-aad7-57cdc450ab0e', '1d324584-570e-4005-bbd4-cecd23703ce0', 'hunting_traditions'),
-('2a675b14-2e7a-4fa5-bc57-424b13b1213e', '1d324584-570e-4005-bbd4-cecd23703ce0', 'off_grid_living_preparation'),
-('66e73b8f-a3d9-46ff-8efc-8ea205a1f0c8', '1d324584-570e-4005-bbd4-cecd23703ce0', 'trail_maintenance_volunteering'),
-('b6ac2bfd-143f-4a35-ae2b-0a91802707a5', '1d324584-570e-4005-bbd4-cecd23703ce0', 'wildlife_conservation_efforts'),
-('f1b90d47-d115-4c09-b2d1-a3142f0e4cca', '1d324584-570e-4005-bbd4-cecd23703ce0', 'historical_hiking_trails'),
-('31b86f83-c5ef-4f35-8c9c-e3188d57cfff', '1d324584-570e-4005-bbd4-cecd23703ce0', 'outdoor_leadership_development'),
-('07de146f-d349-4d55-9e88-0988378b55fc', '1d324584-570e-4005-bbd4-cecd23703ce0', 'family_adventure_planning'),
-('b79de7b8-9f87-4896-b04e-83801e7ad9f6', '1d324584-570e-4005-bbd4-cecd23703ce0', 'agricultural_tourism'),
-('71ce808b-e1dc-423d-91c2-c9aebe58c8c1', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'traditional_cooking_techniques'),
-('4f10243d-8b6c-49e2-a660-2c9c2a525eb3', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'farm_to_table_meal_preparation'),
-('7ba46fb1-a5b2-4018-880f-3b52cbe0bc41', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'sunday_dinner_hosting'),
-('05df7518-25d0-4fc1-964e-45ec8c7beabe', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'heritage_recipe_preservation'),
-('2d131533-659e-4494-a67d-3f5fe1e1b07b', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'homesteading_skills'),
-('c0db77da-9cc0-44a2-a641-bae04109b81e', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'fermentation_crafts'),
-('bd5a591e-4153-4887-8a7d-d42ea48d23bf', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'holiday_feast_traditions'),
-('7bd938b7-5764-439a-a35a-c7e9ceadd360', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'church_potluck_organization'),
-('456c4390-1064-4d1f-ac4d-0e227913566d', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'sustainable_food_sourcing'),
-('c994633f-a434-42d4-b39c-5d01cf59ecab', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'hospitality_ministry_development'),
-('4082577d-080b-40d3-a05c-a64569dd4dd8', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'food_preservation_methods'),
-('09c0dad0-1572-4d79-9d83-a65f1ad6f3e5', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'international_christian_cuisine'),
-('53c6a821-056e-429d-a99c-4a239869fa48', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'bread_baking_from_scratch'),
-('be9aefb5-a9c6-4833-bf75-f76b9491465d', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'biblical_foods_exploration'),
-('c8d24030-6e52-4893-9d91-22574b253e9c', 'b1502fc2-05fe-43c4-ad37-e41b5f052993', 'community_garden_leadership'),
-('b82b85fa-102c-4591-9092-6ff1e1d00a04', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'financial_stewardship'),
-('4ce88dfb-f283-4fcb-a7d1-a5131cb8ca78', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'biblical_time_management'),
-('93809787-c73b-4a0f-b589-a50e615d8bd5', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'character_virtue_development'),
-('78330c88-e045-4e49-a077-164503e0a3b5', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'servant_leadership_training'),
-('8a12316c-e1d6-4e44-ab52-b67133292b04', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'public_speaking_excellence'),
-('7e9afa07-45c4-4dbf-aa3b-8c30ba867ac3', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'professional_networking_with_integrity'),
-('8e47def9-c831-4056-ae6f-c9d83263b7e1', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'faith_work_integration'),
-('55583c13-35cd-4a94-b748-94acb316c9ba', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'self_discipline_practices'),
-('ed042e39-3797-45c4-a64c-d21a77b282a2', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'mentorship_program_participation'),
-('1db35c25-1e99-4046-a76a-8a1249053f05', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'biblical_masculinity_femininity_discussions'),
-('60c4fba4-260c-4a0d-b7cd-e92bc0a6bee7', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'career_discernment_through_faith'),
-('f6041c1e-9bf9-42ba-b777-7eaef82e7620', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'technological_boundaries_setting'),
-('6d694f44-0218-4240-a789-51908f776d8e', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'sabbath_keeping_practices'),
-('6b1b9cfb-0276-441b-8d27-2f98426eb70c', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'scripture_memorization_techniques'),
-('eac737a2-e3d5-4ef8-818d-4fb06fb66f71', '928f35e1-65ea-4569-a6c1-090cd7a1b4f1', 'ethical_decision_making_frameworks'),
-('3f2766c8-dde6-4fc1-9fe8-f49a85a76f81', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'whole_foods_nutrition'),
-('5154f777-a67c-443d-9f60-fc29b4336e9d', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'faith_integrated_fitness_programs'),
-('d836eb1c-a76b-4dd9-861f-1508c403ccb5', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'mental_health_from_biblical_perspective'),
-('1f7aaa86-03ed-4492-acf8-c35b557b5bd9', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'natural_remedies_study'),
-('52aaf950-5f84-42bb-9034-a7199351fc3e', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'temple_stewardship_philosophy'),
-('6e39e644-8ba7-4874-ada7-44b2feea8234', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'community_health_initiatives'),
-('2ebf5de7-fabc-4b4a-880d-02cc82e7a292', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'sports_ministry_organization'),
-('77bc2589-9bce-4351-9027-d124b39a1b9d', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'addiction_recovery_through_faith'),
-('3584bfc5-11ad-474f-9387-2a024f952d69', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'physical_spiritual_wellness_integration'),
-('78e65256-3380-4b87-bce1-1067c6096a81', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'family_health_planning'),
-('1b196239-5d3b-436c-9a71-5929028870f8', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'christian_approaches_to_medicine'),
-('5dbbe139-057b-47e6-a670-c2754324dbb5', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'fasting_practices_and_guidance'),
-('2a6b413e-fed1-46ad-a99d-644633eb7b7e', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'clean_living_advocacy'),
-('78e5bc50-7603-4601-b4ad-3f8fc353995a', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'medical_ethics_from_christian_worldview'),
-('76ea046a-0ab0-4a18-9853-e37b8cfbc388', '184b0910-2d30-42ea-a407-b5a0bbf01ab0', 'stress_management_through_biblical_principles'),
-('76f1a9f1-7f4d-4489-8814-2f444064786a', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'crisis_pregnancy_center_volunteering'),
-('eacbfa03-0b6d-4815-8515-fdc31ba1d009', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'foster_care_support_systems'),
-('d2dc5df0-290f-4842-9505-41ea2d957bbd', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'prison_ministry_participation'),
-('f7f41b02-48c9-4cfe-98ea-5cd1757a20b8', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'homeless_outreach_coordination'),
-('6e3c5780-d222-4891-9270-d1476bf42754', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'international_humanitarian_aid'),
-('b9dff119-598c-4b1d-966e-83e38fdeeadd', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'persecuted_church_advocacy'),
-('84d830f1-362f-4dfd-91e7-ed31f2cfa472', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'disaster_relief_teams'),
-('dca322b1-b7e0-4952-bda3-9e71d89a6457', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'veteran_support_programs'),
-('a7eac53b-7b10-4848-aa50-f571df875a66', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'special_needs_ministry'),
-('c75454a6-8324-4667-ba7e-d0fce68fdf04', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'faith_based_rehabilitation_services'),
-('ad953525-6999-475b-bbdb-b55393c4570e', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'elder_care_visitation'),
-('0545f2b3-da9a-4e44-a5ef-619f373db336', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'refugee_resettlement_assistance'),
-('ba4730b8-786e-444e-bedf-e39e236088e8', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'anti_trafficking_initiatives'),
-('0b563c5b-5e2d-4091-98bb-eb9bdece393a', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'community_cleanup_projects'),
-('5b7e4792-6c2c-426e-b082-344fa595133a', '9192daf8-f698-48c8-922b-40857c3f9e6c', 'religious_freedom_defense'),
-('8f6e7c38-febf-4cca-91a9-1265da9add4b', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'woodworking_craftsmanship'),
-('5cb336a8-9f84-4acf-a9bf-9deab7e669ba', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'auto_repair_expertise'),
-('8cc28af3-e37f-4918-aee4-31f77d1c0b96', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'homebuilding_mission_projects'),
-('c893a6c3-3f54-433f-8929-863d790add22', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'traditional_metalworking'),
-('f725dc35-55c3-4bf0-aa23-3d3e8174ef63', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'emergency_preparedness_training'),
-('77ae2ba7-c34d-4e90-ac4c-0854f5e3f67c', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'amateur_radio_operation'),
-('403bc458-a48c-478a-b790-8bb17d9b2c33', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'bushcraft_mastery'),
-('e16d157e-6565-436e-86bb-085ee55c61bf', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'home_security_planning'),
-('52539996-892b-4230-a9b1-8769d1b389c3', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'financial_independence_strategies'),
-('e1a81925-00e4-4ef6-8a9b-e5e08a6cd489', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'diy_home_renovation'),
-('9aec082b-df63-4bf4-813b-854b093b9f8d', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'heritage_livestock_raising'),
-('100a9a32-8e52-4116-8062-350aec762b4c', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'antique_restoration'),
-('59131134-c77a-488f-986c-d04980f17c3b', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'tactical_first_aid_training'),
-('1d400e80-dacd-4e03-9120-c7e15bbe49e3', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'sustainable_living_technologies'),
-('fda46719-6f23-4d16-95ef-a3c53f57a35d', 'c5c2c1e3-b5ca-410e-b70b-919f23532d4f', 'historical_weapons_craftsmanship'),
-('27d3c869-b93d-4673-885a-8bb08a4fc17f', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'creation_science_research'),
-('96907596-5c21-4575-8bff-68184427e841', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'ethical_technology_development'),
-('bc25029b-663e-409f-a8c7-a4272218a4ac', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'digital_privacy_advocacy'),
-('4076db89-9578-4225-bda6-e8036ee577fc', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'amateur_astronomy'),
-('884858f7-2bd2-455e-b04d-da011c573724', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'agricultural_innovation'),
-('a20f8280-f801-4f43-853d-104d2fb4c6b7', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'faith_compatible_medical_advancements'),
-('18ee1796-4905-4cee-b17d-6f423e136141', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'climate_stewardship_discussions'),
-('8f6f8eec-5691-4f7c-bde7-0de330e0a0ed', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'intelligent_design_theory'),
-('76fdf4b5-321d-42b2-9448-5b31aac4accb', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'tech_entrepreneurship_with_values'),
-('d2368c2e-f164-4fea-869e-1c6cfb84e070', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'biotechnology_ethics'),
-('51488f6f-b641-445e-9b54-0f8de5d4bee3', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'scientific_apologetics'),
-('55378aab-4f25-47a0-9a1d-0fa45951892f', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'space_exploration_enthusiasm'),
-('87c9ef9b-c890-446f-be71-33fe3c5aabf3', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'sustainable_energy_solutions'),
-('4d25111d-d208-4875-8684-464571f86bbc', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'biblical_archaeology'),
-('00f7544b-90ff-4378-a8d6-835300babcf3', 'ad25e2dc-2562-4245-aa86-401a21b3f426', 'mathematical_beauty_appreciation'),
-('dd31d38a-3095-43ad-9be8-3ef764236248', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'a_cappella_singing'),
-('a6858da8-831b-4564-bb96-61a8fcb3a193', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'guitar_led_worship_circles'),
-('00ac6584-57f4-4912-b9e4-93ee51472f12', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'handbell_choir_participation'),
-('1a07cba2-2329-4a93-ae43-e951720e8d74', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'liturgical_dance'),
-('14fefc3b-90fe-4948-b4a4-19f4ebf6061c', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'christian_songwriting_workshops'),
-('944092d5-143b-41a4-b61b-f46c03ea70e2', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'traditional_instrument_preservation'),
-('04b651b5-f4e6-4cd5-acc9-bbf22da2cb21', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'music_theory_for_worship_leaders'),
-('e5367d54-938d-4186-9215-c6c32af096fb', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'worship_space_acoustics'),
-('e597cfa3-19d5-4c1a-bcc5-a8ced0114957', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'family_musical_heritage'),
-('68ef5305-aba0-4e8b-a139-4da5ebdf4d66', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'calligraphy_of_scripture'),
-('d79ed018-89c1-48f0-a233-42444e08fcdf', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'sacred_music_history'),
-('f2e5cc44-672c-499f-b5c7-8715a58ac535', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'cultural_hymn_adaptation'),
-('4d35a26d-2336-4a04-9480-a7bb27fc999b', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'recording_studio_ministry'),
-('ec1eb1b1-faff-4ccb-a3ec-bf502104213a', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'instrumental_ensemble_formation'),
-('eeb35cbe-aa0c-4e1b-9f2a-b49f15e0b988', '9fca5e7a-bb14-43a0-ac32-7147f0da2f94', 'personal_testimony_through_music'),
-('0c73a824-289a-4c2e-a342-5650b44497b1', 'fd586148-850d-4946-92c1-0eaa7ad69a50', 'systematic_theology_reading_groups'),
-('131af279-bb12-440e-bbe9-536827644e61', 'fd586148-850d-4946-92c1-0eaa7ad69a50', 'cs_lewis_literature_circles'),
-('75174a50-3d83-4474-a664-456acab4faa0', 'fd586148-850d-4946-92c1-0eaa7ad69a50', 'biblical_worldview_podcasting'),
-('c1fca2d3-7eab-408c-9aa9-83fc69ea1eb8', 'fd586148-850d-4946-92c1-0eaa7ad69a50', 'cross_generational_mentoring'),
-('2cc67df5-c657-4451-b40c-5988ed48e00d', 'fd586148-850d-4946-92c1-0eaa7ad69a50', 'faith_minded_professional_networking');
+-- Insert interest categories
+INSERT INTO
+  interest_categories (id, slug)
+VALUES
+  (
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'faith_and_spiritual_life'
+  ),
+  (
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'family_and_relationships'
+  ),
+  (
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'culture_and_politics'
+  ),
+  (
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'arts_and_entertainment'
+  ),
+  (
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'education_and_learning'
+  ),
+  (
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'outdoor_and_recreation'
+  ),
+  (
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'food_and_hospitality'
+  ),
+  (
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'personal_development'
+  ),
+  (
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'health_and_wellness'
+  ),
+  (
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'community_service_and_outreach'
+  ),
+  (
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'practical_skills_and_hobbies'
+  ),
+  (
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'science_and_technology'
+  ),
+  (
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'music_and_creative_expression'
+  ),
+  (
+    'fd586148-850d-4946-92c1-0eaa7ad69a50',
+    'intellectual_and_social_connection'
+  );
+
+-- Insert interests
+INSERT INTO
+  interests (id, interest_category_id, slug)
+VALUES
+  (
+    '8858337c-f4fc-47d4-8a28-6b427894f99b',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'bible_study_methodology'
+  ),
+  (
+    '17fbff75-b356-437a-b37c-a92165b4141b',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'apologetics_training'
+  ),
+  (
+    'e2684c6e-cf4b-420b-8678-1715564cc67a',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'worship_music_composition'
+  ),
+  (
+    'f27eb46d-8447-4d41-931b-0bb2375ca020',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'prayer_journaling'
+  ),
+  (
+    'bceb986c-275b-4342-8927-a24313931593',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'church_history_exploration'
+  ),
+  (
+    '789bdf67-74e5-499b-8398-5a527456e892',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'theological_debate'
+  ),
+  (
+    '8368bcb8-f4d7-4331-ac55-2d5fd836ead6',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'faith_based_community_service'
+  ),
+  (
+    '6d83e959-5cfd-4202-934a-449a382515bd',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'christian_literature_analysis'
+  ),
+  (
+    '755a7249-a294-4e78-954e-a421848bb9fc',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'spiritual_retreat_planning'
+  ),
+  (
+    '2640a832-4e74-421c-873e-307256a68d4d',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'religious_art_appreciation'
+  ),
+  (
+    'adbb3430-e850-4b6d-b36f-4ea01498475a',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'christian_meditation_practices'
+  ),
+  (
+    'f32ea01d-9f66-455b-9db0-52283397924d',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'hymn_restoration'
+  ),
+  (
+    'a2d707d0-0b2c-43a7-90c8-57794e431679',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'seminary_education'
+  ),
+  (
+    'd066a649-4adb-48bd-ada5-1a66c603557e',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'missionary_work_experiences'
+  ),
+  (
+    '236b2363-9f20-4d98-95ea-91873219b686',
+    '6fc2fa71-bcf1-4b57-9e1f-18d8fea42684',
+    'religious_symbolism_study'
+  ),
+  (
+    'cb1559ec-de60-4d46-b5a0-0047fcbdc661',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'traditional_courtship_approaches'
+  ),
+  (
+    '33fa843a-9999-478f-bea1-0ec3ab503071',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'marriage_preparation_counseling'
+  ),
+  (
+    '86c41481-d809-4815-bf34-83179c0dd8f1',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'family_devotional_leadership'
+  ),
+  (
+    '1f00ce8b-bbec-4d27-b0fc-999e889e3916',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'generational_storytelling'
+  ),
+  (
+    'c3dee611-6f59-45a6-8f79-7b26cda42e00',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'adoption_advocacy'
+  ),
+  (
+    '8dac712d-8d92-40ad-91bf-360b7b2d54f3',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'christian_parenting_techniques'
+  ),
+  (
+    'c1060922-e82a-47ae-8e73-a405fe6b85af',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'family_business_development'
+  ),
+  (
+    '750964d8-0333-4b40-a03f-49d68b3d8e7a',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'honoring_elders_initiatives'
+  ),
+  (
+    '053c998b-9fa7-47ce-aec8-2e722ea9be26',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'sibling_relationship_building'
+  ),
+  (
+    '4c95f080-cd56-4eb4-a702-4816b9770465',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'faith_based_marriage_enrichment'
+  ),
+  (
+    '91eca2be-06c6-4ac2-a487-e4910349cd39',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'multigenerational_household_management'
+  ),
+  (
+    'c07776fd-db9e-4566-8ac6-14fc58a00001',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'virtue_based_child_education'
+  ),
+  (
+    '6a257455-5359-4a27-915b-e32ec632f5dd',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'heritage_preservation'
+  ),
+  (
+    '2b8bf686-c282-4c72-8647-24a597e06320',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'biblical_conflict_resolution'
+  ),
+  (
+    'd93c1f6f-db96-4311-9de9-9cccdfe81715',
+    '0c9ddfe2-fe79-431a-b634-d0cf7eb485bb',
+    'family_prayer_traditions'
+  ),
+  (
+    'e8c36de4-b976-4d0a-8a49-c1d0b6604e8c',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'constitutional_originalism'
+  ),
+  (
+    'fafd996b-16e0-4420-85b0-adb5da7d6f35',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'free_market_economics'
+  ),
+  (
+    '8c26e83f-710e-4a5e-975f-a46c7d7fdb98',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'religious_liberty_advocacy'
+  ),
+  (
+    '984110c3-2ba2-4058-9e35-40633c560d57',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'traditional_value_promotion'
+  ),
+  (
+    'd3d7063e-7888-432d-9489-2e1fa0ac7eda',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'political_philosophy_study'
+  ),
+  (
+    '47bfec43-457c-4250-ad29-c884eb00a52d',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'classical_western_civilization'
+  ),
+  (
+    '890ae9b1-c7ac-43a2-b3bc-61f077f24b3a',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'american_founding_principles'
+  ),
+  (
+    '23f7f5de-c683-4dcd-8640-2fe406cdee00',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'local_governance_participation'
+  ),
+  (
+    '08403328-9cab-4340-a0da-ac1b2c48e89c',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'pro_life_activism'
+  ),
+  (
+    '9a585c77-3761-4ca0-8c0a-1d6c2c27b755',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'military_appreciation_initiatives'
+  ),
+  (
+    'eed7b625-e48b-415d-aa9b-637ba9739421',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'rural_community_revitalization'
+  ),
+  (
+    'e5a3d7cb-ee26-45e3-a589-2ea98d2a7781',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'small_business_entrepreneurship'
+  ),
+  (
+    'c64db594-703f-4fda-b678-615967684cac',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'faith_in_public_square_discussions'
+  ),
+  (
+    '133fbe46-d945-4d36-a9a7-da3afd74c51c',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'second_amendment_education'
+  ),
+  (
+    'f4ab9eef-b394-4cae-b985-be4e329417a0',
+    '2637bb18-ceaa-463c-b572-cc514efcb02c',
+    'media_bias_analysis'
+  ),
+  (
+    'ca518364-08fc-40c3-aa8f-7e3ad577c1c6',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'sacred_architecture_tours'
+  ),
+  (
+    '39504845-7bee-4a8f-8b19-0d6efe2d942d',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'christian_film_production'
+  ),
+  (
+    'b2e3698b-8f47-49f3-a06e-7c3e198a10b0',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'conservative_comedy_appreciation'
+  ),
+  (
+    '27f84ae0-0332-4cd4-95cc-d62f594bd486',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'classical_music_performance'
+  ),
+  (
+    '817c8afd-04a1-499e-b10e-a8728422b412',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'traditional_dance_instruction'
+  ),
+  (
+    'eb741b64-0579-464e-bed1-3a60f3b7cb18',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'christian_fiction_writing'
+  ),
+  (
+    'f7444ae7-ee1d-445f-80c0-8ef995a124b3',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'folk_art_creation'
+  ),
+  (
+    '42af5f0c-d9fd-462b-bbcd-f91ce27d2b4e',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'historical_reenactment'
+  ),
+  (
+    '6c99f124-6f40-4b0a-a564-a010ec966656',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'sacred_choral_singing'
+  ),
+  (
+    '836f1a31-c415-474b-bb04-7b56d6cb28f9',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'family_friendly_theatre_groups'
+  ),
+  (
+    '0e8af17a-ffd0-4471-9ae9-570ef2a16f60',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'stained_glass_crafting'
+  ),
+  (
+    'a2b7ae89-9f5f-4ac4-b7df-86121f62efc3',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'hymn_composition'
+  ),
+  (
+    'ba6f7637-c1ac-419d-b06e-83edbda971bc',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'traditional_craftsmanship'
+  ),
+  (
+    'c2f22935-ddac-44d0-badd-045ffb488ab3',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'rural_photography'
+  ),
+  (
+    'adebd027-f5bf-41a3-ace3-ea1fb968b3c4',
+    '3ae3e7c1-bd9d-43fd-9909-d0864ec5f5d9',
+    'faith_inspired_poetry'
+  ),
+  (
+    'c218801e-1e0d-4001-83d1-49b20cec83af',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'classical_education_methods'
+  ),
+  (
+    'c335c690-3a06-4fb2-8d66-ddb19f3098d5',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'homeschooling_curriculum_development'
+  ),
+  (
+    'a874a2ab-e9ae-4cae-b86a-ebdac33ff767',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'western_canon_literature_discussion'
+  ),
+  (
+    '554ac530-1a74-4fa7-a582-bcabf8f2793d',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'latin_language_study'
+  ),
+  (
+    '579f02d3-9fa9-4a81-8c53-f45a4bae35c3',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'great_books_programs'
+  ),
+  (
+    '82c8c25f-a824-4be6-810c-aae2eb783c1c',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'religious_philosophy_exploration'
+  ),
+  (
+    'de1c7218-9342-4330-b501-c9f70ff4c940',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'socratic_dialogue_facilitation'
+  ),
+  (
+    'a1731fd7-9e6a-4751-a9f4-28ef9754f4c9',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'logic_and_rhetoric_skills'
+  ),
+  (
+    '1746d3bd-6fef-46ea-b3a5-320175eafc4e',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'academic_freedom_advocacy'
+  ),
+  (
+    '3c8d8d01-b0d6-4684-b9fd-c597dbf9e5b2',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'character_education_development'
+  ),
+  (
+    '92f8a6b2-4a48-4441-8a41-0ff662e8f262',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'historical_primary_source_analysis'
+  ),
+  (
+    '836b031c-53f0-4d1a-bef9-3d4bc5035a4d',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'creation_science_study'
+  ),
+  (
+    'd2b5441d-fbe7-42f1-9f5d-bbf4ca90bc44',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'christian_college_counseling'
+  ),
+  (
+    '7169fed6-0624-405f-b7ea-d39970f064b3',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'ancient_language_preservation'
+  ),
+  (
+    'd530bd45-42bc-4fea-b12e-442fba6fca22',
+    '64d8b235-2305-4435-a92f-812602861f0a',
+    'educational_policy_reform'
+  ),
+  (
+    '8dac29fd-1aa9-404e-a9e9-58d19cc7ce91',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'wilderness_survival_skills'
+  ),
+  (
+    '5ba82c2e-2db1-4d45-9313-d8699e05697d',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'family_camping_excursions'
+  ),
+  (
+    '87a1ae06-42ae-432b-9f1d-44898a385708',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'sport_shooting_competitions'
+  ),
+  (
+    '8f0de7e4-3fe3-4872-a1bb-af1c7e3fd119',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'fishing_retreats'
+  ),
+  (
+    '7b54eed3-3f38-41b3-9e27-7320f249e4ef',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'horseback_riding'
+  ),
+  (
+    'b393122c-00bd-4fe9-a126-ba3580c6993a',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'national_park_exploration'
+  ),
+  (
+    'da98a372-c548-4d8e-9e45-12513170ed8e',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'mountain_climbing_challenges'
+  ),
+  (
+    '35cad0ac-69e2-48a8-aad7-57cdc450ab0e',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'hunting_traditions'
+  ),
+  (
+    '2a675b14-2e7a-4fa5-bc57-424b13b1213e',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'off_grid_living_preparation'
+  ),
+  (
+    '66e73b8f-a3d9-46ff-8efc-8ea205a1f0c8',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'trail_maintenance_volunteering'
+  ),
+  (
+    'b6ac2bfd-143f-4a35-ae2b-0a91802707a5',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'wildlife_conservation_efforts'
+  ),
+  (
+    'f1b90d47-d115-4c09-b2d1-a3142f0e4cca',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'historical_hiking_trails'
+  ),
+  (
+    '31b86f83-c5ef-4f35-8c9c-e3188d57cfff',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'outdoor_leadership_development'
+  ),
+  (
+    '07de146f-d349-4d55-9e88-0988378b55fc',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'family_adventure_planning'
+  ),
+  (
+    'b79de7b8-9f87-4896-b04e-83801e7ad9f6',
+    '1d324584-570e-4005-bbd4-cecd23703ce0',
+    'agricultural_tourism'
+  ),
+  (
+    '71ce808b-e1dc-423d-91c2-c9aebe58c8c1',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'traditional_cooking_techniques'
+  ),
+  (
+    '4f10243d-8b6c-49e2-a660-2c9c2a525eb3',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'farm_to_table_meal_preparation'
+  ),
+  (
+    '7ba46fb1-a5b2-4018-880f-3b52cbe0bc41',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'sunday_dinner_hosting'
+  ),
+  (
+    '05df7518-25d0-4fc1-964e-45ec8c7beabe',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'heritage_recipe_preservation'
+  ),
+  (
+    '2d131533-659e-4494-a67d-3f5fe1e1b07b',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'homesteading_skills'
+  ),
+  (
+    'c0db77da-9cc0-44a2-a641-bae04109b81e',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'fermentation_crafts'
+  ),
+  (
+    'bd5a591e-4153-4887-8a7d-d42ea48d23bf',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'holiday_feast_traditions'
+  ),
+  (
+    '7bd938b7-5764-439a-a35a-c7e9ceadd360',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'church_potluck_organization'
+  ),
+  (
+    '456c4390-1064-4d1f-ac4d-0e227913566d',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'sustainable_food_sourcing'
+  ),
+  (
+    'c994633f-a434-42d4-b39c-5d01cf59ecab',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'hospitality_ministry_development'
+  ),
+  (
+    '4082577d-080b-40d3-a05c-a64569dd4dd8',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'food_preservation_methods'
+  ),
+  (
+    '09c0dad0-1572-4d79-9d83-a65f1ad6f3e5',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'international_christian_cuisine'
+  ),
+  (
+    '53c6a821-056e-429d-a99c-4a239869fa48',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'bread_baking_from_scratch'
+  ),
+  (
+    'be9aefb5-a9c6-4833-bf75-f76b9491465d',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'biblical_foods_exploration'
+  ),
+  (
+    'c8d24030-6e52-4893-9d91-22574b253e9c',
+    'b1502fc2-05fe-43c4-ad37-e41b5f052993',
+    'community_garden_leadership'
+  ),
+  (
+    'b82b85fa-102c-4591-9092-6ff1e1d00a04',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'financial_stewardship'
+  ),
+  (
+    '4ce88dfb-f283-4fcb-a7d1-a5131cb8ca78',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'biblical_time_management'
+  ),
+  (
+    '93809787-c73b-4a0f-b589-a50e615d8bd5',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'character_virtue_development'
+  ),
+  (
+    '78330c88-e045-4e49-a077-164503e0a3b5',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'servant_leadership_training'
+  ),
+  (
+    '8a12316c-e1d6-4e44-ab52-b67133292b04',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'public_speaking_excellence'
+  ),
+  (
+    '7e9afa07-45c4-4dbf-aa3b-8c30ba867ac3',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'professional_networking_with_integrity'
+  ),
+  (
+    '8e47def9-c831-4056-ae6f-c9d83263b7e1',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'faith_work_integration'
+  ),
+  (
+    '55583c13-35cd-4a94-b748-94acb316c9ba',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'self_discipline_practices'
+  ),
+  (
+    'ed042e39-3797-45c4-a64c-d21a77b282a2',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'mentorship_program_participation'
+  ),
+  (
+    '1db35c25-1e99-4046-a76a-8a1249053f05',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'biblical_masculinity_femininity_discussions'
+  ),
+  (
+    '60c4fba4-260c-4a0d-b7cd-e92bc0a6bee7',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'career_discernment_through_faith'
+  ),
+  (
+    'f6041c1e-9bf9-42ba-b777-7eaef82e7620',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'technological_boundaries_setting'
+  ),
+  (
+    '6d694f44-0218-4240-a789-51908f776d8e',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'sabbath_keeping_practices'
+  ),
+  (
+    '6b1b9cfb-0276-441b-8d27-2f98426eb70c',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'scripture_memorization_techniques'
+  ),
+  (
+    'eac737a2-e3d5-4ef8-818d-4fb06fb66f71',
+    '928f35e1-65ea-4569-a6c1-090cd7a1b4f1',
+    'ethical_decision_making_frameworks'
+  ),
+  (
+    '3f2766c8-dde6-4fc1-9fe8-f49a85a76f81',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'whole_foods_nutrition'
+  ),
+  (
+    '5154f777-a67c-443d-9f60-fc29b4336e9d',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'faith_integrated_fitness_programs'
+  ),
+  (
+    'd836eb1c-a76b-4dd9-861f-1508c403ccb5',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'mental_health_from_biblical_perspective'
+  ),
+  (
+    '1f7aaa86-03ed-4492-acf8-c35b557b5bd9',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'natural_remedies_study'
+  ),
+  (
+    '52aaf950-5f84-42bb-9034-a7199351fc3e',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'temple_stewardship_philosophy'
+  ),
+  (
+    '6e39e644-8ba7-4874-ada7-44b2feea8234',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'community_health_initiatives'
+  ),
+  (
+    '2ebf5de7-fabc-4b4a-880d-02cc82e7a292',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'sports_ministry_organization'
+  ),
+  (
+    '77bc2589-9bce-4351-9027-d124b39a1b9d',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'addiction_recovery_through_faith'
+  ),
+  (
+    '3584bfc5-11ad-474f-9387-2a024f952d69',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'physical_spiritual_wellness_integration'
+  ),
+  (
+    '78e65256-3380-4b87-bce1-1067c6096a81',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'family_health_planning'
+  ),
+  (
+    '1b196239-5d3b-436c-9a71-5929028870f8',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'christian_approaches_to_medicine'
+  ),
+  (
+    '5dbbe139-057b-47e6-a670-c2754324dbb5',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'fasting_practices_and_guidance'
+  ),
+  (
+    '2a6b413e-fed1-46ad-a99d-644633eb7b7e',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'clean_living_advocacy'
+  ),
+  (
+    '78e5bc50-7603-4601-b4ad-3f8fc353995a',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'medical_ethics_from_christian_worldview'
+  ),
+  (
+    '76ea046a-0ab0-4a18-9853-e37b8cfbc388',
+    '184b0910-2d30-42ea-a407-b5a0bbf01ab0',
+    'stress_management_through_biblical_principles'
+  ),
+  (
+    '76f1a9f1-7f4d-4489-8814-2f444064786a',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'crisis_pregnancy_center_volunteering'
+  ),
+  (
+    'eacbfa03-0b6d-4815-8515-fdc31ba1d009',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'foster_care_support_systems'
+  ),
+  (
+    'd2dc5df0-290f-4842-9505-41ea2d957bbd',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'prison_ministry_participation'
+  ),
+  (
+    'f7f41b02-48c9-4cfe-98ea-5cd1757a20b8',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'homeless_outreach_coordination'
+  ),
+  (
+    '6e3c5780-d222-4891-9270-d1476bf42754',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'international_humanitarian_aid'
+  ),
+  (
+    'b9dff119-598c-4b1d-966e-83e38fdeeadd',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'persecuted_church_advocacy'
+  ),
+  (
+    '84d830f1-362f-4dfd-91e7-ed31f2cfa472',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'disaster_relief_teams'
+  ),
+  (
+    'dca322b1-b7e0-4952-bda3-9e71d89a6457',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'veteran_support_programs'
+  ),
+  (
+    'a7eac53b-7b10-4848-aa50-f571df875a66',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'special_needs_ministry'
+  ),
+  (
+    'c75454a6-8324-4667-ba7e-d0fce68fdf04',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'faith_based_rehabilitation_services'
+  ),
+  (
+    'ad953525-6999-475b-bbdb-b55393c4570e',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'elder_care_visitation'
+  ),
+  (
+    '0545f2b3-da9a-4e44-a5ef-619f373db336',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'refugee_resettlement_assistance'
+  ),
+  (
+    'ba4730b8-786e-444e-bedf-e39e236088e8',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'anti_trafficking_initiatives'
+  ),
+  (
+    '0b563c5b-5e2d-4091-98bb-eb9bdece393a',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'community_cleanup_projects'
+  ),
+  (
+    '5b7e4792-6c2c-426e-b082-344fa595133a',
+    '9192daf8-f698-48c8-922b-40857c3f9e6c',
+    'religious_freedom_defense'
+  ),
+  (
+    '8f6e7c38-febf-4cca-91a9-1265da9add4b',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'woodworking_craftsmanship'
+  ),
+  (
+    '5cb336a8-9f84-4acf-a9bf-9deab7e669ba',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'auto_repair_expertise'
+  ),
+  (
+    '8cc28af3-e37f-4918-aee4-31f77d1c0b96',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'homebuilding_mission_projects'
+  ),
+  (
+    'c893a6c3-3f54-433f-8929-863d790add22',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'traditional_metalworking'
+  ),
+  (
+    'f725dc35-55c3-4bf0-aa23-3d3e8174ef63',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'emergency_preparedness_training'
+  ),
+  (
+    '77ae2ba7-c34d-4e90-ac4c-0854f5e3f67c',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'amateur_radio_operation'
+  ),
+  (
+    '403bc458-a48c-478a-b790-8bb17d9b2c33',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'bushcraft_mastery'
+  ),
+  (
+    'e16d157e-6565-436e-86bb-085ee55c61bf',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'home_security_planning'
+  ),
+  (
+    '52539996-892b-4230-a9b1-8769d1b389c3',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'financial_independence_strategies'
+  ),
+  (
+    'e1a81925-00e4-4ef6-8a9b-e5e08a6cd489',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'diy_home_renovation'
+  ),
+  (
+    '9aec082b-df63-4bf4-813b-854b093b9f8d',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'heritage_livestock_raising'
+  ),
+  (
+    '100a9a32-8e52-4116-8062-350aec762b4c',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'antique_restoration'
+  ),
+  (
+    '59131134-c77a-488f-986c-d04980f17c3b',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'tactical_first_aid_training'
+  ),
+  (
+    '1d400e80-dacd-4e03-9120-c7e15bbe49e3',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'sustainable_living_technologies'
+  ),
+  (
+    'fda46719-6f23-4d16-95ef-a3c53f57a35d',
+    'c5c2c1e3-b5ca-410e-b70b-919f23532d4f',
+    'historical_weapons_craftsmanship'
+  ),
+  (
+    '27d3c869-b93d-4673-885a-8bb08a4fc17f',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'creation_science_research'
+  ),
+  (
+    '96907596-5c21-4575-8bff-68184427e841',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'ethical_technology_development'
+  ),
+  (
+    'bc25029b-663e-409f-a8c7-a4272218a4ac',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'digital_privacy_advocacy'
+  ),
+  (
+    '4076db89-9578-4225-bda6-e8036ee577fc',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'amateur_astronomy'
+  ),
+  (
+    '884858f7-2bd2-455e-b04d-da011c573724',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'agricultural_innovation'
+  ),
+  (
+    'a20f8280-f801-4f43-853d-104d2fb4c6b7',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'faith_compatible_medical_advancements'
+  ),
+  (
+    '18ee1796-4905-4cee-b17d-6f423e136141',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'climate_stewardship_discussions'
+  ),
+  (
+    '8f6f8eec-5691-4f7c-bde7-0de330e0a0ed',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'intelligent_design_theory'
+  ),
+  (
+    '76fdf4b5-321d-42b2-9448-5b31aac4accb',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'tech_entrepreneurship_with_values'
+  ),
+  (
+    'd2368c2e-f164-4fea-869e-1c6cfb84e070',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'biotechnology_ethics'
+  ),
+  (
+    '51488f6f-b641-445e-9b54-0f8de5d4bee3',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'scientific_apologetics'
+  ),
+  (
+    '55378aab-4f25-47a0-9a1d-0fa45951892f',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'space_exploration_enthusiasm'
+  ),
+  (
+    '87c9ef9b-c890-446f-be71-33fe3c5aabf3',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'sustainable_energy_solutions'
+  ),
+  (
+    '4d25111d-d208-4875-8684-464571f86bbc',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'biblical_archaeology'
+  ),
+  (
+    '00f7544b-90ff-4378-a8d6-835300babcf3',
+    'ad25e2dc-2562-4245-aa86-401a21b3f426',
+    'mathematical_beauty_appreciation'
+  ),
+  (
+    'dd31d38a-3095-43ad-9be8-3ef764236248',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'a_cappella_singing'
+  ),
+  (
+    'a6858da8-831b-4564-bb96-61a8fcb3a193',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'guitar_led_worship_circles'
+  ),
+  (
+    '00ac6584-57f4-4912-b9e4-93ee51472f12',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'handbell_choir_participation'
+  ),
+  (
+    '1a07cba2-2329-4a93-ae43-e951720e8d74',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'liturgical_dance'
+  ),
+  (
+    '14fefc3b-90fe-4948-b4a4-19f4ebf6061c',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'christian_songwriting_workshops'
+  ),
+  (
+    '944092d5-143b-41a4-b61b-f46c03ea70e2',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'traditional_instrument_preservation'
+  ),
+  (
+    '04b651b5-f4e6-4cd5-acc9-bbf22da2cb21',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'music_theory_for_worship_leaders'
+  ),
+  (
+    'e5367d54-938d-4186-9215-c6c32af096fb',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'worship_space_acoustics'
+  ),
+  (
+    'e597cfa3-19d5-4c1a-bcc5-a8ced0114957',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'family_musical_heritage'
+  ),
+  (
+    '68ef5305-aba0-4e8b-a139-4da5ebdf4d66',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'calligraphy_of_scripture'
+  ),
+  (
+    'd79ed018-89c1-48f0-a233-42444e08fcdf',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'sacred_music_history'
+  ),
+  (
+    'f2e5cc44-672c-499f-b5c7-8715a58ac535',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'cultural_hymn_adaptation'
+  ),
+  (
+    '4d35a26d-2336-4a04-9480-a7bb27fc999b',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'recording_studio_ministry'
+  ),
+  (
+    'ec1eb1b1-faff-4ccb-a3ec-bf502104213a',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'instrumental_ensemble_formation'
+  ),
+  (
+    'eeb35cbe-aa0c-4e1b-9f2a-b49f15e0b988',
+    '9fca5e7a-bb14-43a0-ac32-7147f0da2f94',
+    'personal_testimony_through_music'
+  ),
+  (
+    '0c73a824-289a-4c2e-a342-5650b44497b1',
+    'fd586148-850d-4946-92c1-0eaa7ad69a50',
+    'systematic_theology_reading_groups'
+  ),
+  (
+    '131af279-bb12-440e-bbe9-536827644e61',
+    'fd586148-850d-4946-92c1-0eaa7ad69a50',
+    'cs_lewis_literature_circles'
+  ),
+  (
+    '75174a50-3d83-4474-a664-456acab4faa0',
+    'fd586148-850d-4946-92c1-0eaa7ad69a50',
+    'biblical_worldview_podcasting'
+  ),
+  (
+    'c1fca2d3-7eab-408c-9aa9-83fc69ea1eb8',
+    'fd586148-850d-4946-92c1-0eaa7ad69a50',
+    'cross_generational_mentoring'
+  ),
+  (
+    '2cc67df5-c657-4451-b40c-5988ed48e00d',
+    'fd586148-850d-4946-92c1-0eaa7ad69a50',
+    'faith_minded_professional_networking'
+  );

@@ -97,18 +97,26 @@ const menuItems = computed(() => {
     ]
 })
 
-const settings = [
-    {
-        label: 'Profile',
-        icon: 'pi pi-user',
-        to: '/profile',
-    },
-    {
-        label: 'Logout',
-        icon: 'pi pi-sign-out',
-        to: '/logout',
-    },
-]
+const settings = computed(() => {
+    const settingMenu = [
+        {
+            label: 'Logout',
+            icon: 'pi pi-sign-out',
+            to: '/logout',
+        },
+    ]
+
+    if (!user.value) {
+        return settingMenu
+    } else {
+        settingMenu.unshift({
+            label: 'Profile',
+            icon: 'pi pi-user',
+            to: '/profile',
+        })
+        return settingMenu
+    }
+})
 
 onMounted(() => {
     if (user.value) {
