@@ -1,7 +1,7 @@
 export interface InterestCategoryDTO {
     id: string
     slug: string
-    createdAt?: string
+    created_at?: string
 }
 
 export interface PostInterestCategoryDTO {

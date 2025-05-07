@@ -14,7 +14,7 @@ export const getAllInterests = async (event: any): Promise<InterestDTO[]> => {
         id: interest.id,
         slug: interest.slug,
         category: interest.category,
-        createdAt: interest.created_at,
+        created_at: interest.created_at,
     }))
 
     return interests

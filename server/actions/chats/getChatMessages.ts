@@ -1,33 +1,15 @@
 import { serverSupabaseClient } from '#supabase/server'
 import type { MessageDTO } from '~/shared/types/MessageDTOs'
 
-export const getUserMessages = async (
+export const getChatMessages = async (
     event: any,
-    userId: string,
+    matchId: string,
 ): Promise<MessageDTO[]> => {
-    if (!userId) {
-        throw createError({ statusCode: 400, message: 'User ID is required' })
+    if (!matchId) {
+        throw createError({ statusCode: 400, message: 'Chat ID is required' })
     }
 
     const supabase = await serverSupabaseClient(event)
-
-    // First get matches involving this user
-    const { data: matchData, error: matchError } = await supabase
-        .from('matches')
-        .select('id')
-        .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
-
-    if (matchError) {
-        throw createError({ statusCode: 500, message: matchError.message })
-    }
-
-    if (!matchData || matchData.length === 0) {
-        return [] // No matches, so no messages
-    }
-
-    const matchIds = matchData.map((match) => match.id)
-
-    // Now get messages for these matches
     const { data, error } = await supabase
         .from('messages')
         .select(
@@ -35,8 +17,7 @@ export const getUserMessages = async (
             id,
             content,
             read,
-            created_at,
-            match:match_id (
+            chat:chat_id (
                 id,
                 status,
                 user1:user1_id (
@@ -66,11 +47,12 @@ export const getUserMessages = async (
                 space:spaces (id, name, description),
                 last_active,
                 created_at
-            )
+            ),
+            created_at
         `,
         )
-        .in('match_id', matchIds)
-        .order('created_at', { ascending: false })
+        .eq('match_id', matchId)
+        .order('created_at', { ascending: true })
 
     if (error) {
         throw createError({ statusCode: 500, message: error.message })

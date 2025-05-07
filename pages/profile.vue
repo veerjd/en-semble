@@ -3,34 +3,39 @@
         <h1 class="text-3xl font-bold mb-8">Your User</h1>
 
         <form @submit.prevent="saveUser" class="p-fluid">
-            <div class="field mb-4">
-                <label for="username" class="font-medium">Username</label>
-                <InputText
-                    :pt="{
-                        root: {
-                            class: 'text-black rounded',
-                        },
-                    }"
-                    id="username"
-                    v-model="user.username"
-                    required
-                    class="w-full"
-                />
+            <div v-if="userLoading || !user" class="mb-4">
+                <Skeleton height="40px" class="mb-2" />
+                <Skeleton height="40px" />
             </div>
-            <div class="field mb-4">
-                <label for="bio" class="font-medium">Bio</label>
-                <InputText
-                    :pt="{
-                        root: {
-                            class: 'text-black rounded',
-                        },
-                    }"
-                    id="bio"
-                    v-model="user.bio"
-                    required
-                    class="w-full"
-                />
-            </div>
+            <template v-else>
+                <div class="field mb-4">
+                    <label for="username" class="font-medium">Username</label>
+                    <InputText
+                        :pt="{
+                            root: {
+                                class: 'text-black rounded',
+                            },
+                        }"
+                        id="username"
+                        v-model="user.username"
+                        required
+                        class="w-full"
+                    />
+                </div>
+                <div class="field mb-4">
+                    <label for="bio" class="font-medium">Bio</label>
+                    <InputText
+                        :pt="{
+                            root: {
+                                class: 'text-black rounded',
+                            },
+                        }"
+                        id="bio"
+                        v-model="user.bio"
+                        class="w-full"
+                    />
+                </div>
+            </template>
             <div class="field mb-4">
                 <label class="font-medium block mb-2">Interests</label>
                 <div class="flex flex-wrap gap-2">
@@ -82,8 +87,13 @@
             </div>
 
             <Message v-if="error" severity="error" :text="error" class="mb-4" />
-
-            <Button type="submit" label="Save User" class="w-full" />
+            {{ error }}
+            <Button
+                type="submit"
+                label="Save User"
+                class="w-full"
+                :disabled="loading || userLoading"
+            />
         </form>
     </div>
 </template>
@@ -92,21 +102,53 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
-const client = useSupabaseClient()
 const router = useRouter()
-const { data: user } = await useUser()
-const { interests, isLoading, fetchAllInterests } = useInterests()
+const {
+    user,
+    isLoading: userLoading,
+    error: userError,
+    fetchUser,
+    updateUser,
+} = useUser()
+
+const {
+    interests,
+    isLoading,
+    error: interestsError,
+    fetchAllInterests,
+    fetchUserInterests,
+    replaceUserInterests,
+    getUserInterests,
+} = useInterests()
+
 const loading = ref(true)
-const selectedInterests = ref(
-    user.value?.interests?.map((interest) => interest.id) || [],
-)
 const error = ref(null)
+const selectedInterests = ref([])
 
-// Fetch interests data immediately rather than waiting for onMounted
-await fetchAllInterests()
+// Initialize with any interests from the user data
+onMounted(async () => {
+    try {
+        // Ensure interests and user are loaded
+        await Promise.all([fetchAllInterests(), fetchUser()])
 
-onMounted(() => {
-    loading.value = false
+        // If user interests were passed in the user object, use them
+        if (user.value?.interests?.length) {
+            selectedInterests.value = user.value.interests.map(
+                (interest) => interest.id,
+            )
+        }
+        // Otherwise fetch them using the composable
+        else if (user.value?.id) {
+            const userInterests = await fetchUserInterests(user.value.id)
+            selectedInterests.value = userInterests.map(
+                (interest) => interest.id,
+            )
+        }
+    } catch (err) {
+        error.value = err.message || 'Failed to load interests'
+    } finally {
+        loading.value = false
+    }
 })
 
 const toggleInterest = (interest) => {
@@ -121,39 +163,36 @@ const toggleInterest = (interest) => {
 const saveUser = async () => {
     try {
         error.value = null
+        loading.value = true
 
-        // Update user
-        const { error: userError } = await client.from('users').upsert({
+        // Update user using the new updateUser method from the composable
+        await updateUser({
             id: user.value.id,
             username: user.value.username,
             bio: user.value.bio,
         })
 
-        if (userError) throw userError
+        // Update user interests using the composable
+        const success = await replaceUserInterests(
+            user.value.id,
+            selectedInterests.value,
+        )
 
-        // Delete existing interests
-        await client
-            .from('user_interests')
-            .delete()
-            .eq('user_id', user.value.id)
-
-        // Insert new interests
-        if (selectedInterests.value.length) {
-            const { error: interestsError } = await client
-                .from('user_interests')
-                .insert(
-                    selectedInterests.value.map((interestId) => ({
-                        user_id: user.value.id,
-                        interest_id: interestId,
-                    })),
-                )
-
-            if (interestsError) throw interestsError
+        if (!success) {
+            // Check if there's a specific error from the interests composable
+            if (interestsError.value) {
+                throw interestsError.value
+            } else {
+                throw new Error('Failed to update interests')
+            }
         }
 
+        // Navigate back to home page after successful save
         router.push('/')
     } catch (e) {
-        error.value = e.message
+        error.value = e.message || 'An error occurred while saving'
+    } finally {
+        loading.value = false
     }
 }
 </script>

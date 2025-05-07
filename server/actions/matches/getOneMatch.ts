@@ -3,9 +3,9 @@ import type { MatchDTO } from '~/shared/types/MatchDTOs'
 
 export const getOneMatch = async (
     event: any,
-    id: string,
+    matchId: string,
 ): Promise<MatchDTO> => {
-    if (!id) {
+    if (!matchId) {
         throw createError({ statusCode: 400, message: 'Match ID is required' })
     }
 
@@ -15,13 +15,13 @@ export const getOneMatch = async (
         .select(
             `
         id,
-        status,
+        status_id,
         created_at,
         user1:user1_id (
             id,
             username,
             bio,
-            interest:interests (id, name),
+            interests (id, slug, category:interest_category_id (id, slug)),
             space:spaces (id, name, description),
             last_active,
             created_at
@@ -30,14 +30,14 @@ export const getOneMatch = async (
             id,
             username,
             bio,
-            interest:interests (id, name),
+            interests (id, slug, category:interest_category_id (id, slug)),
             space:spaces (id, name, description),
             last_active,
             created_at
         )
     `,
         )
-        .eq('id', id)
+        .eq('id', matchId)
         .maybeSingle()
 
     if (error) {
@@ -50,25 +50,9 @@ export const getOneMatch = async (
 
     return {
         id: data.id,
-        user1: {
-            id: data.user1.id,
-            username: data.user1.username,
-            bio: data.user1.bio,
-            interests: data.user1.interests,
-            space: data.user1.space,
-            created_at: data.user1.created_at,
-            last_active: data.user1.last_active,
-        },
-        user2: {
-            id: data.user2.id,
-            username: data.user2.username,
-            bio: data.user2.bio,
-            interests: data.user2.interests,
-            space: data.user2.space,
-            created_at: data.user2.created_at,
-            last_active: data.user2.last_active,
-        },
-        status: data.status,
-        createdAt: data.created_at,
+        user1: data.user1,
+        user2: data.user2,
+        status_id: data.status_id,
+        created_at: data.created_at,
     }
 }

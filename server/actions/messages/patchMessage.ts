@@ -18,7 +18,6 @@ export const patchMessage = async (
     const updates: Record<string, any> = {}
     if (dto.content !== undefined) updates.content = dto.content
     if (dto.read !== undefined) updates.read = dto.read
-    if (dto.match_id) updates.match_id = dto.match_id
     if (dto.user_id) updates.user_id = dto.user_id
 
     const { error } = await supabase

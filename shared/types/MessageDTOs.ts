@@ -1,17 +1,17 @@
-import type { MatchDTO } from './MatchDTOs'
+import type { ChatDTO } from './ChatDTOs'
 import type { UserDTO } from './UserDTOs'
 
 export interface MessageDTO {
     id: string
-    match: MatchDTO
+    chat: ChatDTO
     user: UserDTO
     content: string
     read: boolean
-    createdAt?: string
+    created_at?: string
 }
 
 export interface PostMessageDTO {
-    match_id: string
+    chat_id: string
     user_id: string
     content: string
     read: boolean
@@ -19,7 +19,7 @@ export interface PostMessageDTO {
 
 export interface PatchMessageDTO {
     id: string
-    match_id?: string
+    chat_id?: string
     user_id?: string
     content?: string
     read?: boolean

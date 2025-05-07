@@ -1,15 +1,16 @@
-import type { InterestCategoryDTO } from "./InterestCategoryDTOs"
+import type { InterestCategoryDTO } from './InterestCategoryDTOs'
 
 export interface InterestDTO {
     id: string
     slug: string
     category: InterestCategoryDTO
-    createdAt?: string
+    created_at: string
 }
 
 export interface PostInterestDTO {
     slug: string
     category_id: string
+    created_at?: string
 }
 
 export interface PatchInterestDTO {

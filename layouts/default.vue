@@ -110,7 +110,7 @@ const settings = computed(() => {
         return settingMenu
     } else {
         settingMenu.unshift({
-            label: 'Profile',
+            label: `${user.value.email}`,
             icon: 'pi pi-user',
             to: '/profile',
         })

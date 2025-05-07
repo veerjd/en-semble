@@ -157,17 +157,20 @@ const loadChats = async () => {
             )
             .or(`user1_id.eq.${user.value.id},user2_id.eq.${user.value.id}`)
 
-        chats.value = data.map((match) => ({
-            ...match,
-            user:
-                match.user1_id === user.value.id
-                    ? match.users_chats_user2_id_fkey
-                    : match.users_chats_user1_id_fkey,
-            canAccept:
-                match.user2_id === user.value.id && match.status === 'pending',
-            channel: match.channels[0],
-            unreadCount: 0,
-        }))
+        chats.value = data
+            ? data.map((match) => ({
+                  ...match,
+                  user:
+                      match.user1_id === user.value.id
+                          ? match.users_chats_user2_id_fkey
+                          : match.users_chats_user1_id_fkey,
+                  canAccept:
+                      match.user2_id === user.value.id &&
+                      match.status === 'pending',
+                  channel: match.channels[0],
+                  unreadCount: 0,
+              }))
+            : []
 
         await loadUnreadCounts()
     } catch (error) {
@@ -178,6 +181,8 @@ const loadChats = async () => {
 }
 
 const loadUnreadCounts = async () => {
+    if (!chats.value || chats.value.length === 0) return
+
     // Get channel IDs
     const channelIds = chats.value
         .filter((match) => match.channel)

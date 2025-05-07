@@ -1,5 +1,4 @@
 export * from './deleteMessage'
-export * from './getMatchMessages'
 export * from './getOneMessage'
 export * from './getUserMessages'
 export * from './markMessageRead'

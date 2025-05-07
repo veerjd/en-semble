@@ -11,14 +11,14 @@ export const getSpaceMatches = async (
         .select(
             `
         id,
-        status,
+        status_id,
         created_at,
         space:spaces (id, name, description),
         user1:user1_id (
             id,
             username,
             bio,
-            interest:interests (id, name),
+            interests (id, slug, category:interest_category_id (id, slug)),
             space:spaces (id, name, description),
             last_active,
             created_at
@@ -27,7 +27,7 @@ export const getSpaceMatches = async (
             id,
             username,
             bio,
-            interest:interests (id, name),
+            interests (id, slug, category:interest_category_id (id, slug)),
             space:spaces (id, name, description),
             last_active,
             created_at
@@ -43,26 +43,10 @@ export const getSpaceMatches = async (
     // Transform data to DTOs
     const matches: MatchDTO[] = data.map((match: any) => ({
         id: match.id,
-        user1: {
-            id: match.user1.id,
-            username: match.user1.username,
-            bio: match.user1.bio,
-            interests: match.user1.interests,
-            space: match.user1.space,
-            created_at: match.user1.created_at,
-            last_active: match.user1.last_active,
-        },
-        user2: {
-            id: match.user2.id,
-            username: match.user2.username,
-            bio: match.user2.bio,
-            interests: match.user2.interests,
-            space: match.user2.space,
-            created_at: match.user2.created_at,
-            last_active: match.user2.last_active,
-        },
-        status: match.status,
-        createdAt: match.created_at,
+        user1: match.user1,
+        user2: match.user2,
+        status_id: match.status_id,
+        created_at: match.created_at,
     }))
 
     return matches

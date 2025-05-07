@@ -30,7 +30,7 @@ export const getOneInterest = async (
             id: data.id,
             slug: data.slug,
             category: data.category,
-            createdAt: data.created_at,
+            created_at: data.created_at,
         }
     }
 }

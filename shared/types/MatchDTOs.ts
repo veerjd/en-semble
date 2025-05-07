@@ -4,21 +4,21 @@ export interface MatchDTO {
     id: string
     user1: UserDTO
     user2: UserDTO
-    status: string
-    createdAt?: string
+    status_id: number
+    created_at?: string
 }
 
 export interface PostMatchDTO {
     user1_id: string
     user2_id: string
-    status: string
+    status_id: number
 }
 
 export interface PatchMatchDTO {
     id: string
     user1_id: string
     user2_id: string
-    status: string
+    status_id: number
 }
 
 export interface DeleteMatchDTO {

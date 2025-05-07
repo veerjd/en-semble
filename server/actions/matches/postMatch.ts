@@ -49,7 +49,7 @@ export const postMatch = async (
         .insert({
             user1_id: user1_id,
             user2_id: user2_id,
-            status: dto.status || 'pending',
+            status_id: dto.status_id,
         })
         .select('id')
         .single()

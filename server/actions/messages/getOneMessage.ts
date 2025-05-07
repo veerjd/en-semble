@@ -67,16 +67,54 @@ export const getOneMessage = async (
 
     return {
         id: data.id,
-        match: {
-            id: data.match.id,
-            user1: data.match.user1,
-            user2: data.match.user2,
-            status: data.match.status,
-            createdAt: data.match.created_at,
+        chat: {
+            id: data.chat.id,
+            user1: data.chat.user1,
+            user2: data.chat.user2,
+            match: data.chat.match,
+            created_at: data.chat.created_at,
         },
-        user: data.user,
+        user: {
+            id: data.user.id,
+            username: data.user.username,
+            bio: data.user?.bio,
+            interests: Array.isArray(data.user?.interests)
+                ? data.user.interests.map((interest: any) => ({
+                      id: interest.id,
+                      slug: interest.slug,
+                      category: {
+                          id: interest.category.id,
+                          slug: interest.category.slug,
+                          created_at: interest.category.created_at,
+                      },
+                      created_at: interest.created_at,
+                  }))
+                : data.user?.interests
+                  ? [
+                        {
+                            id: data.user.interests.id,
+                            slug: data.user.interests.slug,
+                            category: {
+                                id: data.user.interests.category.id,
+                                slug: data.user.interests.category.slug,
+                                created_at:
+                                    data.user.interests.category.created_at,
+                            },
+                            created_at: data.user.interests.created_at,
+                        },
+                    ]
+                  : [],
+            space: {
+                id: data.user.id,
+                name: data.user.name,
+                description: data.user?.description,
+                created_at: data.user?.created_at,
+            },
+            created_at: data.user.created_at,
+            last_active: data.user.last_active,
+        },
         content: data.content,
         read: data.read,
-        createdAt: data.created_at,
+        created_at: data.created_at,
     }
 }
