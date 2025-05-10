@@ -132,14 +132,7 @@ CREATE TABLE
     id uuid PRIMARY KEY DEFAULT gen_random_uuid (),
     user1_id uuid REFERENCES users ON DELETE CASCADE,
     user2_id uuid REFERENCES users ON DELETE CASCADE,
-    status_id integer REFERENCES match_statuses NOT NULL DEFAULT (
-      SELECT
-        id
-      FROM
-        match_statuses
-      WHERE
-        slug = 'pending'
-    ),
+    status_id integer REFERENCES match_statuses NOT NULL DEFAULT 1,
     created_at timestamptz DEFAULT now (),
     deleted_at timestamptz,
     CHECK (user1_id < user2_id)
@@ -202,74 +195,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER update_user_last_active_on_message AFTER INSERT ON chat_messages FOR EACH ROW EXECUTE FUNCTION update_user_last_active ();
-
--- Enable Row Level Security
-ALTER TABLE spaces ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE users ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE interest_categories ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE interests ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE user_interests ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE chats ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE chat_participants ENABLE ROW LEVEL SECURITY;
-
-ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
-
--- Create RLS policies
-CREATE POLICY "Users can view their own data" ON users FOR
-SELECT
-  USING (auth.uid () = id);
-
-CREATE POLICY "Users can update their own data" ON users FOR
-UPDATE USING (auth.uid () = id);
-
-CREATE POLICY "Users can view messages in their chats" ON chat_messages FOR
-SELECT
-  USING (
-    EXISTS (
-      SELECTf
-        1
-      FROM
-        chat_participants
-      WHERE
-        chat_id = chat_messages.chat_id
-        AND user_id = auth.uid ()
-    )
-  );
-
-CREATE POLICY "Users can insert messages in their chats" ON chat_messages FOR INSERT
-WITH
-  CHECK (
-    EXISTS (
-      SELECT
-        1
-      FROM
-        chat_participants
-      WHERE
-        chat_id = chat_messages.chat_id
-        AND user_id = auth.uid ()
-    )
-  );
-
-CREATE POLICY "Users can view their matches" ON matches FOR
-SELECT
-  USING (
-    auth.uid () = user1_id
-    OR auth.uid () = user2_id
-  );
-
-CREATE POLICY "Users can view their interests" ON user_interests FOR
-SELECT
-  USING (auth.uid () = user_id);
-
-CREATE POLICY "Users can manage their interests" ON user_interests FOR ALL USING (auth.uid () = user_id);
 
 -- Set up realtime for messages
 ALTER TABLE chat_messages REPLICA IDENTITY FULL;

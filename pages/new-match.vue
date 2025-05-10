@@ -11,46 +11,44 @@
             />
         </div>
 
-        <Dialog
-            v-model:visible="showMatchDialog"
-            modal
-            header="Match trouvé !"
-            :closable="true"
-            :style="{ width: '400px' }"
-        >
-            <template v-if="matchedUser">
-                <div class="text-center">
-                    <h3 class="text-xl font-semibold mb-2">
-                        {{ matchedUser.username }}
-                    </h3>
-                    <p class="text-gray-600 mb-4">{{ matchedUser.bio }}</p>
-                    <div class="flex flex-wrap gap-2 justify-center mb-4">
-                        <span
-                            v-for="interest in matchedUser.interests"
-                            :key="interest.id"
-                            class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                        >
-                            {{ interest.name || interest.slug }}
-                        </span>
-                    </div>
-                    <div v-if="commonInterests.length" class="mb-2">
-                        <span class="font-bold">Intérêts communs :</span>
-                        <span class="ml-2">{{
-                            commonInterests.join(', ')
-                        }}</span>
-                    </div>
-                </div>
-            </template>
-            <template v-else>
-                <div class="text-center text-gray-600">Aucun match trouvé.</div>
-            </template>
-        </Dialog>
-
         <div v-if="loading || isLoading" class="text-center py-8">
             Chargement des matches en cours...
         </div>
 
-        <div v-else-if="matches.length" class="space-y-6">
+        <!-- New section to display the newly found match -->
+        <div
+            v-if="matchedUser"
+            class="mb-8 bg-green-50 border-l-4 border-green-500 p-6 rounded-lg shadow-md"
+        >
+            <h2 class="text-2xl font-semibold mb-4 text-green-800">
+                Nouveau match trouvé !
+            </h2>
+            <div class="text-center">
+                <h3 class="text-xl font-semibold mb-2">
+                    {{ matchedUser.username }}
+                </h3>
+                <p class="text-gray-600 mb-4">{{ matchedUser.bio }}</p>
+                <div class="flex flex-wrap gap-2 justify-center mb-4">
+                    <span
+                        v-for="interest in matchedUser.interests"
+                        :key="interest.id"
+                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                    >
+                        {{ interest.name || interest.slug }}
+                    </span>
+                </div>
+                <div v-if="commonInterests.length" class="mb-2">
+                    <span class="font-bold">Intérêts communs :</span>
+                    <span class="ml-2">{{ commonInterests.join(', ') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 v-if="matches.length" class="text-2xl font-semibold mb-4">
+            Vos matches actuels
+        </h2>
+
+        <div v-if="matches.length" class="space-y-6">
             <div
                 v-for="match in matches"
                 :key="match.id"
@@ -70,14 +68,14 @@
                             :key="interest.id"
                             class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
                         >
-                            {{ interest.name }}
+                            {{ $t(interest.slug) }}
                         </span>
                     </div>
                 </template>
             </div>
         </div>
 
-        <div v-else class="text-center py-8 text-gray-600">
+        <div v-else-if="!matchedUser" class="text-center py-8 text-gray-600">
             Aucun match en cours trouvé.
         </div>
     </div>
@@ -86,14 +84,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Button from 'primevue/button'
-import Dialog from 'primevue/dialog'
 import { useMatches } from '~/composables/useMatches'
 
 const { user, fetchUser } = useUser()
 const client = useSupabaseClient()
 const loading = ref(true)
 
-const showMatchDialog = ref(false)
 const matchedUser = ref(null)
 const commonInterests = ref([])
 
@@ -128,14 +124,18 @@ const findAndCreateMatch = async () => {
         if (data && data.match && data.match.user2) {
             matchedUser.value = data.match.user2
             commonInterests.value = data.commonInterests
-            showMatchDialog.value = true
+            // Scroll to the match result
+            setTimeout(() => {
+                window.scrollTo({
+                    top: document.querySelector('.bg-green-50').offsetTop,
+                    behavior: 'smooth',
+                })
+            }, 100)
         } else {
             matchedUser.value = null
-            showMatchDialog.value = true
         }
     } catch (err) {
         matchedUser.value = null
-        showMatchDialog.value = true
         console.error('Erreur lors de la recherche de match automatique :', err)
     }
 }

@@ -22,7 +22,7 @@ INSERT INTO
   users (id, space_id, username, bio)
 VALUES
   (
-    'bcbab6c4-182c-41a1-9e3e-5eaa711117b0',
+    '54552ef8-dafe-4f74-9cfd-054ce5d86e3b',
     'c74bc511-e68f-4ce3-95a4-6770024ba172',
     'veerjd',
     'Soli Deo Gloria'
