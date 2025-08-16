@@ -108,7 +108,7 @@ onMounted(async () => {
 const findAndCreateMatch = async () => {
     try {
         // On suppose que l'utilisateur a un champ space_id
-        const spaceId = user.value.space?.id
+        const spaceId = user.value?.space?.id
         if (!spaceId) {
             alert('Aucun espace associé à votre profil.')
             return
