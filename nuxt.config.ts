@@ -85,4 +85,10 @@ export default defineNuxtConfig({
             autoprefixer: {},
         },
     },
+    vite: {
+        // Vite configuration options
+        optimizeDeps: {
+            include: ['jsonwebtoken'],
+        },
+    },
 })

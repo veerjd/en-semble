@@ -11,6 +11,8 @@
         "lint:eslint": "eslint .",
         "lint:prettier": "prettier --check .",
         "format": "prettier --write .",
+        "typecheck": "vue-tsc --noEmit",
+        "clean": "rm -rf .nuxt .output dist node_modules/.cache",
         "generate:types": "supabase gen types typescript --project-id YOUR_PROJECT_ID > database.types.ts"
     },
     "devDependencies": {
