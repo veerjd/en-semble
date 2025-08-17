@@ -1,59 +1,7 @@
 <template>
     <div class="flex flex-col min-h-screen w-full">
         <header class="bg-white shadow-sm dark:bg-slate-700 w-full">
-            <div class="card">
-                <Menubar
-                    :model="menuItems"
-                    :pt="{
-                        root: {
-                            class: 'border-0 border-b border-gray-600 bg-slate-200 dark:bg-slate-900 dark:text-white text-gray-900 rounded-none',
-                        },
-                    }"
-                >
-                    <template #start>
-                        <svg
-                            width="35"
-                            height="40"
-                            viewBox="0 0 35 40"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-8"
-                        >
-                            <path d="..." fill="var(--p-primary-color)" />
-                            <path d="..." fill="var(--p-text-color)" />
-                        </svg>
-                    </template>
-                    <template #item="{ item, props }">
-                        <a
-                            v-ripple
-                            :class="[
-                                'flex items-center gap-2',
-                                { 'text-emphasis': item.url === $route.path },
-                            ]"
-                            v-bind="props.action"
-                            :href="item.to"
-                        >
-                            <i :class="item.icon"></i>
-                            <span>{{ item.label }}</span>
-                        </a>
-                    </template>
-                    <template #end>
-                        <div
-                            class="flex items-center justify-center gap-8 me-12"
-                        >
-                            <a
-                                v-ripple
-                                v-for="setting in settings"
-                                :class="['flex items-center gap-2']"
-                                :href="setting.to"
-                            >
-                                <i :class="setting.icon"></i>
-                                <span>{{ setting.label }}</span>
-                            </a>
-                        </div>
-                    </template>
-                </Menubar>
-            </div>
+            <Navbar />
         </header>
 
         <main class="flex-grow p-4 h-auto w-full">

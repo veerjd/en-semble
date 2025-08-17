@@ -1,8 +1,28 @@
 <template>
     <div class="max-w-2xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8">Your User</h1>
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Your Profile</h1>
+            <div class="flex items-center gap-2">
+                <i class="pi pi-building text-gray-500"></i>
+                <span class="text-gray-600">
+                    {{ currentSpace ? currentSpace.name : 'No Space Selected' }}
+                </span>
+            </div>
+        </div>
 
-        <form @submit.prevent="saveUser" class="p-fluid">
+        <!-- Space Context Warning -->
+        <Message 
+            v-if="!currentSpace" 
+            severity="warn" 
+            class="mb-6"
+        >
+            <template #messageicon>
+                <i class="pi pi-exclamation-triangle"></i>
+            </template>
+            No space is currently selected. Please select a space from the navbar to view and edit your profile for that context.
+        </Message>
+
+        <form @submit.prevent="saveUser" class="p-fluid" :disabled="!currentSpace">
             <div v-if="userLoading || !user" class="mb-4">
                 <Skeleton height="40px" class="mb-2" />
                 <Skeleton height="40px" />
@@ -88,19 +108,75 @@
 
             <Message v-if="error" severity="error" :text="error" class="mb-4" />
             {{ error }}
-            <Button
-                type="submit"
-                label="Save User"
-                class="w-full"
-                :disabled="loading || userLoading"
-            />
+            <div class="flex gap-4">
+                <Button
+                    type="submit"
+                    label="Save Profile"
+                    class="flex-1"
+                    :disabled="loading || userLoading || !currentSpace"
+                />
+                <Button
+                    type="button"
+                    label="Create New Space"
+                    icon="pi pi-plus"
+                    severity="secondary"
+                    @click="showCreateSpaceDialog = true"
+                />
+            </div>
         </form>
+
+        <!-- Create Space Dialog -->
+        <Dialog 
+            v-model:visible="showCreateSpaceDialog" 
+            modal 
+            header="Create New Space" 
+            :style="{ width: '450px' }"
+        >
+            <form @submit.prevent="createNewSpace" class="p-fluid">
+                <div class="field mb-4">
+                    <label for="spaceName" class="font-medium">Space Name</label>
+                    <InputText
+                        id="spaceName"
+                        v-model="newSpaceData.name"
+                        required
+                        placeholder="Enter space name"
+                        class="w-full"
+                    />
+                </div>
+                <div class="field mb-4">
+                    <label for="spaceDescription" class="font-medium">Description (Optional)</label>
+                    <Textarea
+                        id="spaceDescription"
+                        v-model="newSpaceData.description"
+                        placeholder="Enter space description"
+                        rows="3"
+                        class="w-full"
+                    />
+                </div>
+                <div class="flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        label="Cancel"
+                        severity="secondary"
+                        @click="showCreateSpaceDialog = false"
+                    />
+                    <Button
+                        type="submit"
+                        label="Create Space"
+                        :loading="spaceLoading"
+                    />
+                </div>
+            </form>
+        </Dialog>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import Dialog from 'primevue/dialog'
+import Textarea from 'primevue/textarea'
+import Message from 'primevue/message'
 
 const router = useRouter()
 const {
@@ -121,9 +197,21 @@ const {
     getUserInterests,
 } = useInterests()
 
+const {
+    currentSpace,
+    currentSpaceId,
+    createSpace,
+    isLoading: spaceLoading,
+} = useSpaceContext()
+
 const loading = ref(true)
 const error = ref(null)
 const selectedInterests = ref([])
+const showCreateSpaceDialog = ref(false)
+const newSpaceData = reactive({
+    name: '',
+    description: '',
+})
 
 // Initialize with any interests from the user data
 onMounted(async () => {
@@ -160,10 +248,42 @@ const toggleInterest = (interest) => {
     }
 }
 
+const createNewSpace = async () => {
+    try {
+        await createSpace({
+            name: newSpaceData.name,
+            description: newSpaceData.description,
+        })
+        
+        // Reset form and close dialog
+        newSpaceData.name = ''
+        newSpaceData.description = ''
+        showCreateSpaceDialog.value = false
+    } catch (err) {
+        error.value = err.message || 'Failed to create space'
+    }
+}
+
+const loadProfileForCurrentSpace = async () => {
+    if (!currentSpaceId.value || !user.value?.id) return
+    
+    try {
+        // Load user interests for the current space context
+        const userInterests = await fetchUserInterests(user.value.id, currentSpaceId.value)
+        selectedInterests.value = userInterests.map(interest => interest.id)
+    } catch (err) {
+        console.error('Failed to load profile for space:', err)
+    }
+}
+
 const saveUser = async () => {
     try {
         error.value = null
         loading.value = true
+
+        if (!currentSpaceId.value) {
+            throw new Error('No space selected')
+        }
 
         // Update user using the new updateUser method from the composable
         await updateUser({
@@ -172,14 +292,14 @@ const saveUser = async () => {
             bio: user.value.bio,
         })
 
-        // Update user interests using the composable
+        // Update user interests for the current space context
         const success = await replaceUserInterests(
             user.value.id,
             selectedInterests.value,
+            currentSpaceId.value,
         )
 
         if (!success) {
-            // Check if there's a specific error from the interests composable
             if (interestsError.value) {
                 throw interestsError.value
             } else {
@@ -195,4 +315,11 @@ const saveUser = async () => {
         loading.value = false
     }
 }
+
+// Watch for space changes and reload profile data
+watch(currentSpaceId, async (newSpaceId) => {
+    if (newSpaceId) {
+        await loadProfileForCurrentSpace()
+    }
+}, { immediate: true })
 </script>

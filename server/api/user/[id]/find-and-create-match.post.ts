@@ -10,15 +10,20 @@ export default defineEventHandler(async (event) => {
             message: 'User ID et Space ID requis',
         })
     }
+    
+    // findMatch now ensures we only get users not already matched with
     const { user1, user2, commonInterests } = await findMatch(
         event,
         spaceId,
         userId,
     )
+    
+    // Create new match - findMatch guarantees this won't be a duplicate
     const match = await postMatch(event, {
         user1_id: user1.id,
         user2_id: user2.id,
         status_id: 1,
     })
-    return { match, commonInterests }
+    
+    return { match, commonInterests, isExisting: false }
 })

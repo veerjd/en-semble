@@ -1,8 +1,48 @@
 <template>
     <div class="max-w-2xl mx-auto">
-        <h1 class="text-3xl font-bold mb-8">Your Chats</h1>
+        <h1 class="text-3xl font-bold mb-8">Find Your Match</h1>
 
-        <div v-if="loading" class="text-center py-8">Loading chats...</div>
+        <div class="mb-8 text-center">
+            <Button
+                label="Trouver un match automatique"
+                icon="pi pi-search"
+                class="p-button-lg bg-green-600 hover:bg-green-700 text-white"
+                @click="findAndCreateMatch"
+            />
+        </div>
+
+        <!-- New section to display the newly found match -->
+        <div
+            v-if="matchedUser"
+            class="mb-8 bg-green-50 border-l-4 border-green-500 p-6 rounded-lg shadow-md"
+        >
+            <h2 class="text-2xl font-semibold mb-4 text-green-800">
+                Match trouvé !
+            </h2>
+            <div class="text-center">
+                <h3 class="text-xl font-semibold mb-2">
+                    {{ matchedUser.username }}
+                </h3>
+                <p class="text-gray-600 mb-4">{{ matchedUser.bio }}</p>
+                <div class="flex flex-wrap gap-2 justify-center mb-4">
+                    <span
+                        v-for="interest in matchedUser.interests"
+                        :key="interest.id"
+                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                    >
+                        {{ interest.name || interest.slug }}
+                    </span>
+                </div>
+                <div v-if="commonInterests.length" class="mb-2">
+                    <span class="font-bold">Intérêts communs :</span>
+                    <span class="ml-2">{{ commonInterests.join(', ') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="loading || isLoading" class="text-center py-8">
+            Chargement des matches en cours...
+        </div>
 
         <div v-else class="space-y-8">
             <div v-if="pendingChats.length">
@@ -94,8 +134,42 @@
                 </div>
             </div>
 
+            <div v-if="matches.length">
+                <h2 class="text-xl font-semibold mb-4">Vos matches actuels</h2>
+                <div class="space-y-4">
+                    <div
+                        v-for="match in matches"
+                        :key="match.id"
+                        class="bg-slate-700 p-6 rounded-lg shadow"
+                    >
+                        <template v-if="getOtherUser(match)">
+                            <h3 class="text-xl font-semibold text-white">
+                                {{ getOtherUser(match).username }}
+                            </h3>
+                            <p class="text-gray-300 mt-2">
+                                {{ getOtherUser(match).bio }}
+                            </p>
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                <span
+                                    v-for="interest in getOtherUser(match)
+                                        .interests || []"
+                                    :key="interest.id"
+                                    class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                                >
+                                    {{ interest.name || interest.slug }}
+                                </span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
             <div
-                v-if="!pendingChats.length && !activeChats.length"
+                v-if="
+                    !pendingChats.length &&
+                    !activeChats.length &&
+                    !matches.length
+                "
                 class="text-center py-8 text-gray-600"
             >
                 No chats yet. Try finding some people with similar interests!
@@ -105,17 +179,34 @@
 </template>
 
 <script setup>
-const user = useSupabaseUser()
+import Button from 'primevue/button'
+import { useMatches } from '~/composables/useMatches'
+
+const { user, fetchUser } = useUser()
+const supabaseUser = useSupabaseUser()
 const client = useSupabaseClient()
 const loading = ref(true)
 const chats = ref([])
 const unreadCounts = ref({})
 
+const matchedUser = ref(null)
+const commonInterests = ref([])
+
+const { matches, fetchUserMatches, isLoading } = useMatches()
+
 onMounted(async () => {
-    if (user.value) {
+    await fetchUser()
+
+    if (user.value || supabaseUser.value) {
         await loadChats()
         setupRealtimeSubscription()
+
+        if (user.value) {
+            await fetchUserMatches(user.value.id)
+        }
     }
+    loading.value = false
+    isLoading.value = false
 })
 
 onUnmounted(() => {
@@ -130,23 +221,34 @@ const loadChats = async () => {
             .select(
                 `
         *,
-        users!chats_user1_id_fkey (
-          username,
-          bio,
-          user_interests (
-            interests (
-              id,
-              name
+        matches!inner (
+          id,
+          user1_id,
+          user2_id,
+          status:match_statuses (
+            id,
+            name
+          ),
+          user1:users!matches_user1_id_fkey (
+            id,
+            username,
+            bio,
+            user_interests (
+              interests (
+                id,
+                name
+              )
             )
-          )
-        ),
-        users!chats_user2_id_fkey (
-          username,
-          bio,
-          user_interests (
-            interests (
-              id,
-              name
+          ),
+          user2:users!matches_user2_id_fkey (
+            id,
+            username,
+            bio,
+            user_interests (
+              interests (
+                id,
+                name
+              )
             )
           )
         ),
@@ -155,19 +257,30 @@ const loadChats = async () => {
         )
       `,
             )
-            .or(`user1_id.eq.${user.value.id},user2_id.eq.${user.value.id}`)
+            .or(
+                `matches.user1_id.eq.${
+                    (user.value || supabaseUser.value).id
+                },matches.user2_id.eq.${(user.value || supabaseUser.value).id}`,
+            )
 
         chats.value = data
-            ? data.map((match) => ({
-                  ...match,
+            ? data.map((chat) => ({
+                  ...chat,
+                  user1_id: chat.matches.user1_id,
+                  user2_id: chat.matches.user2_id,
+                  status: chat.matches.status?.name || 'unknown',
                   user:
-                      match.user1_id === user.value.id
-                          ? match.users_chats_user2_id_fkey
-                          : match.users_chats_user1_id_fkey,
+                      chat.matches.user1_id ===
+                      (user.value || supabaseUser.value).id
+                          ? chat.matches.user2
+                          : chat.matches.user1,
+                  users_chats_user1_id_fkey: chat.matches.user1,
+                  users_chats_user2_id_fkey: chat.matches.user2,
                   canAccept:
-                      match.user2_id === user.value.id &&
-                      match.status === 'pending',
-                  channel: match.channels[0],
+                      chat.matches.user2_id ===
+                          (user.value || supabaseUser.value).id &&
+                      chat.matches.status?.name === 'pending',
+                  channel: chat.channels[0],
                   unreadCount: 0,
               }))
             : []
@@ -194,7 +307,7 @@ const loadUnreadCounts = async () => {
         const { data } = await client
             .from('messages')
             .select('channel_id, count')
-            .not('user_id', 'eq', user.value.id)
+            .not('user_id', 'eq', (user.value || supabaseUser.value).id)
             .eq('read', false)
             .in('channel_id', channelIds)
             .group('channel_id')
@@ -226,7 +339,7 @@ const setupRealtimeSubscription = () => {
                 event: '*',
                 schema: 'public',
                 table: 'messages',
-                filter: `user_id.neq.${user.value.id}`,
+                filter: `user_id.neq.${(user.value || supabaseUser.value).id}`,
             },
             async (payload) => {
                 // Reload unread counts when a new message arrives
@@ -246,7 +359,7 @@ const setupRealtimeSubscription = () => {
                 event: '*',
                 schema: 'public',
                 table: 'chats',
-                filter: `user1_id.eq.${user.value.id}`,
+                filter: `user1_id.eq.${(user.value || supabaseUser.value).id}`,
             },
             async () => await loadChats(),
         )
@@ -256,7 +369,7 @@ const setupRealtimeSubscription = () => {
                 event: '*',
                 schema: 'public',
                 table: 'chats',
-                filter: `user2_id.eq.${user.value.id}`,
+                filter: `user2_id.eq.${(user.value || supabaseUser.value).id}`,
             },
             async () => await loadChats(),
         )
@@ -306,5 +419,68 @@ const declineMatch = async (matchId) => {
     } catch (error) {
         console.error('Error declining match:', error)
     }
+}
+
+const findAndCreateMatch = async () => {
+    try {
+        // On suppose que l'utilisateur a un champ space_id
+        const spaceId = user.value?.space?.id
+        if (!spaceId) {
+            alert('Aucun espace associé à votre profil.')
+            return
+        }
+        const data = await $fetch(
+            `/api/user/${user.value.id}/find-and-create-match`,
+            {
+                method: 'POST',
+                body: { spaceId },
+            },
+        )
+
+        if (data && data.match && data.match.user2) {
+            matchedUser.value = data.match.user2
+            commonInterests.value = data.commonInterests
+
+            console.log('Nouveau match créé:', data.match)
+
+            // Scroll to the match result
+            setTimeout(() => {
+                const element = document.querySelector('.bg-green-50')
+                if (element) {
+                    window.scrollTo({
+                        top: element.offsetTop,
+                        behavior: 'smooth',
+                    })
+                }
+            }, 100)
+        } else {
+            matchedUser.value = null
+        }
+    } catch (err) {
+        matchedUser.value = null
+        console.error('Erreur lors de la recherche de match automatique :', err)
+
+        // Show user-friendly error messages
+        if (err.data?.message?.includes('Aucun utilisateur disponible')) {
+            alert(
+                'Vous avez déjà été associé avec tous les utilisateurs disponibles dans votre espace.',
+            )
+        } else if (
+            err.data?.message?.includes(
+                'Aucun utilisateur avec des intérêts communs',
+            )
+        ) {
+            alert(
+                'Aucun utilisateur avec des intérêts communs trouvé parmi les utilisateurs disponibles.',
+            )
+        } else {
+            alert('Erreur lors de la recherche de match. Veuillez réessayer.')
+        }
+    }
+}
+
+const getOtherUser = (match) => {
+    if (!user.value) return null
+    return match.user1?.id === user.value.id ? match.user2 : match.user1
 }
 </script>
