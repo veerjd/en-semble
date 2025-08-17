@@ -5,6 +5,7 @@ export interface MatchDTO {
     user1: UserDTO
     user2: UserDTO
     status_id: number
+    status?: string
     created_at?: string
 }
 

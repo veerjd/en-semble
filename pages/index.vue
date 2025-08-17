@@ -143,12 +143,29 @@
                         class="bg-slate-700 p-6 rounded-lg shadow"
                     >
                         <template v-if="getOtherUser(match)">
-                            <h3 class="text-xl font-semibold text-white">
-                                {{ getOtherUser(match).username }}
-                            </h3>
-                            <p class="text-gray-300 mt-2">
-                                {{ getOtherUser(match).bio }}
-                            </p>
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h3 class="text-xl font-semibold text-white">
+                                        {{ getOtherUser(match).username }}
+                                    </h3>
+                                    <p class="text-gray-300 mt-2">
+                                        {{ getOtherUser(match).bio }}
+                                    </p>
+                                </div>
+                                <div class="ml-4">
+                                    <span 
+                                        :class="{
+                                            'bg-yellow-100 text-yellow-800': match.status === 'pending',
+                                            'bg-green-100 text-green-800': match.status === 'accepted',
+                                            'bg-red-100 text-red-800': match.status === 'rejected',
+                                            'bg-gray-100 text-gray-800': match.status === 'expired' || !match.status
+                                        }"
+                                        class="px-3 py-1 rounded-full text-sm font-medium capitalize"
+                                    >
+                                        {{ match.status || 'unknown' }}
+                                    </span>
+                                </div>
+                            </div>
                             <div class="mt-4 flex flex-wrap gap-2">
                                 <span
                                     v-for="interest in getOtherUser(match)
@@ -193,20 +210,35 @@ const matchedUser = ref(null)
 const commonInterests = ref([])
 
 const { matches, fetchUserMatches, isLoading } = useMatches()
+const { currentSpaceId, availableSpaces, initializeSpaceContext } = useSpaceContext()
 
 onMounted(async () => {
-    await fetchUser()
+    try {
+        // 1. First, get the authenticated user
+        await fetchUser()
+        
+        // 2. Initialize space context (depends on user being authenticated)
+        await initializeSpaceContext()
 
-    if (user.value || supabaseUser.value) {
-        await loadChats()
-        setupRealtimeSubscription()
-
-        if (user.value) {
-            await fetchUserMatches(user.value.id)
+        // 3. Only proceed if we have a user (either from useUser or Supabase)
+        const currentUser = user.value || supabaseUser.value
+        if (currentUser) {
+            // 4. Load chats and matches in parallel since they're independent
+            const [_, __] = await Promise.all([
+                loadChats(),
+                user.value ? fetchUserMatches(user.value.id) : Promise.resolve()
+            ])
+            
+            // 5. Set up real-time subscriptions after data is loaded
+            setupRealtimeSubscription()
         }
+    } catch (error) {
+        console.error('Error during component initialization:', error)
+    } finally {
+        // Only set loading to false after everything is done (or failed)
+        loading.value = false
+        isLoading.value = false
     }
-    loading.value = false
-    isLoading.value = false
 })
 
 onUnmounted(() => {
@@ -215,6 +247,13 @@ onUnmounted(() => {
 })
 
 const loadChats = async () => {
+    // Use consistent user reference
+    const currentUser = user.value || supabaseUser.value
+    if (!currentUser) {
+        console.warn('No authenticated user found for loadChats')
+        return
+    }
+
     try {
         const { data } = await client
             .from('chats')
@@ -227,7 +266,7 @@ const loadChats = async () => {
           user2_id,
           status:match_statuses (
             id,
-            name
+            slug
           ),
           user1:users!matches_user1_id_fkey (
             id,
@@ -258,9 +297,7 @@ const loadChats = async () => {
       `,
             )
             .or(
-                `matches.user1_id.eq.${
-                    (user.value || supabaseUser.value).id
-                },matches.user2_id.eq.${(user.value || supabaseUser.value).id}`,
+                `matches.user1_id.eq.${currentUser.id},matches.user2_id.eq.${currentUser.id}`,
             )
 
         chats.value = data
@@ -268,18 +305,16 @@ const loadChats = async () => {
                   ...chat,
                   user1_id: chat.matches.user1_id,
                   user2_id: chat.matches.user2_id,
-                  status: chat.matches.status?.name || 'unknown',
+                  status: chat.matches.status?.slug || 'unknown',
                   user:
-                      chat.matches.user1_id ===
-                      (user.value || supabaseUser.value).id
+                      chat.matches.user1_id === currentUser.id
                           ? chat.matches.user2
                           : chat.matches.user1,
                   users_chats_user1_id_fkey: chat.matches.user1,
                   users_chats_user2_id_fkey: chat.matches.user2,
                   canAccept:
-                      chat.matches.user2_id ===
-                          (user.value || supabaseUser.value).id &&
-                      chat.matches.status?.name === 'pending',
+                      chat.matches.user2_id === currentUser.id &&
+                      chat.matches.status?.slug === 'pending',
                   channel: chat.channels[0],
                   unreadCount: 0,
               }))
@@ -294,7 +329,8 @@ const loadChats = async () => {
 }
 
 const loadUnreadCounts = async () => {
-    if (!chats.value || chats.value.length === 0) return
+    const currentUser = user.value || supabaseUser.value
+    if (!currentUser || !chats.value || chats.value.length === 0) return
 
     // Get channel IDs
     const channelIds = chats.value
@@ -307,7 +343,7 @@ const loadUnreadCounts = async () => {
         const { data } = await client
             .from('messages')
             .select('channel_id, count')
-            .not('user_id', 'eq', (user.value || supabaseUser.value).id)
+            .not('user_id', 'eq', currentUser.id)
             .eq('read', false)
             .in('channel_id', channelIds)
             .group('channel_id')
@@ -328,6 +364,12 @@ const loadUnreadCounts = async () => {
 }
 
 const setupRealtimeSubscription = () => {
+    const currentUser = user.value || supabaseUser.value
+    if (!currentUser) {
+        console.warn('No authenticated user found for setupRealtimeSubscription')
+        return
+    }
+
     const supabase = useSupabaseClient()
 
     // Subscribe to new messages
@@ -339,7 +381,7 @@ const setupRealtimeSubscription = () => {
                 event: '*',
                 schema: 'public',
                 table: 'messages',
-                filter: `user_id.neq.${(user.value || supabaseUser.value).id}`,
+                filter: `user_id.neq.${currentUser.id}`,
             },
             async (payload) => {
                 // Reload unread counts when a new message arrives
@@ -359,7 +401,7 @@ const setupRealtimeSubscription = () => {
                 event: '*',
                 schema: 'public',
                 table: 'chats',
-                filter: `user1_id.eq.${(user.value || supabaseUser.value).id}`,
+                filter: `user1_id.eq.${currentUser.id}`,
             },
             async () => await loadChats(),
         )
@@ -369,7 +411,7 @@ const setupRealtimeSubscription = () => {
                 event: '*',
                 schema: 'public',
                 table: 'chats',
-                filter: `user2_id.eq.${(user.value || supabaseUser.value).id}`,
+                filter: `user2_id.eq.${currentUser.id}`,
             },
             async () => await loadChats(),
         )
@@ -423,8 +465,14 @@ const declineMatch = async (matchId) => {
 
 const findAndCreateMatch = async () => {
     try {
-        // On suppose que l'utilisateur a un champ space_id
-        const spaceId = user.value?.space?.id
+        // Use space context to get current space
+        console.log('user.value:', user.value)
+        console.log('user.value?.space:', user.value?.space)
+        console.log('currentSpaceId:', currentSpaceId.value)
+        console.log('availableSpaces:', availableSpaces.value)
+        
+        // Try to get space ID from space context first, then fallback to user space
+        const spaceId = currentSpaceId.value || user.value?.space?.id
         if (!spaceId) {
             alert('Aucun espace associé à votre profil.')
             return

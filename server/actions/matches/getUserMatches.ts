@@ -43,12 +43,24 @@ export const getUserMatches = async (
         throw createError({ statusCode: 500, message: error.message })
     }
 
+    // Helper function to map status_id to status name
+    const getStatusName = (statusId: number): string => {
+        switch (statusId) {
+            case 1: return 'pending'
+            case 2: return 'accepted'
+            case 3: return 'rejected'
+            case 4: return 'expired'
+            default: return 'unknown'
+        }
+    }
+
     // Transform data to DTOs
     const matches: MatchDTO[] = data.map((match: any) => ({
         id: match.id,
         user1: match.user1,
         user2: match.user2,
         status_id: match.status_id,
+        status: getStatusName(match.status_id),
         created_at: match.created_at,
     }))
 
