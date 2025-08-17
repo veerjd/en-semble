@@ -32,7 +32,7 @@ export function useSpaceContext() {
         try {
             // Use $fetch for client-side only to avoid SSR auth issues
             const data = await $fetch<SpaceDTO[]>('/api/user/spaces')
-            
+
             console.log('$fetch result - data:', data)
 
             state.value.availableSpaces = data || []
@@ -44,7 +44,10 @@ export function useSpaceContext() {
                 state.value.availableSpaces.length > 0
             ) {
                 state.value.currentSpaceId = state.value.availableSpaces[0].id
-                console.log('Set currentSpaceId to:', state.value.currentSpaceId)
+                console.log(
+                    'Set currentSpaceId to:',
+                    state.value.currentSpaceId,
+                )
             }
         } catch (err) {
             state.value.error = err
@@ -82,13 +85,16 @@ export function useSpaceContext() {
 
     const initializeSpaceContext = async () => {
         console.log('initializeSpaceContext called')
-        
+
         // Try to restore from localStorage first
         if (process.client) {
             const storedSpaceId = localStorage.getItem('selectedSpaceId')
             if (storedSpaceId) {
                 state.value.currentSpaceId = storedSpaceId
-                console.log('Restored currentSpaceId from localStorage:', storedSpaceId)
+                console.log(
+                    'Restored currentSpaceId from localStorage:',
+                    storedSpaceId,
+                )
             }
         }
 

@@ -145,25 +145,61 @@
                         <template v-if="getOtherUser(match)">
                             <div class="flex justify-between items-start">
                                 <div class="flex-1">
-                                    <h3 class="text-xl font-semibold text-white">
+                                    <h3
+                                        class="text-xl font-semibold text-white"
+                                    >
                                         {{ getOtherUser(match).username }}
                                     </h3>
                                     <p class="text-gray-300 mt-2">
                                         {{ getOtherUser(match).bio }}
                                     </p>
                                 </div>
-                                <div class="ml-4">
-                                    <span 
+                                <div class="ml-4 flex items-center gap-2">
+                                    <span
                                         :class="{
-                                            'bg-yellow-100 text-yellow-800': match.status === 'pending',
-                                            'bg-green-100 text-green-800': match.status === 'accepted',
-                                            'bg-red-100 text-red-800': match.status === 'rejected',
-                                            'bg-gray-100 text-gray-800': match.status === 'expired' || !match.status
+                                            'bg-yellow-100 text-yellow-800':
+                                                match.status === 'pending',
+                                            'bg-green-100 text-green-800':
+                                                match.status === 'accepted',
+                                            'bg-red-100 text-red-800':
+                                                match.status === 'rejected',
+                                            'bg-gray-100 text-gray-800':
+                                                match.status === 'expired' ||
+                                                !match.status,
                                         }"
                                         class="px-3 py-1 rounded-full text-sm font-medium capitalize"
                                     >
                                         {{ match.status || 'unknown' }}
                                     </span>
+
+                                    <!-- Accept/Reject buttons for pending matches -->
+                                    <div
+                                        v-if="match.status === 'pending'"
+                                        class="flex gap-2"
+                                    >
+                                        <button
+                                            @click="acceptMatch(match.id)"
+                                            :disabled="
+                                                isProcessingMatch === match.id
+                                            "
+                                            class="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {{
+                                                isProcessingMatch === match.id
+                                                    ? 'Processing...'
+                                                    : 'Accept'
+                                            }}
+                                        </button>
+                                        <button
+                                            @click="rejectMatch(match.id)"
+                                            :disabled="
+                                                isProcessingMatch === match.id
+                                            "
+                                            class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            Reject
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mt-4 flex flex-wrap gap-2">
@@ -208,15 +244,18 @@ const unreadCounts = ref({})
 
 const matchedUser = ref(null)
 const commonInterests = ref([])
+const isProcessingMatch = ref(null)
 
 const { matches, fetchUserMatches, isLoading } = useMatches()
-const { currentSpaceId, availableSpaces, initializeSpaceContext } = useSpaceContext()
+const { currentSpaceId, availableSpaces, initializeSpaceContext } =
+    useSpaceContext()
+const router = useRouter()
 
 onMounted(async () => {
     try {
         // 1. First, get the authenticated user
         await fetchUser()
-        
+
         // 2. Initialize space context (depends on user being authenticated)
         await initializeSpaceContext()
 
@@ -224,11 +263,15 @@ onMounted(async () => {
         const currentUser = user.value || supabaseUser.value
         if (currentUser) {
             // 4. Load chats and matches in parallel since they're independent
+            // Use supabaseUser.id as the authoritative user ID (UUID)
+            const userId = supabaseUser.value?.id || user.value?.id
             const [_, __] = await Promise.all([
                 loadChats(),
-                user.value ? fetchUserMatches(user.value.id) : Promise.resolve()
+                userId
+                    ? fetchUserMatches(userId)
+                    : Promise.resolve(),
             ])
-            
+
             // 5. Set up real-time subscriptions after data is loaded
             setupRealtimeSubscription()
         }
@@ -366,7 +409,9 @@ const loadUnreadCounts = async () => {
 const setupRealtimeSubscription = () => {
     const currentUser = user.value || supabaseUser.value
     if (!currentUser) {
-        console.warn('No authenticated user found for setupRealtimeSubscription')
+        console.warn(
+            'No authenticated user found for setupRealtimeSubscription',
+        )
         return
     }
 
@@ -440,29 +485,6 @@ const activeChats = computed(() =>
     chats.value.filter((match) => match.status === 'accepted'),
 )
 
-const acceptMatch = async (matchId) => {
-    try {
-        await client
-            .from('chats')
-            .update({ status: 'accepted' })
-            .eq('id', matchId)
-
-        await loadChats()
-    } catch (error) {
-        console.error('Error accepting match:', error)
-    }
-}
-
-const declineMatch = async (matchId) => {
-    try {
-        await client.from('chats').delete().eq('id', matchId)
-
-        await loadChats()
-    } catch (error) {
-        console.error('Error declining match:', error)
-    }
-}
-
 const findAndCreateMatch = async () => {
     try {
         // Use space context to get current space
@@ -470,15 +492,20 @@ const findAndCreateMatch = async () => {
         console.log('user.value?.space:', user.value?.space)
         console.log('currentSpaceId:', currentSpaceId.value)
         console.log('availableSpaces:', availableSpaces.value)
-        
+
         // Try to get space ID from space context first, then fallback to user space
         const spaceId = currentSpaceId.value || user.value?.space?.id
         if (!spaceId) {
             alert('Aucun espace associé à votre profil.')
             return
         }
+        const userId = supabaseUser.value?.id || user.value?.id
+        if (!userId) {
+            alert('User not authenticated.')
+            return
+        }
         const data = await $fetch(
-            `/api/user/${user.value.id}/find-and-create-match`,
+            `/api/user/${userId}/find-and-create-match`,
             {
                 method: 'POST',
                 body: { spaceId },
@@ -528,7 +555,61 @@ const findAndCreateMatch = async () => {
 }
 
 const getOtherUser = (match) => {
-    if (!user.value) return null
-    return match.user1?.id === user.value.id ? match.user2 : match.user1
+    const currentUser = user.value || supabaseUser.value
+    if (!currentUser) return null
+    const userId = supabaseUser.value?.id || user.value?.id
+    return match.user1?.id === userId ? match.user2 : match.user1
+}
+
+const acceptMatch = async (matchId) => {
+    isProcessingMatch.value = matchId
+    try {
+        const response = await $fetch(`/api/match/${matchId}/accept`, {
+            method: 'POST',
+        })
+
+        console.log('Match accepted:', response)
+
+        // Refresh matches to show updated status
+        const userId = supabaseUser.value?.id || user.value?.id
+        if (userId) {
+            await fetchUserMatches(userId)
+        }
+
+        // Refresh chats to show new chat
+        await loadChats()
+
+        // Navigate to the chat
+        if (response.chatId) {
+            await router.push(`/chat/${response.chatId}`)
+        }
+    } catch (error) {
+        console.error('Error accepting match:', error)
+        alert('Failed to accept match. Please try again.')
+    } finally {
+        isProcessingMatch.value = null
+    }
+}
+
+const rejectMatch = async (matchId) => {
+    isProcessingMatch.value = matchId
+    try {
+        await $fetch(`/api/match/${matchId}/reject`, {
+            method: 'POST',
+        })
+
+        console.log('Match rejected')
+
+        // Refresh matches to show updated status
+        const userId = supabaseUser.value?.id || user.value?.id
+        if (userId) {
+            await fetchUserMatches(userId)
+        }
+    } catch (error) {
+        console.error('Error rejecting match:', error)
+        alert('Failed to reject match. Please try again.')
+    } finally {
+        isProcessingMatch.value = null
+    }
 }
 </script>

@@ -8,6 +8,6 @@ export default defineEventHandler(async (event) => {
             message: 'User ID is required',
         })
     }
-    
+
     return await getOneUser(event, id)
 })

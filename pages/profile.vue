@@ -11,18 +11,19 @@
         </div>
 
         <!-- Space Context Warning -->
-        <Message 
-            v-if="!currentSpace" 
-            severity="warn" 
-            class="mb-6"
-        >
+        <Message v-if="!currentSpace" severity="warn" class="mb-6">
             <template #messageicon>
                 <i class="pi pi-exclamation-triangle"></i>
             </template>
-            No space is currently selected. Please select a space from the navbar to view and edit your profile for that context.
+            No space is currently selected. Please select a space from the
+            navbar to view and edit your profile for that context.
         </Message>
 
-        <form @submit.prevent="saveUser" class="p-fluid" :disabled="!currentSpace">
+        <form
+            @submit.prevent="saveUser"
+            class="p-fluid"
+            :disabled="!currentSpace"
+        >
             <div v-if="userLoading || !user" class="mb-4">
                 <Skeleton height="40px" class="mb-2" />
                 <Skeleton height="40px" />
@@ -126,15 +127,17 @@
         </form>
 
         <!-- Create Space Dialog -->
-        <Dialog 
-            v-model:visible="showCreateSpaceDialog" 
-            modal 
-            header="Create New Space" 
+        <Dialog
+            v-model:visible="showCreateSpaceDialog"
+            modal
+            header="Create New Space"
             :style="{ width: '450px' }"
         >
             <form @submit.prevent="createNewSpace" class="p-fluid">
                 <div class="field mb-4">
-                    <label for="spaceName" class="font-medium">Space Name</label>
+                    <label for="spaceName" class="font-medium"
+                        >Space Name</label
+                    >
                     <InputText
                         id="spaceName"
                         v-model="newSpaceData.name"
@@ -144,7 +147,9 @@
                     />
                 </div>
                 <div class="field mb-4">
-                    <label for="spaceDescription" class="font-medium">Description (Optional)</label>
+                    <label for="spaceDescription" class="font-medium"
+                        >Description (Optional)</label
+                    >
                     <Textarea
                         id="spaceDescription"
                         v-model="newSpaceData.description"
@@ -254,7 +259,7 @@ const createNewSpace = async () => {
             name: newSpaceData.name,
             description: newSpaceData.description,
         })
-        
+
         // Reset form and close dialog
         newSpaceData.name = ''
         newSpaceData.description = ''
@@ -266,11 +271,14 @@ const createNewSpace = async () => {
 
 const loadProfileForCurrentSpace = async () => {
     if (!currentSpaceId.value || !user.value?.id) return
-    
+
     try {
         // Load user interests for the current space context
-        const userInterests = await fetchUserInterests(user.value.id, currentSpaceId.value)
-        selectedInterests.value = userInterests.map(interest => interest.id)
+        const userInterests = await fetchUserInterests(
+            user.value.id,
+            currentSpaceId.value,
+        )
+        selectedInterests.value = userInterests.map((interest) => interest.id)
     } catch (err) {
         console.error('Failed to load profile for space:', err)
     }
@@ -317,9 +325,13 @@ const saveUser = async () => {
 }
 
 // Watch for space changes and reload profile data
-watch(currentSpaceId, async (newSpaceId) => {
-    if (newSpaceId) {
-        await loadProfileForCurrentSpace()
-    }
-}, { immediate: true })
+watch(
+    currentSpaceId,
+    async (newSpaceId) => {
+        if (newSpaceId) {
+            await loadProfileForCurrentSpace()
+        }
+    },
+    { immediate: true },
+)
 </script>

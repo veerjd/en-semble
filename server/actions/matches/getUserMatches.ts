@@ -46,11 +46,16 @@ export const getUserMatches = async (
     // Helper function to map status_id to status name
     const getStatusName = (statusId: number): string => {
         switch (statusId) {
-            case 1: return 'pending'
-            case 2: return 'accepted'
-            case 3: return 'rejected'
-            case 4: return 'expired'
-            default: return 'unknown'
+            case 1:
+                return 'pending'
+            case 2:
+                return 'accepted'
+            case 3:
+                return 'rejected'
+            case 4:
+                return 'expired'
+            default:
+                return 'unknown'
         }
     }
 

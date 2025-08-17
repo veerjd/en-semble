@@ -43,7 +43,7 @@ export const findMatch = async (
 
     // Extract IDs of users already matched with
     const matchedUserIds = new Set<string>()
-    existingMatches?.forEach(match => {
+    existingMatches?.forEach((match) => {
         if (match.user1_id === userId) {
             matchedUserIds.add(match.user2_id)
         } else {
@@ -52,8 +52,8 @@ export const findMatch = async (
     })
 
     // Filter out already matched users and the current user
-    const availableUsers = users.filter(user => 
-        user.id !== userId && !matchedUserIds.has(user.id)
+    const availableUsers = users.filter(
+        (user) => user.id !== userId && !matchedUserIds.has(user.id),
     )
 
     // Check if there are any available users to match with
@@ -82,7 +82,8 @@ export const findMatch = async (
     if (!bestUser) {
         throw createError({
             statusCode: 404,
-            message: 'Aucun utilisateur avec des intérêts communs trouvé parmi les utilisateurs disponibles',
+            message:
+                'Aucun utilisateur avec des intérêts communs trouvé parmi les utilisateurs disponibles',
         })
     }
 

@@ -15,21 +15,23 @@ export const getUserSpaces = async (event: any): Promise<SpaceDTO[]> => {
     // Get the user's space by joining users and spaces tables
     const { data, error } = await supabase
         .from('users')
-        .select(`
+        .select(
+            `
             space:spaces (
                 id,
                 name,
                 description,
                 created_at
             )
-        `)
+        `,
+        )
         .eq('id', user.id)
         .single()
 
     if (error) {
-        throw createError({ 
-            statusCode: 500, 
-            message: `Failed to get user space: ${error.message}` 
+        throw createError({
+            statusCode: 500,
+            message: `Failed to get user space: ${error.message}`,
         })
     }
 

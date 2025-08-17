@@ -3,7 +3,7 @@ import type { DeleteUserDTO, SoftDeleteUserDTO } from '~/shared/types/UserDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')
-  const query = getQuery(event)
+    const query = getQuery(event)
     const isHardDelete = query?.hard === 'true'
 
     if (!id) {
