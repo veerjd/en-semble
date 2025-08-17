@@ -34,6 +34,9 @@ export const getUserMatches = async (
             space:spaces (id, name, description),
             last_active,
             created_at
+        ),
+        chats (
+            id
         )
     `,
         )
@@ -67,6 +70,7 @@ export const getUserMatches = async (
         status_id: match.status_id,
         status: getStatusName(match.status_id),
         created_at: match.created_at,
+        chat: match.chats?.[0] || null,
     }))
 
     return matches

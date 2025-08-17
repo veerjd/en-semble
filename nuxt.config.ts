@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     // debug: true,
     app: {
         head: {
-            title: 'MachinOps',
+            title: 'En-Semble',
         },
     },
     vue: {

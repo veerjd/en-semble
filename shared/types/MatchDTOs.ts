@@ -7,6 +7,7 @@ export interface MatchDTO {
     status_id: number
     status?: string
     created_at?: string
+    chat?: { id: string } | null
 }
 
 export interface PostMatchDTO {

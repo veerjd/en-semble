@@ -200,6 +200,20 @@
                                             Reject
                                         </button>
                                     </div>
+
+                                    <!-- Chat button for accepted matches -->
+                                    <div
+                                        v-if="match.status === 'accepted' && match.chat"
+                                        class="flex gap-2"
+                                    >
+                                        <NuxtLink
+                                            :to="`/chat/${match.chat.id}`"
+                                            class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 flex items-center gap-1"
+                                        >
+                                            <i class="pi pi-comments"></i>
+                                            Chat
+                                        </NuxtLink>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mt-4 flex flex-wrap gap-2">
