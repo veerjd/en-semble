@@ -2,234 +2,54 @@
     <div class="max-w-2xl mx-auto">
         <h1 class="text-3xl font-bold mb-8">Find Your Match</h1>
 
-        <div class="mb-8 text-center">
-            <Button
-                label="Trouver un match automatique"
-                icon="pi pi-search"
-                class="p-button-lg bg-green-600 hover:bg-green-700 text-white"
-                @click="findAndCreateMatch"
-            />
-        </div>
-
-        <!-- New section to display the newly found match -->
-        <div
-            v-if="matchedUser"
-            class="mb-8 bg-green-50 border-l-4 border-green-500 p-6 rounded-lg shadow-md"
-        >
-            <h2 class="text-2xl font-semibold mb-4 text-green-800">
-                Match trouvé !
-            </h2>
-            <div class="text-center">
-                <h3 class="text-xl font-semibold mb-2">
-                    {{ matchedUser.username }}
-                </h3>
-                <p class="text-gray-600 mb-4">{{ matchedUser.bio }}</p>
-                <div class="flex flex-wrap gap-2 justify-center mb-4">
-                    <span
-                        v-for="interest in matchedUser.interests"
-                        :key="interest.id"
-                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                    >
-                        {{ interest.name || interest.slug }}
-                    </span>
-                </div>
-                <div v-if="commonInterests.length" class="mb-2">
-                    <span class="font-bold">Intérêts communs :</span>
-                    <span class="ml-2">{{ commonInterests.join(', ') }}</span>
-                </div>
-            </div>
-        </div>
+        <MatchFinder
+            :matched-user="matchedUser"
+            :common-interests="commonInterests"
+            :is-loading="isLoading"
+            @find-match="findAndCreateMatch"
+        />
 
         <div v-if="loading || isLoading" class="text-center py-8">
             Chargement des matches en cours...
         </div>
 
         <div v-else class="space-y-8">
+            <!-- Pending Chats Section -->
             <div v-if="pendingChats.length">
                 <h2 class="text-xl font-semibold mb-4">Pending Chats</h2>
                 <div class="space-y-4">
-                    <div
+                    <ChatCard
                         v-for="match in pendingChats"
                         :key="match.id"
-                        class="bg-white p-6 rounded-lg shadow"
-                    >
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3 class="text-lg font-medium">
-                                    {{ match.user.username }}
-                                </h3>
-                                <p class="text-gray-600 mt-1">
-                                    {{ match.user.bio }}
-                                </p>
-                                <div class="mt-2 flex flex-wrap gap-2">
-                                    <span
-                                        v-for="interest in match.user.interests"
-                                        :key="interest.id"
-                                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                                    >
-                                        {{ interest.name }}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="flex gap-2" v-if="match.canAccept">
-                                <button
-                                    @click="acceptMatch(match.id)"
-                                    class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-                                >
-                                    Accept
-                                </button>
-                                <button
-                                    @click="declineMatch(match.id)"
-                                    class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                                >
-                                    Decline
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                        :chat="match"
+                        @accept="acceptMatch"
+                        @decline="declineMatch"
+                    />
                 </div>
             </div>
 
+            <!-- Active Chats Section -->
             <div v-if="activeChats.length">
                 <h2 class="text-xl font-semibold mb-4">Active Chats</h2>
                 <div class="space-y-4">
-                    <div
+                    <ChatCard
                         v-for="match in activeChats"
                         :key="match.id"
-                        class="bg-white p-6 rounded-lg shadow"
-                    >
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3 class="text-lg font-medium">
-                                    {{ match.user.username }}
-                                </h3>
-                                <p class="text-gray-600 mt-1">
-                                    {{ match.user.bio }}
-                                </p>
-                                <div class="mt-2 flex flex-wrap gap-2">
-                                    <span
-                                        v-for="interest in match.user.interests"
-                                        :key="interest.id"
-                                        class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                                    >
-                                        {{ interest.name }}
-                                    </span>
-                                </div>
-                            </div>
-                            <NuxtLink
-                                :to="`/chat/${match.channel?.id}`"
-                                v-if="match.channel"
-                                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
-                            >
-                                <span class="mr-2">Chat</span>
-                                <span
-                                    v-if="match.unreadCount"
-                                    class="bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
-                                >
-                                    {{ match.unreadCount }}
-                                </span>
-                            </NuxtLink>
-                        </div>
-                    </div>
+                        :chat="match"
+                    />
                 </div>
             </div>
 
-            <div v-if="matches.length">
-                <h2 class="text-xl font-semibold mb-4">Vos matches actuels</h2>
-                <div class="space-y-4">
-                    <div
-                        v-for="match in matches"
-                        :key="match.id"
-                        class="bg-slate-700 p-6 rounded-lg shadow"
-                    >
-                        <template v-if="getOtherUser(match)">
-                            <div class="flex justify-between items-start">
-                                <div class="flex-1">
-                                    <h3
-                                        class="text-xl font-semibold text-white"
-                                    >
-                                        {{ getOtherUser(match).username }}
-                                    </h3>
-                                    <p class="text-gray-300 mt-2">
-                                        {{ getOtherUser(match).bio }}
-                                    </p>
-                                </div>
-                                <div class="ml-4 flex items-center gap-2">
-                                    <span
-                                        :class="{
-                                            'bg-yellow-100 text-yellow-800':
-                                                match.status === 'pending',
-                                            'bg-green-100 text-green-800':
-                                                match.status === 'accepted',
-                                            'bg-red-100 text-red-800':
-                                                match.status === 'rejected',
-                                            'bg-gray-100 text-gray-800':
-                                                match.status === 'expired' ||
-                                                !match.status,
-                                        }"
-                                        class="px-3 py-1 rounded-full text-sm font-medium capitalize"
-                                    >
-                                        {{ match.status || 'unknown' }}
-                                    </span>
-
-                                    <!-- Accept/Reject buttons for pending matches -->
-                                    <div
-                                        v-if="match.status === 'pending'"
-                                        class="flex gap-2"
-                                    >
-                                        <button
-                                            @click="acceptMatch(match.id)"
-                                            :disabled="
-                                                isProcessingMatch === match.id
-                                            "
-                                            class="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            {{
-                                                isProcessingMatch === match.id
-                                                    ? 'Processing...'
-                                                    : 'Accept'
-                                            }}
-                                        </button>
-                                        <button
-                                            @click="rejectMatch(match.id)"
-                                            :disabled="
-                                                isProcessingMatch === match.id
-                                            "
-                                            class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        >
-                                            Reject
-                                        </button>
-                                    </div>
-
-                                    <!-- Chat button for accepted matches -->
-                                    <div
-                                        v-if="match.status === 'accepted' && match.chat"
-                                        class="flex gap-2"
-                                    >
-                                        <NuxtLink
-                                            :to="`/chat/${match.chat.id}`"
-                                            class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 flex items-center gap-1"
-                                        >
-                                            <i class="pi pi-comments"></i>
-                                            Chat
-                                        </NuxtLink>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-4 flex flex-wrap gap-2">
-                                <span
-                                    v-for="interest in getOtherUser(match)
-                                        .interests || []"
-                                    :key="interest.id"
-                                    class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                                >
-                                    {{ interest.name || interest.slug }}
-                                </span>
-                            </div>
-                        </template>
-                    </div>
-                </div>
-            </div>
+            <!-- User Matches Section -->
+            <MatchesSection
+                v-if="matches.length"
+                :matches="matches"
+                :current-user-id="currentUserId"
+                :is-processing-match="isProcessingMatch"
+                title="Vos matches actuels"
+                @accept="acceptMatch"
+                @reject="rejectMatch"
+            />
 
             <div
                 v-if="
@@ -248,6 +68,9 @@
 <script setup>
 import Button from 'primevue/button'
 import { useMatches } from '~/composables/useMatches'
+import MatchFinder from '~/components/MatchFinder.vue'
+import ChatCard from '~/components/ChatCard.vue'
+import MatchesSection from '~/components/MatchesSection.vue'
 
 const { user, fetchUser } = useUser()
 const supabaseUser = useSupabaseUser()
@@ -264,6 +87,9 @@ const { matches, fetchUserMatches, isLoading } = useMatches()
 const { currentSpaceId, availableSpaces, initializeSpaceContext } =
     useSpaceContext()
 const router = useRouter()
+
+// Computed property for current user ID
+const currentUserId = computed(() => supabaseUser.value?.id || user.value?.id)
 
 onMounted(async () => {
     try {
@@ -626,4 +452,7 @@ const rejectMatch = async (matchId) => {
         isProcessingMatch.value = null
     }
 }
+
+// Alias for chat cards
+const declineMatch = rejectMatch
 </script>
