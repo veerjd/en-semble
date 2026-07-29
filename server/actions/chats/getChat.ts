@@ -3,7 +3,7 @@ import type { ChatDTO } from '~~/shared/types/api'
 
 export const getChat = async (
     event: H3Event,
-    chatId: string
+    chatId: string,
 ): Promise<ChatDTO> => {
     const { user, chat, match } = await requireChatParticipant(event, chatId)
     const db = useDb(event)
@@ -14,7 +14,7 @@ export const getChat = async (
     const { data: other, error } = await db
         .from('users')
         .select(
-            'id, username, bio, user_interests(interest:interests(id, slug, label))'
+            'id, username, bio, user_interests(interest:interests(id, slug, label))',
         )
         .eq('id', otherUserId)
         .single()

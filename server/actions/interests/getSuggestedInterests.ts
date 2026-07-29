@@ -8,7 +8,7 @@ import type { InterestDTO } from '~~/shared/types/api'
  */
 export const getSuggestedInterests = async (
     event: H3Event,
-    limit = 20
+    limit = 20,
 ): Promise<InterestDTO[]> => {
     const user = await requireUser(event)
     const db = useDb(event)
@@ -28,7 +28,7 @@ export const getSuggestedInterests = async (
         .select('interest_id, interest:interests(id, slug, label)')
         .in(
             'user_id',
-            members.map((m) => m.id)
+            members.map((m) => m.id),
         )
 
     if (interestsError) throw interestsError

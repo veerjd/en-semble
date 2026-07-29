@@ -5,6 +5,6 @@ export default defineApiHandler((event) => {
     return getChatMessages(
         event,
         requireParam(event, 'id'),
-        typeof before === 'string' && before ? before : undefined
+        typeof before === 'string' && before ? before : undefined,
     )
 })

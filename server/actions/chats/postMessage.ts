@@ -7,7 +7,7 @@ import { toMessageDTO } from './getChatMessages'
 export const postMessage = async (
     event: H3Event,
     chatId: string,
-    input: PostMessageInput
+    input: PostMessageInput,
 ): Promise<MessageDTO> => {
     const { user } = await requireChatParticipant(event, chatId)
     const db = useDb(event)

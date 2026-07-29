@@ -38,7 +38,11 @@ export interface MatchUserDTO {
  * - matched:       both accepted (chatId is set)
  * - rejected:      either side rejected
  */
-export type MatchStatus = 'awaiting_me' | 'awaiting_them' | 'matched' | 'rejected'
+export type MatchStatus =
+    | 'awaiting_me'
+    | 'awaiting_them'
+    | 'matched'
+    | 'rejected'
 
 export interface MatchDTO {
     id: string

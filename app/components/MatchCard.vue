@@ -1,93 +1,113 @@
+<script setup lang="ts">
+import type { MatchDTO } from '~~/shared/types/api'
+
+const props = defineProps<{
+    match: MatchDTO
+    space: string
+    processing?: boolean
+}>()
+
+defineEmits<{
+    accept: []
+    reject: []
+}>()
+
+const interestLabel = useInterestLabel()
+
+const statusSeverity = computed(
+    () =>
+        (
+            ({
+                awaiting_me: 'warn',
+                awaiting_them: 'info',
+                matched: 'success',
+                rejected: 'danger',
+            }) as const
+        )[props.match.status],
+)
+</script>
+
 <template>
     <div class="bg-slate-700 p-6 rounded-lg shadow">
-        <template v-if="otherUser">
-            <div class="flex justify-between items-start">
-                <div class="flex-1">
-                    <h3 class="text-xl font-semibold text-white">
-                        {{ otherUser.username }}
-                    </h3>
-                    <p class="text-gray-300 mt-2">
-                        {{ otherUser.bio }}
-                    </p>
-                </div>
-                <div class="ml-4 flex items-center gap-2">
-                    <span
-                        :class="{
-                            'bg-yellow-100 text-yellow-800': match.status === 'pending',
-                            'bg-green-100 text-green-800': match.status === 'accepted',
-                            'bg-red-100 text-red-800': match.status === 'rejected',
-                            'bg-gray-100 text-gray-800': match.status === 'expired' || !match.status,
-                        }"
-                        class="px-3 py-1 rounded-full text-sm font-medium capitalize"
-                    >
-                        {{ match.status || 'unknown' }}
-                    </span>
-
-                    <!-- Accept/Reject buttons for pending matches -->
-                    <div v-if="match.status === 'pending'" class="flex gap-2">
-                        <button
-                            @click="$emit('accept', match.id)"
-                            :disabled="isProcessing"
-                            class="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {{ isProcessing ? 'Processing...' : 'Accept' }}
-                        </button>
-                        <button
-                            @click="$emit('reject', match.id)"
-                            :disabled="isProcessing"
-                            class="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            Reject
-                        </button>
-                    </div>
-
-                    <!-- Chat button for accepted matches -->
-                    <div v-if="match.status === 'accepted' && match.chat" class="flex gap-2">
-                        <NuxtLink
-                            :to="`/chat/${match.chat.id}`"
-                            class="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 flex items-center gap-1"
-                        >
-                            <i class="pi pi-comments"></i>
-                            Chat
-                        </NuxtLink>
-                    </div>
-                </div>
+        <div class="flex justify-between items-start gap-4">
+            <div class="flex-1 min-w-0">
+                <h3 class="text-xl font-semibold text-white">
+                    {{ match.otherUser.username }}
+                </h3>
+                <p v-if="match.otherUser.bio" class="text-gray-300 mt-2">
+                    {{ match.otherUser.bio }}
+                </p>
             </div>
-            <div class="mt-4 flex flex-wrap gap-2">
+
+            <div class="flex items-center gap-2 flex-wrap justify-end">
+                <Tag
+                    :value="$t(`matches.status.${match.status}`)"
+                    :severity="statusSeverity"
+                />
+
+                <template v-if="match.status === 'awaiting_me'">
+                    <Button
+                        :label="$t('matches.accept')"
+                        icon="pi pi-check"
+                        size="small"
+                        severity="success"
+                        :loading="processing"
+                        @click="$emit('accept')"
+                    />
+                    <Button
+                        :label="$t('matches.reject')"
+                        icon="pi pi-times"
+                        size="small"
+                        severity="danger"
+                        outlined
+                        :disabled="processing"
+                        @click="$emit('reject')"
+                    />
+                </template>
+
+                <NuxtLink
+                    v-if="match.status === 'matched' && match.chatId"
+                    :to="`/${space}/chat/${match.chatId}`"
+                >
+                    <Button
+                        :label="$t('matches.openChat')"
+                        icon="pi pi-comments"
+                        size="small"
+                        :badge="
+                            match.unreadCount
+                                ? String(match.unreadCount)
+                                : undefined
+                        "
+                    />
+                </NuxtLink>
+            </div>
+        </div>
+
+        <div v-if="match.commonInterests.length" class="mt-4">
+            <span class="text-sm font-semibold text-gray-300">
+                {{ $t('matches.commonInterests') }}
+            </span>
+            <div class="flex flex-wrap gap-2 mt-2">
                 <span
-                    v-for="interest in otherUser.interests || []"
+                    v-for="interest in match.commonInterests"
+                    :key="interest.id"
+                    class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm"
+                >
+                    {{ interestLabel(interest) }}
+                </span>
+            </div>
+        </div>
+
+        <div v-if="match.otherUser.interests.length" class="mt-3">
+            <div class="flex flex-wrap gap-2">
+                <span
+                    v-for="interest in match.otherUser.interests"
                     :key="interest.id"
                     class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
                 >
-                    {{ interest.name || interest.slug }}
+                    {{ interestLabel(interest) }}
                 </span>
             </div>
-        </template>
+        </div>
     </div>
 </template>
-
-<script setup>
-const props = defineProps({
-    match: {
-        type: Object,
-        required: true
-    },
-    currentUserId: {
-        type: String,
-        required: true
-    },
-    isProcessing: {
-        type: Boolean,
-        default: false
-    }
-})
-
-defineEmits(['accept', 'reject'])
-
-const otherUser = computed(() => {
-    if (!props.currentUserId) return null
-    return props.match.user1?.id === props.currentUserId 
-        ? props.match.user2 
-        : props.match.user1
-})
-</script>

@@ -10,9 +10,7 @@ import { getMatchById } from './getMyMatches'
  * The candidate sharing the most interests wins; zero overlap never matches
  * (404 no_overlap -> the UI offers suggested interests instead).
  */
-export const findAndCreateMatch = async (
-    event: H3Event
-): Promise<MatchDTO> => {
+export const findAndCreateMatch = async (event: H3Event): Promise<MatchDTO> => {
     const user = await requireUser(event)
     const db = useDb(event)
 
@@ -44,15 +42,15 @@ export const findAndCreateMatch = async (
 
     const paired = new Set(
         priorMatches.map((m) =>
-            m.user1_id === user.id ? m.user2_id : m.user1_id
-        )
+            m.user1_id === user.id ? m.user2_id : m.user1_id,
+        ),
     )
 
     let best: { id: string; overlap: number } | null = null
     for (const candidate of candidates) {
         if (paired.has(candidate.id)) continue
         const overlap = candidate.user_interests.filter((ui) =>
-            myInterestIds.has(ui.interest_id)
+            myInterestIds.has(ui.interest_id),
         ).length
         if (overlap > 0 && (!best || overlap > best.overlap)) {
             best = { id: candidate.id, overlap }

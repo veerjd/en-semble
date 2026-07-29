@@ -43,7 +43,7 @@ export const requireUser = async (event: H3Event): Promise<SessionUser> => {
  */
 export const requireSpaceMember = async (
     event: H3Event,
-    spaceIdOrSlug: string
+    spaceIdOrSlug: string,
 ): Promise<SessionUser> => {
     const user = await requireUser(event)
     if (user.space_id === spaceIdOrSlug) return user
@@ -66,7 +66,7 @@ export const requireSpaceMember = async (
  */
 export const requireMatchParticipant = async (
     event: H3Event,
-    matchId: string
+    matchId: string,
 ) => {
     const user = await requireUser(event)
     const db = useDb(event)
@@ -91,7 +91,7 @@ export const requireMatchParticipant = async (
  */
 export const requireChatParticipant = async (
     event: H3Event,
-    chatId: string
+    chatId: string,
 ) => {
     const user = await requireUser(event)
     const db = useDb(event)

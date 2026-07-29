@@ -5,7 +5,7 @@ import { getMe } from './getMe'
 
 export const patchMe = async (
     event: H3Event,
-    input: PatchMeInput
+    input: PatchMeInput,
 ): Promise<MeDTO> => {
     const user = await requireUser(event)
     const db = useDb(event)

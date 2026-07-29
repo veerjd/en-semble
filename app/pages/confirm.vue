@@ -1,4 +1,6 @@
-<script setup>
+<script setup lang="ts">
+definePageMeta({ layout: 'unauthenticated' })
+
 const user = useSupabaseUser()
 
 // Get redirect path from cookies
@@ -9,10 +11,9 @@ watch(
     user,
     () => {
         if (user.value) {
-            // Clear cookie
+            // Clear cookie and continue where the user was headed.
             useCookie(`${cookieName}-redirect-path`).value = null
-            // Redirect to path
-            return navigateTo(redirectPath)
+            return navigateTo(redirectPath ?? '/')
         }
     },
     { immediate: true },
@@ -20,5 +21,5 @@ watch(
 </script>
 
 <template>
-    <div>Waiting for login...</div>
+    <div>{{ $t('auth.waitingForLogin') }}</div>
 </template>

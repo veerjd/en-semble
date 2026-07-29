@@ -5,7 +5,7 @@ import type { InterestDTO } from '~~/shared/types/api'
 /** Replace the caller's interest set with the given interest ids. */
 export const replaceMyInterests = async (
     event: H3Event,
-    input: ReplaceInterestsInput
+    input: ReplaceInterestsInput,
 ): Promise<InterestDTO[]> => {
     const user = await requireUser(event)
     const db = useDb(event)

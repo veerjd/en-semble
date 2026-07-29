@@ -10,7 +10,7 @@ export const getMe = async (event: H3Event): Promise<MeDTO> => {
         .select(
             `id, username, bio, locale,
              space:spaces!inner(id, slug, name),
-             user_interests(interest:interests(id, slug, label))`
+             user_interests(interest:interests(id, slug, label))`,
         )
         .eq('id', user.id)
         .single()

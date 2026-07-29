@@ -7,7 +7,7 @@ import type { z } from 'zod'
  */
 export const readValidated = async <S extends z.ZodType>(
     event: H3Event,
-    schema: S
+    schema: S,
 ): Promise<z.output<S>> => {
     const body = await readBody(event)
     const result = schema.safeParse(body)
@@ -33,14 +33,14 @@ export const readValidated = async <S extends z.ZodType>(
 export const requireParam = (
     event: H3Event,
     name: string,
-    opts: { uuid?: boolean } = { uuid: true }
+    opts: { uuid?: boolean } = { uuid: true },
 ): string => {
     const value = getRouterParam(event, name)
     if (!value) apiError(400, 'missing_param')
     if (
         opts.uuid &&
         !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-            value!
+            value!,
         )
     ) {
         apiError(400, 'invalid_param')

@@ -32,13 +32,20 @@ export const getMyMatches = async (event: H3Event): Promise<MatchDTO[]> => {
             .is('deleted_at', null)
         if (unreadError) throw unreadError
         for (const row of unread) {
-            unreadByChat.set(row.chat_id, (unreadByChat.get(row.chat_id) ?? 0) + 1)
+            unreadByChat.set(
+                row.chat_id,
+                (unreadByChat.get(row.chat_id) ?? 0) + 1,
+            )
         }
     }
 
     return rows.map((row) => {
         const chatId = Array.isArray(row.chat) ? row.chat[0]?.id : row.chat?.id
-        return toMatchDTO(row, user.id, chatId ? (unreadByChat.get(chatId) ?? 0) : 0)
+        return toMatchDTO(
+            row,
+            user.id,
+            chatId ? unreadByChat.get(chatId) ?? 0 : 0,
+        )
     })
 }
 
@@ -46,7 +53,7 @@ export const getMyMatches = async (event: H3Event): Promise<MatchDTO[]> => {
 export const getMatchById = async (
     event: H3Event,
     matchId: string,
-    viewerId: string
+    viewerId: string,
 ): Promise<MatchDTO> => {
     const db = useDb(event)
 

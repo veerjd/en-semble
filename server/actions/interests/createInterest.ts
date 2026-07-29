@@ -8,7 +8,7 @@ import type { InterestDTO } from '~~/shared/types/api'
  */
 export const createInterest = async (
     event: H3Event,
-    input: CreateInterestInput
+    input: CreateInterestInput,
 ): Promise<InterestDTO> => {
     const user = await requireUser(event)
     const db = useDb(event)

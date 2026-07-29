@@ -15,7 +15,7 @@ export interface UserWithInterests {
 }
 
 export const toInterests = (
-    userInterests: { interest: InterestDTO | null }[]
+    userInterests: { interest: InterestDTO | null }[],
 ): InterestDTO[] =>
     userInterests.flatMap((ui) => (ui.interest ? [ui.interest] : []))
 
@@ -28,7 +28,7 @@ export const toMatchUser = (user: UserWithInterests): MatchUserDTO => ({
 
 export const deriveMatchStatus = (
     myResponse: MatchResponse,
-    theirResponse: MatchResponse
+    theirResponse: MatchResponse,
 ): MatchStatus => {
     if (myResponse === 'rejected' || theirResponse === 'rejected') {
         return 'rejected'
@@ -41,7 +41,7 @@ export const deriveMatchStatus = (
 
 export const commonInterests = (
     mine: InterestDTO[],
-    theirs: InterestDTO[]
+    theirs: InterestDTO[],
 ): InterestDTO[] => {
     const myIds = new Set(mine.map((i) => i.id))
     return theirs.filter((i) => myIds.has(i.id))
@@ -74,14 +74,14 @@ export const MATCH_SELECT = `
 export const toMatchDTO = (
     row: MatchRow,
     viewerId: string,
-    unreadCount = 0
+    unreadCount = 0,
 ): MatchDTO => {
     const iAmUser1 = row.user1_id === viewerId
     const me = iAmUser1 ? row.user1 : row.user2
     const other = iAmUser1 ? row.user2 : row.user1
     const myResponse = iAmUser1 ? row.user1_response : row.user2_response
     const theirResponse = iAmUser1 ? row.user2_response : row.user1_response
-    const chat = Array.isArray(row.chat) ? (row.chat[0] ?? null) : row.chat
+    const chat = Array.isArray(row.chat) ? row.chat[0] ?? null : row.chat
 
     const myInterests = me ? toInterests(me.user_interests) : []
     const otherUser: MatchUserDTO = other

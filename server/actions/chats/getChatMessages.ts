@@ -20,7 +20,7 @@ export const toMessageDTO = (row: Tables<'chat_messages'>): MessageDTO => ({
 export const getChatMessages = async (
     event: H3Event,
     chatId: string,
-    before?: string
+    before?: string,
 ): Promise<MessageDTO[]> => {
     await requireChatParticipant(event, chatId)
     const db = useDb(event)

@@ -10,7 +10,7 @@ import { getMatchById } from './getMyMatches'
 export const respondToMatch = async (
     event: H3Event,
     matchId: string,
-    response: Extract<MatchResponse, 'accepted' | 'rejected'>
+    response: Extract<MatchResponse, 'accepted' | 'rejected'>,
 ): Promise<MatchDTO> => {
     const { user } = await requireMatchParticipant(event, matchId)
     const db = useDb(event)

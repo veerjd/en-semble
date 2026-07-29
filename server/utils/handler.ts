@@ -11,7 +11,7 @@ import type { EventHandler, EventHandlerRequest, H3Event } from 'h3'
  * string (errors.<code>).
  */
 export const defineApiHandler = <T extends EventHandlerRequest, D>(
-    handler: (event: H3Event<T>) => Promise<D>
+    handler: (event: H3Event<T>) => Promise<D>,
 ): EventHandler<T, Promise<D>> =>
     defineEventHandler(async (event) => {
         try {
@@ -20,7 +20,7 @@ export const defineApiHandler = <T extends EventHandlerRequest, D>(
             if (isError(err)) throw err
             console.error(
                 `[api] ${event.method} ${event.path}:`,
-                err instanceof Error ? err.message : err
+                err instanceof Error ? err.message : err,
             )
             throw createError({
                 statusCode: 500,
