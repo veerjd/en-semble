@@ -1,4 +1,4 @@
-import { getUserMatches } from '~/server/actions/matches'
+import { getUserMatches } from '~~/server/actions/matches'
 
 export default defineEventHandler(async (event) => {
     const userId = getRouterParam(event, 'id')

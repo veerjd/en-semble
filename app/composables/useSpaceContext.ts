@@ -1,6 +1,6 @@
 // composables/useSpaceContext.ts
 import { ref, computed } from 'vue'
-import type { SpaceDTO, PostSpaceDTO } from '~/shared/types/SpaceDTOs'
+import type { SpaceDTO, PostSpaceDTO } from '~~/shared/types/SpaceDTOs'
 
 interface SpaceContextState {
     currentSpaceId: string | null

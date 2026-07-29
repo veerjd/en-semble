@@ -1,5 +1,5 @@
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
-import type { SpaceDTO } from '~/shared/types/SpaceDTOs'
+import type { SpaceDTO } from '~~/shared/types/SpaceDTOs'
 
 export const getUserSpaces = async (event: any): Promise<SpaceDTO[]> => {
     const supabase = await serverSupabaseClient(event)

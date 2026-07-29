@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { UserInterestDTO } from '~/shared/types/UserInterestDTOs'
+import type { UserInterestDTO } from '~~/shared/types/UserInterestDTOs'
 
 export const replaceUserInterests = async (
     event: any,

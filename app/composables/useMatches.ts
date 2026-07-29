@@ -4,7 +4,7 @@ import type {
     PatchMatchDTO,
     DeleteMatchDTO,
     SoftDeleteMatchDTO,
-} from '~/shared/types/MatchDTOs'
+} from '~~/shared/types/MatchDTOs'
 
 export const useMatches = () => {
     const matches: Ref<MatchDTO[]> = ref([])

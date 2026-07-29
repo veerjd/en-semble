@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { PatchSpaceDTO, SpaceDTO } from '~/shared/types/SpaceDTOs'
+import type { PatchSpaceDTO, SpaceDTO } from '~~/shared/types/SpaceDTOs'
 import { getOneSpace } from './getOneSpace'
 
 export const patchSpace = async (

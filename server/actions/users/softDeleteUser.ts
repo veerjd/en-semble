@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { SoftDeleteUserDTO } from '~/shared/types/UserDTOs'
+import type { SoftDeleteUserDTO } from '~~/shared/types/UserDTOs'
 
 export const softDeleteUser = async (
     event: any,

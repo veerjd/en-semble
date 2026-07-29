@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { UserDTO } from '~/shared/types/UserDTOs'
+import type { UserDTO } from '~~/shared/types/UserDTOs'
 
 export const getOneUser = async (event: any, id: string): Promise<UserDTO> => {
     if (!id) {

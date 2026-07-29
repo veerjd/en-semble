@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { PatchMatchDTO, MatchDTO } from '~/shared/types/MatchDTOs'
+import type { PatchMatchDTO, MatchDTO } from '~~/shared/types/MatchDTOs'
 import { getOneMatch } from './getOneMatch'
 
 export const patchMatch = async (

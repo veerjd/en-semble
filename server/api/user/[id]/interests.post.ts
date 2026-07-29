@@ -1,5 +1,5 @@
-import { postUserInterest } from '~/server/actions/userInterests'
-import type { PostUserInterestDTO } from '~/shared/types/UserInterestDTOs'
+import { postUserInterest } from '~~/server/actions/userInterests'
+import type { PostUserInterestDTO } from '~~/shared/types/UserInterestDTOs'
 
 export default defineEventHandler(async (event) => {
     const userId = getRouterParam(event, 'id')

@@ -1,6 +1,6 @@
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server'
-import { getOneUser } from '~/server/actions/users/getOneUser'
-import type { UserDTO } from '~/shared/types/UserDTOs'
+import { getOneUser } from '~~/server/actions/users/getOneUser'
+import type { UserDTO } from '~~/shared/types/UserDTOs'
 
 export default defineEventHandler(async (event): Promise<UserDTO> => {
     const supabaseUser = await serverSupabaseUser(event)

@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { MessageDTO, PatchMessageDTO } from '~/shared/types/MessageDTOs'
+import type { MessageDTO, PatchMessageDTO } from '~~/shared/types/MessageDTOs'
 import { getOneMessage } from './getOneMessage'
 
 export const patchMessage = async (

@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { MatchDTO } from '~/shared/types/MatchDTOs'
+import type { MatchDTO } from '~~/shared/types/MatchDTOs'
 
 export const getOneMatch = async (
     event: any,

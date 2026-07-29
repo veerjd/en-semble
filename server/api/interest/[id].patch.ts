@@ -1,5 +1,5 @@
-import { patchInterest } from '~/server/actions/interests'
-import type { PatchInterestDTO } from '~/shared/types/InterestDTOs'
+import { patchInterest } from '~~/server/actions/interests'
+import type { PatchInterestDTO } from '~~/shared/types/InterestDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

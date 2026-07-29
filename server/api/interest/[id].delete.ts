@@ -1,8 +1,8 @@
-import { deleteInterest, softDeleteInterest } from '~/server/actions/interests'
+import { deleteInterest, softDeleteInterest } from '~~/server/actions/interests'
 import type {
     DeleteInterestDTO,
     SoftDeleteInterestDTO,
-} from '~/shared/types/InterestDTOs'
+} from '~~/shared/types/InterestDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

@@ -1,4 +1,4 @@
-import { markMessageRead } from '~/server/actions/messages'
+import { markMessageRead } from '~~/server/actions/messages'
 
 export default defineEventHandler(async (event) => {
     const messageId = getRouterParam(event, 'messageId')

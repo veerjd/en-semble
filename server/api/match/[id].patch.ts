@@ -1,5 +1,5 @@
-import { patchMatch } from '~/server/actions/matches'
-import type { PatchMatchDTO } from '~/shared/types/MatchDTOs'
+import { patchMatch } from '~~/server/actions/matches'
+import type { PatchMatchDTO } from '~~/shared/types/MatchDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

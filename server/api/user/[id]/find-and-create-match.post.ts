@@ -1,5 +1,5 @@
-import { findMatch } from '~/server/actions/matches/findMatch'
-import { postMatch } from '~/server/actions/matches/postMatch'
+import { findMatch } from '~~/server/actions/matches/findMatch'
+import { postMatch } from '~~/server/actions/matches/postMatch'
 
 export default defineEventHandler(async (event) => {
     const userId = getRouterParam(event, 'id')

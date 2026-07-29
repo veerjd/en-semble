@@ -1,5 +1,5 @@
-import { patchUser } from '~/server/actions/users'
-import type { PatchUserDTO } from '~/shared/types/UserDTOs'
+import { patchUser } from '~~/server/actions/users'
+import type { PatchUserDTO } from '~~/shared/types/UserDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

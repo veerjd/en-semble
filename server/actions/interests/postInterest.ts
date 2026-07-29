@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { InterestDTO, PostInterestDTO } from '~/shared/types/InterestDTOs'
+import type { InterestDTO, PostInterestDTO } from '~~/shared/types/InterestDTOs'
 
 export const postInterest = async (
     event: any,

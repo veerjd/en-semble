@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { ChatDTO } from '~/shared/types/ChatDTOs'
+import type { ChatDTO } from '~~/shared/types/ChatDTOs'
 
 export const getAllChats = async (event: any): Promise<ChatDTO[]> => {
     const supabase = await serverSupabaseClient(event)

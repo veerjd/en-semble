@@ -1,4 +1,4 @@
-import { replaceUserInterests } from '~/server/actions/userInterests'
+import { replaceUserInterests } from '~~/server/actions/userInterests'
 
 export default defineEventHandler(async (event) => {
     const userId = getRouterParam(event, 'id')

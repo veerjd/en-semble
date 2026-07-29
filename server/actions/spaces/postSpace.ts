@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { PostSpaceDTO, SpaceDTO } from '~/shared/types/SpaceDTOs'
+import type { PostSpaceDTO, SpaceDTO } from '~~/shared/types/SpaceDTOs'
 
 export const postSpace = async (
     event: any,

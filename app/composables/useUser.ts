@@ -6,7 +6,7 @@ import type {
     PatchUserDTO,
     DeleteUserDTO,
     SoftDeleteUserDTO,
-} from '~/shared/types/UserDTOs'
+} from '~~/shared/types/UserDTOs'
 
 export function useUser() {
     const user = ref<UserDTO | null>(null)

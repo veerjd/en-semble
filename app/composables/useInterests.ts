@@ -4,8 +4,8 @@ import type {
     PatchInterestDTO,
     DeleteInterestDTO,
     SoftDeleteInterestDTO,
-} from '~/shared/types/InterestDTOs'
-import type { UserInterestDTO } from '~/shared/types/UserInterestDTOs'
+} from '~~/shared/types/InterestDTOs'
+import type { UserInterestDTO } from '~~/shared/types/UserInterestDTOs'
 
 export const useInterests = () => {
     const interests: Ref<InterestDTO[]> = ref([])

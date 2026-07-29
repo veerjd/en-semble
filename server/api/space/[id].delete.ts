@@ -1,8 +1,8 @@
-import { deleteSpace, softDeleteSpace } from '~/server/actions/spaces'
+import { deleteSpace, softDeleteSpace } from '~~/server/actions/spaces'
 import type {
     DeleteSpaceDTO,
     SoftDeleteSpaceDTO,
-} from '~/shared/types/SpaceDTOs'
+} from '~~/shared/types/SpaceDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

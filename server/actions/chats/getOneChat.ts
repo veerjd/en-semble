@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { ChatDTO } from '~/shared/types/ChatDTOs'
+import type { ChatDTO } from '~~/shared/types/ChatDTOs'
 
 export const getOneChat = async (
     event: any,

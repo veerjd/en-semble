@@ -1,8 +1,8 @@
-import { deleteMessage, softDeleteMessage } from '~/server/actions/messages'
+import { deleteMessage, softDeleteMessage } from '~~/server/actions/messages'
 import type {
     DeleteMessageDTO,
     SoftDeleteMessageDTO,
-} from '~/shared/types/MessageDTOs'
+} from '~~/shared/types/MessageDTOs'
 
 export default defineEventHandler(async (event) => {
     const messageId = getRouterParam(event, 'messageId')

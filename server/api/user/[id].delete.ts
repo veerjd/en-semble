@@ -1,5 +1,5 @@
-import { deleteUser, softDeleteUser } from '~/server/actions/users'
-import type { DeleteUserDTO, SoftDeleteUserDTO } from '~/shared/types/UserDTOs'
+import { deleteUser, softDeleteUser } from '~~/server/actions/users'
+import type { DeleteUserDTO, SoftDeleteUserDTO } from '~~/shared/types/UserDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

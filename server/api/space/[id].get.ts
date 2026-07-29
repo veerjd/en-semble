@@ -1,4 +1,4 @@
-import { getOneSpace } from '~/server/actions/spaces'
+import { getOneSpace } from '~~/server/actions/spaces'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

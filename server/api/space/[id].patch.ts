@@ -1,5 +1,5 @@
-import { patchSpace } from '~/server/actions/spaces'
-import type { PatchSpaceDTO } from '~/shared/types/SpaceDTOs'
+import { patchSpace } from '~~/server/actions/spaces'
+import type { PatchSpaceDTO } from '~~/shared/types/SpaceDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

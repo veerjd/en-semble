@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { SoftDeleteSpaceDTO } from '~/shared/types/SpaceDTOs'
+import type { SoftDeleteSpaceDTO } from '~~/shared/types/SpaceDTOs'
 
 export const softDeleteSpace = async (
     event: any,

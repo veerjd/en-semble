@@ -1,4 +1,4 @@
-import { getOneMessage } from '~/server/actions/messages'
+import { getOneMessage } from '~~/server/actions/messages'
 
 export default defineEventHandler(async (event) => {
     const messageId = getRouterParam(event, 'messageId')

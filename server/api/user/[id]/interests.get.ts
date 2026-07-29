@@ -1,4 +1,4 @@
-import { getUserInterests } from '~/server/actions/userInterests'
+import { getUserInterests } from '~~/server/actions/userInterests'
 
 export default defineEventHandler(async (event) => {
     const userId = getRouterParam(event, 'id')

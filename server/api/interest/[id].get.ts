@@ -1,4 +1,4 @@
-import { getOneInterest } from '~/server/actions/interests'
+import { getOneInterest } from '~~/server/actions/interests'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

@@ -1,4 +1,4 @@
-import { getSpaceMatches } from '~/server/actions/matches'
+import { getSpaceMatches } from '~~/server/actions/matches'
 
 export default defineEventHandler(async (event) => {
     const spaceId = getRouterParam(event, 'id')

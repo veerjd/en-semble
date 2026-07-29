@@ -1,4 +1,4 @@
-import { getOneUser } from '~/server/actions/users'
+import { getOneUser } from '~~/server/actions/users'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

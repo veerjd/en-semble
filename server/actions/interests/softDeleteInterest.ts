@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { SoftDeleteInterestDTO } from '~/shared/types/InterestDTOs'
+import type { SoftDeleteInterestDTO } from '~~/shared/types/InterestDTOs'
 
 export const softDeleteInterest = async (
     event: any,

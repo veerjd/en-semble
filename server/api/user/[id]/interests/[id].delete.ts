@@ -1,5 +1,5 @@
-import { deleteUserInterest } from '~/server/actions/userInterests'
-import type { DeleteUserInterestDTO } from '~/shared/types/UserInterestDTOs'
+import { deleteUserInterest } from '~~/server/actions/userInterests'
+import type { DeleteUserInterestDTO } from '~~/shared/types/UserInterestDTOs'
 
 export default defineEventHandler(async (event) => {
     const userId = getRouterParam(event, 'id')

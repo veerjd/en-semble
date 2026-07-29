@@ -1,15 +1,11 @@
 import Aura from '@primeuix/themes/aura'
-import Lara from '@primeuix/themes/lara'
 
 export default defineNuxtConfig({
-    // debug: true,
+    compatibilityDate: '2026-07-01',
     app: {
         head: {
             title: 'En-Semble',
         },
-    },
-    vue: {
-        propsDestructure: true,
     },
     components: [
         {
@@ -25,20 +21,13 @@ export default defineNuxtConfig({
             login: '/login',
             callback: '/confirm',
             include: undefined,
-            exclude: ['/update-password', '/logout', '/api/*', '/signup*'],
+            exclude: ['/login', '/register/*', '/confirm', '/logout', '/api/*'],
             saveRedirectToCookie: true,
-        },
-    },
-    devtools: {
-        enabled: true,
-
-        timeline: {
-            enabled: true,
         },
     },
     typescript: {
         typeCheck: true,
-        strict: false,
+        strict: true,
     },
     css: ['primeicons/primeicons.css'],
     modules: [
@@ -56,19 +45,17 @@ export default defineNuxtConfig({
             { code: 'en', file: 'en.json' },
             { code: 'fr', file: 'fr.json' },
         ],
-        bundle: {
-            optimizeTranslationDirective: false, // Add this to fix the warning
-        },
     },
     primevue: {
         autoImport: true,
-        usePrimeVue: true,
         options: {
             ripple: true,
             theme: {
                 preset: Aura,
-                darkModeSelector: 'media',
-                cssLayer: false,
+                options: {
+                    darkModeSelector: '.dark',
+                    cssLayer: false,
+                },
             },
         },
     },
@@ -83,12 +70,6 @@ export default defineNuxtConfig({
         plugins: {
             tailwindcss: {},
             autoprefixer: {},
-        },
-    },
-    vite: {
-        // Vite configuration options
-        optimizeDeps: {
-            include: ['jsonwebtoken'],
         },
     },
 })

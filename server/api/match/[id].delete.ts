@@ -1,8 +1,8 @@
-import { deleteMatch, softDeleteMatch } from '~/server/actions/matches'
+import { deleteMatch, softDeleteMatch } from '~~/server/actions/matches'
 import type {
     DeleteMatchDTO,
     SoftDeleteMatchDTO,
-} from '~/shared/types/MatchDTOs'
+} from '~~/shared/types/MatchDTOs'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

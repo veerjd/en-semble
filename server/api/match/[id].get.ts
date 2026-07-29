@@ -1,4 +1,4 @@
-import { getOneMatch } from '~/server/actions/matches'
+import { getOneMatch } from '~~/server/actions/matches'
 
 export default defineEventHandler(async (event) => {
     const id = getRouterParam(event, 'id')

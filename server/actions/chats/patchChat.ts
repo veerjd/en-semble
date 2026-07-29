@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { PatchChatDTO, ChatDTO } from '~/shared/types/ChatDTOs'
+import type { PatchChatDTO, ChatDTO } from '~~/shared/types/ChatDTOs'
 import { getOneChat } from './getOneChat'
 
 export const patchChat = async (

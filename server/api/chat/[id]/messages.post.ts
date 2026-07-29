@@ -1,5 +1,5 @@
-import { postMessage } from '~/server/actions/messages'
-import type { PostMessageDTO } from '~/shared/types/MessageDTOs'
+import { postMessage } from '~~/server/actions/messages'
+import type { PostMessageDTO } from '~~/shared/types/MessageDTOs'
 
 export default defineEventHandler(async (event) => {
     const chatId = getRouterParam(event, 'id')

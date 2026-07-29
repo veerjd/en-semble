@@ -1,4 +1,4 @@
-import { getSpaceUsers } from '~/server/actions/users'
+import { getSpaceUsers } from '~~/server/actions/users'
 
 export default defineEventHandler(async (event) => {
     const spaceId = getRouterParam(event, 'id')

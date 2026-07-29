@@ -1,6 +1,6 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { PostUserInterestDTO } from '~/shared/types/UserInterestDTOs'
-import type { PostUserDTO, UserDTO } from '~/shared/types/UserDTOs'
+import type { PostUserInterestDTO } from '~~/shared/types/UserInterestDTOs'
+import type { PostUserDTO, UserDTO } from '~~/shared/types/UserDTOs'
 import { getOneUser } from './getOneUser'
 
 export const postUser = async (

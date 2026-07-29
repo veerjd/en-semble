@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { SoftDeleteChatDTO } from '~/shared/types/ChatDTOs'
+import type { SoftDeleteChatDTO } from '~~/shared/types/ChatDTOs'
 
 export const softDeleteChat = async (
     event: any,

@@ -1,5 +1,5 @@
-import { patchMessage } from '~/server/actions/messages'
-import type { PatchMessageDTO } from '~/shared/types/MessageDTOs'
+import { patchMessage } from '~~/server/actions/messages'
+import type { PatchMessageDTO } from '~~/shared/types/MessageDTOs'
 
 export default defineEventHandler(async (event) => {
     const messageId = getRouterParam(event, 'messageId')

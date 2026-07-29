@@ -1,5 +1,5 @@
 import { serverSupabaseClient } from '#supabase/server'
-import type { MessageDTO } from '~/shared/types/MessageDTOs'
+import type { MessageDTO } from '~~/shared/types/MessageDTOs'
 
 export const getUserMessages = async (
     event: any,

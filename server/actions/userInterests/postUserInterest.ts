@@ -2,7 +2,7 @@ import { serverSupabaseClient } from '#supabase/server'
 import type {
     PostUserInterestDTO,
     UserInterestDTO,
-} from '~/shared/types/UserInterestDTOs'
+} from '~~/shared/types/UserInterestDTOs'
 
 export const postUserInterest = async (
     event: any,

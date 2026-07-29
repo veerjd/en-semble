@@ -1,4 +1,4 @@
-import { getChatMessages } from '~/server/actions/chats'
+import { getChatMessages } from '~~/server/actions/chats'
 
 export default defineEventHandler(async (event) => {
     const chatId = getRouterParam(event, 'id')

@@ -1,6 +1,6 @@
 import { getSpaceUsers } from '../users/getSpaceUsers'
 import { serverSupabaseClient } from '#supabase/server'
-import type { UserDTO } from '~/shared/types/UserDTOs'
+import type { UserDTO } from '~~/shared/types/UserDTOs'
 
 export const findMatch = async (
     event: any,
