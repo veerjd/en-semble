@@ -1,7 +1,0 @@
-export * from './deleteMessage'
-export * from './getOneMessage'
-export * from './getUserMessages'
-export * from './markMessageRead'
-export * from './patchMessage'
-export * from './postMessage'
-export * from './softDeleteMessage'

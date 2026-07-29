@@ -1,9 +1,10 @@
-import { getChatMessages } from '~~/server/actions/chats'
+import { getChatMessages } from '~~/server/actions/chats/getChatMessages'
 
-export default defineEventHandler(async (event) => {
-    const chatId = getRouterParam(event, 'id')
-    if (!chatId) {
-        throw createError({ statusCode: 400, message: 'Chat ID is required' })
-    }
-    return await getChatMessages(event, chatId)
+export default defineApiHandler((event) => {
+    const { before } = getQuery(event)
+    return getChatMessages(
+        event,
+        requireParam(event, 'id'),
+        typeof before === 'string' && before ? before : undefined
+    )
 })

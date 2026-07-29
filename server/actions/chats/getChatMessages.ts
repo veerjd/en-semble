@@ -1,117 +1,42 @@
-import { serverSupabaseClient } from '#supabase/server'
-import type { MessageDTO } from '~~/shared/types/MessageDTOs'
+import type { H3Event } from 'h3'
+import type { MessageDTO } from '~~/shared/types/api'
+import type { Tables } from '~~/shared/types/database.types'
 
+const PAGE_SIZE = 50
+
+export const toMessageDTO = (row: Tables<'chat_messages'>): MessageDTO => ({
+    id: row.id,
+    chatId: row.chat_id,
+    userId: row.user_id,
+    content: row.content,
+    readAt: row.read_at,
+    createdAt: row.created_at,
+})
+
+/**
+ * Messages for a chat, oldest first. Pass ?before=<ISO timestamp> to page
+ * backwards through history.
+ */
 export const getChatMessages = async (
-    event: any,
-    matchId: string,
+    event: H3Event,
+    chatId: string,
+    before?: string
 ): Promise<MessageDTO[]> => {
-    if (!matchId) {
-        throw createError({ statusCode: 400, message: 'Chat ID is required' })
-    }
+    await requireChatParticipant(event, chatId)
+    const db = useDb(event)
 
-    const supabase = await serverSupabaseClient(event)
-    const { data, error } = await supabase
-        .from('messages')
-        .select(
-            `
-            id,
-            content,
-            read,
-            chat:chat_id (
-                id,
-                status,
-                user1:user1_id (
-                    id,
-                    username,
-                    bio,
-                    interest:interests (id, name),
-                    space:spaces (id, name, description),
-                    last_active,
-                    created_at
-                ),
-                user2:user2_id (
-                    id,
-                    username,
-                    bio,
-                    interest:interests (id, name),
-                    space:spaces (id, name, description),
-                    last_active,
-                    created_at
-                )
-            ),
-            user:user_id (
-                id,
-                username,
-                bio,
-                interest:interests (id, name),
-                space:spaces (id, name, description),
-                last_active,
-                created_at
-            ),
-            created_at
-        `,
-        )
-        .eq('match_id', matchId)
-        .order('created_at', { ascending: true })
+    let query = db
+        .from('chat_messages')
+        .select('*')
+        .eq('chat_id', chatId)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+        .limit(PAGE_SIZE)
 
-    if (error) {
-        throw createError({ statusCode: 500, message: error.message })
-    }
+    if (before) query = query.lt('created_at', before)
 
-    // Transform data to DTOs
-    const messages: MessageDTO[] = data.map((message: any) => ({
-        id: message.id,
-        chat: {
-            id: message.chat.id,
-            user1: message.chat.user1,
-            user2: message.chat.user2,
-            status: message.chat.status,
-            match: message.chat.match,
-            created_at: message.chat.created_at,
-        },
-        user: {
-            id: message.user.id,
-            username: message.user.username,
-            bio: message.user?.bio,
-            interests: Array.isArray(message.user?.interests)
-                ? message.user.interests.map((interest: any) => ({
-                      id: interest.id,
-                      slug: interest.slug,
-                      category: {
-                          id: interest.category.id,
-                          slug: interest.category.slug,
-                          created_at: interest.category.created_at,
-                      },
-                      created_at: interest.created_at,
-                  }))
-                : message.user?.interests
-                  ? [
-                        {
-                            id: message.user.interests.id,
-                            slug: message.user.interests.slug,
-                            category: {
-                                id: message.user.interests.category.id,
-                                slug: message.user.interests.category.slug,
-                                created_at:
-                                    message.user.interests.category.created_at,
-                            },
-                            created_at: message.user.interests.created_at,
-                        },
-                    ]
-                  : [],
-            space: {
-                id: message.user.id,
-                name: message.user.name,
-                description: message.user?.description,
-                created_at: message.user?.created_at,
-            },
-            created_at: message.user.created_at,
-            last_active: message.user.last_active,
-        },
-        content: message.content,
-        read: message.read,
-        created_at: message.created_at,
-    }))
+    const { data, error } = await query
+    if (error) throw error
 
-    return messages
+    return data.reverse().map(toMessageDTO)
 }

@@ -1,7 +1,0 @@
-export * from './getOneChat'
-export * from './getAllChats'
-export * from './getChatMessages'
-export * from './postChat'
-export * from './patchChat'
-export * from './deleteChat'
-export * from './softDeleteChat'
