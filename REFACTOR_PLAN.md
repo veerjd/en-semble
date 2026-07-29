@@ -180,3 +180,14 @@ app/pages/
 -   `server/api/match/[id]/accept.post.ts` — mutual-accept rewrite target
 -   `pages/chat/[id].vue` — best existing chat impl, basis for the single implementation
 -   `nuxt.config.ts` — touched in every stage
+
+---
+
+## Implementation status (2026-07-29)
+
+-   **Stage 0 — DONE.** Nuxt 4.5 migration (app/ srcDir, module bumps, strict TS, project-references tsconfig), clean migration set validated on Postgres 16 (8 functional assertions on `respond_to_match` pass), typed DB types wired, server utils + zod schemas, dependency cleanup.
+-   **Stage 1 — DONE.** 15-route authorized/validated API (register, me, interests + suggested, matches find/accept/reject, chat); `/[space]/` page tree with membership middleware; rewritten composables; single realtime chat implementation; no-overlap suggestion flow; full i18n on all new copy. Typecheck strict: 0 errors (baseline was 118).
+-   **Stage 2 — DONE.** Invite links with expiry (bulk create, list, revoke, public lookup), invite page + register pre-validation, realtime match notifications, color-mode dark theme.
+-   **Stage 3 — mostly done.** Fail-closed `/api/**` auth middleware, rate limiting (register/invites/find/messages), invite tokens stored as sha256 (folded into the base schema migration since nothing was deployed), 30 vitest unit tests, tailwind config reduced from 1084 lines to its single real customization, README rewritten.
+    -   **Deferred:** RLS second pass (moving plain reads to the user-scoped client) — needs a running Supabase stack to verify; ESLint currently doesn't parse TS/Vue files (pre-existing; migrate to `@nuxt/eslint` flat config when convenient).
+-   **Verification still needed on a machine with Docker:** `supabase start && supabase db reset`, the two-browser end-to-end script from Stage 1 (register via dev invite → mutual accept → realtime chat), and `npm run generate:types` to replace the hand-maintained `database.types.ts`.

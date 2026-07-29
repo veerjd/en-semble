@@ -14,7 +14,7 @@ export const getInviteByToken = async (
     const { data, error } = await db
         .from('invites')
         .select('expires_at, used_at, space:spaces!inner(name)')
-        .eq('token', token)
+        .eq('token_hash', hashInviteToken(token))
         .maybeSingle()
 
     if (error) throw error

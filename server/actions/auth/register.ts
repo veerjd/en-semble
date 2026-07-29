@@ -13,7 +13,7 @@ export const register = async (event: H3Event, input: RegisterInput) => {
     const { data: invite, error: inviteError } = await db
         .from('invites')
         .select('id, space_id, expires_at, used_at')
-        .eq('token', input.token)
+        .eq('token_hash', hashInviteToken(input.token))
         .maybeSingle()
 
     if (inviteError) throw inviteError

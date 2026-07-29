@@ -150,7 +150,7 @@ export type Database = {
                 Row: {
                     id: string
                     space_id: string
-                    token: string
+                    token_hash: string
                     email: string | null
                     created_by: string | null
                     expires_at: string
@@ -161,7 +161,7 @@ export type Database = {
                 Insert: {
                     id?: string
                     space_id: string
-                    token?: string
+                    token_hash: string
                     email?: string | null
                     created_by?: string | null
                     expires_at: string
@@ -172,7 +172,7 @@ export type Database = {
                 Update: {
                     id?: string
                     space_id?: string
-                    token?: string
+                    token_hash?: string
                     email?: string | null
                     created_by?: string | null
                     expires_at?: string

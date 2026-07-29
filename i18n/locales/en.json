@@ -94,7 +94,8 @@
         "not_chat_participant": "This chat is not yours.",
         "not_space_member": "You are not a member of this space.",
         "invalid_interest": "Unknown interest.",
-        "invalid_label": "This interest name is not valid."
+        "invalid_label": "This interest name is not valid.",
+        "rate_limited": "Too many attempts. Please wait a moment and retry."
     },
     "interests": {
         "faith_and_spiritual_life": "Faith and Spiritual Life",
@@ -330,6 +331,7 @@
             "pending": "Pending",
             "used": "Used",
             "expired": "Expired"
-        }
+        },
+        "copyOnce": "Links can only be copied right after creation — the server keeps only a fingerprint of them."
     }
 }

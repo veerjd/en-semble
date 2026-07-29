@@ -74,8 +74,9 @@ export interface MessageDTO {
 export interface InviteDTO {
     id: string
     email: string | null
-    token: string
-    link: string
+    /** Raw token/link exist only in the create response (DB stores a hash). */
+    token?: string
+    link?: string
     expiresAt: string
     usedAt: string | null
     status: 'pending' | 'used' | 'expired'

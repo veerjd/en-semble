@@ -2,11 +2,18 @@ import type { H3Event } from 'h3'
 import type { InviteDTO } from '~~/shared/types/api'
 import type { Tables } from '~~/shared/types/database.types'
 
-export const toInviteDTO = (row: Tables<'invites'>): InviteDTO => ({
+/**
+ * `token` is only known at creation time (the DB stores its hash), so the
+ * DTO carries it — and the shareable link — only in the create response.
+ */
+export const toInviteDTO = (
+    row: Tables<'invites'>,
+    token?: string,
+): InviteDTO => ({
     id: row.id,
     email: row.email,
-    token: row.token,
-    link: `/register/${row.token}`,
+    token,
+    link: token ? `/register/${token}` : undefined,
     expiresAt: row.expires_at,
     usedAt: row.used_at,
     status: row.used_at
@@ -29,5 +36,5 @@ export const getSpaceInvites = async (event: H3Event): Promise<InviteDTO[]> => {
         .order('created_at', { ascending: false })
 
     if (error) throw error
-    return data.map(toInviteDTO)
+    return data.map((row) => toInviteDTO(row))
 }

@@ -94,7 +94,8 @@
         "not_chat_participant": "Cette discussion ne vous appartient pas.",
         "not_space_member": "Vous n'êtes pas membre de cet espace.",
         "invalid_interest": "Intérêt inconnu.",
-        "invalid_label": "Ce nom d'intérêt n'est pas valide."
+        "invalid_label": "Ce nom d'intérêt n'est pas valide.",
+        "rate_limited": "Trop de tentatives. Patientez un instant puis réessayez."
     },
     "interests": {
         "faith_and_spiritual_life": "Foi et vie spirituelle",
@@ -330,6 +331,7 @@
             "pending": "En attente",
             "used": "Utilisée",
             "expired": "Expirée"
-        }
+        },
+        "copyOnce": "Les liens ne peuvent être copiés qu’immédiatement après leur création — le serveur n’en conserve qu’une empreinte."
     }
 }

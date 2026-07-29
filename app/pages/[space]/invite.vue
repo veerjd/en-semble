@@ -53,6 +53,7 @@ const handleCreate = async () => {
 }
 
 const copyLink = async (invite: InviteDTO) => {
+    if (!invite.token) return
     const link = `${window.location.origin}/register/${invite.token}`
     await navigator.clipboard.writeText(link)
     toast.add({ severity: 'info', summary: t('invite.copied'), life: 2500 })
@@ -88,7 +89,8 @@ const statusSeverity = (status: InviteDTO['status']) =>
 <template>
     <div class="max-w-3xl mx-auto p-4">
         <h1 class="text-2xl font-bold mb-2">{{ $t('invite.title') }}</h1>
-        <p class="text-gray-400 mb-6">{{ $t('invite.intro') }}</p>
+        <p class="text-gray-400 mb-1">{{ $t('invite.intro') }}</p>
+        <p class="text-gray-400 mb-6 text-sm">{{ $t('invite.copyOnce') }}</p>
 
         <form
             class="space-y-4 bg-slate-700 p-6 rounded-lg mb-8"
@@ -169,7 +171,7 @@ const statusSeverity = (status: InviteDTO['status']) =>
                     {{ formatDate(invite.expiresAt) }}
                 </span>
                 <Button
-                    v-if="invite.status === 'pending'"
+                    v-if="invite.status === 'pending' && invite.token"
                     :label="$t('invite.copyLink')"
                     icon="pi pi-copy"
                     size="small"

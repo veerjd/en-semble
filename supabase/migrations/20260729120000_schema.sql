@@ -114,12 +114,13 @@ create index chat_messages_user_id_idx on chat_messages (user_id);
 
 -- ---------------------------------------------------------------------------
 -- Invites: expiring registration links; no email sending.
+-- Only the sha256 of the token is stored — the raw token appears exactly
+-- once, in the API response that created the invite.
 -- ---------------------------------------------------------------------------
 create table invites (
     id uuid primary key default gen_random_uuid(),
     space_id uuid not null references spaces (id),
-    token text not null unique
-        default encode(extensions.gen_random_bytes(24), 'hex'),
+    token_hash text not null unique,
     email text, -- optional label for the inviter; nothing is sent
     created_by uuid references users (id),
     expires_at timestamptz not null,

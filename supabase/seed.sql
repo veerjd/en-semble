@@ -66,9 +66,10 @@ insert into public.user_interests (user_id, interest_id) values
     ('7b7e6f2a-9c4d-4a21-8f3e-2d1b5c9a0e47'::uuid, 'e2684c6e-cf4b-420b-8678-1715564cc67a'::uuid); -- worship_music_composition
 
 -- Fixed-token dev invite for testing /register/dev-invite-token
-insert into public.invites (space_id, token, created_by, expires_at) values (
+-- (only the sha256 of the token is stored)
+insert into public.invites (space_id, token_hash, created_by, expires_at) values (
     'c74bc511-e68f-4ce3-95a4-6770024ba172'::uuid,
-    'dev-invite-token',
+    encode(extensions.digest('dev-invite-token', 'sha256'), 'hex'),
     '54552ef8-dafe-4f74-9cfd-054ce5d86e3b'::uuid,
     now() + interval '10 years'
 );
