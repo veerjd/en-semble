@@ -9,8 +9,7 @@ module.exports = {
         './error.vue',
     ],
     presets: [],
-    darkMode: 'media',
-    // darkMode: 'selector',
+    darkMode: 'selector',
     theme: {
         accentColor: ({ theme }) => ({
             ...theme('colors'),

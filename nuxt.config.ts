@@ -39,6 +39,9 @@ export default defineNuxtConfig({
         '@nuxtjs/i18n',
         '@nuxt/icon',
     ],
+    colorMode: {
+        classSuffix: '',
+    },
     i18n: {
         defaultLocale: 'fr',
         strategy: 'no_prefix',

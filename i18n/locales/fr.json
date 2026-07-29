@@ -28,7 +28,9 @@
         "registering": "Création de votre compte…",
         "loggedOut": "Vous avez été déconnecté·e.",
         "logBackIn": "Se reconnecter",
-        "waitingForLogin": "Connexion en cours…"
+        "waitingForLogin": "Connexion en cours…",
+        "inviteInvalid": "Ce lien d’invitation est invalide, expiré ou déjà utilisé.",
+        "checkingInvite": "Vérification de votre invitation…"
     },
     "matches": {
         "title": "Vos matchs",
@@ -309,5 +311,25 @@
         "cross_generational_mentoring": "Cross Generational Mentoring",
         "faith_minded_professional_networking": "Faith Minded Professional Networking",
         "historical_weapons_craftsmanship": "Artisanat d’armes historiques"
+    },
+    "invite": {
+        "title": "Inviter des gens",
+        "intro": "Créez des liens d’invitation et partagez-les vous-même — aucun courriel n’est envoyé.",
+        "emails": "Courriels (optionnel, un par ligne — servent d’étiquettes)",
+        "count": "Nombre de liens",
+        "expiresAt": "Expire le",
+        "create": "Créer les invitations",
+        "created": "Liens d’invitation créés.",
+        "listTitle": "Invitations existantes",
+        "copyLink": "Copier le lien",
+        "copied": "Lien copié !",
+        "revoke": "Révoquer",
+        "revoked": "Invitation révoquée.",
+        "anonymous": "(sans étiquette)",
+        "status": {
+            "pending": "En attente",
+            "used": "Utilisée",
+            "expired": "Expirée"
+        }
     }
 }

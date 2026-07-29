@@ -35,6 +35,14 @@ const spaceSlug = computed(() => me.value?.space.slug)
                     severity="secondary"
                 />
             </NuxtLink>
+            <NuxtLink :to="`/${spaceSlug}/invite`">
+                <Button
+                    :label="$t('nav.invite')"
+                    icon="pi pi-user-plus"
+                    text
+                    severity="secondary"
+                />
+            </NuxtLink>
             <NuxtLink to="/logout">
                 <Button
                     :label="$t('nav.logout')"

@@ -28,7 +28,9 @@
         "registering": "Creating your account…",
         "loggedOut": "You have been logged out.",
         "logBackIn": "Log back in",
-        "waitingForLogin": "Waiting for login…"
+        "waitingForLogin": "Waiting for login…",
+        "inviteInvalid": "This invite link is invalid, expired, or already used.",
+        "checkingInvite": "Checking your invitation…"
     },
     "matches": {
         "title": "Your matches",
@@ -309,5 +311,25 @@
         "biblical_worldview_podcasting": "Biblical Worldview Podcasting",
         "cross_generational_mentoring": "Cross Generational Mentoring",
         "faith_minded_professional_networking": "Faith Minded Professional Networking"
+    },
+    "invite": {
+        "title": "Invite people",
+        "intro": "Create invite links and share them yourself — nothing is emailed.",
+        "emails": "Emails (optional, one per line — used as labels)",
+        "count": "Number of links",
+        "expiresAt": "Expires at",
+        "create": "Create invites",
+        "created": "Invite links created.",
+        "listTitle": "Existing invites",
+        "copyLink": "Copy link",
+        "copied": "Link copied!",
+        "revoke": "Revoke",
+        "revoked": "Invite revoked.",
+        "anonymous": "(no label)",
+        "status": {
+            "pending": "Pending",
+            "used": "Used",
+            "expired": "Expired"
+        }
     }
 }
