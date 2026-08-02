@@ -23,9 +23,13 @@ NODE_OPTIONS = "--max-old-space-size=4096"
 # `npm ci` needs devDependencies (nuxt itself is a devDependency here).
 NPM_FLAGS = "--include=dev"
 
-# Deploy previews and branch deploys build the same way as production; they
-# differ only in the environment variables Netlify injects (set the preview
-# values in the Netlify UI, scoped to "Deploy previews" / "Branch deploys").
+# Production (master) deploys run the test suite before building; a failing
+# test fails the deploy. Deploy previews and branch deploys skip the tests and
+# otherwise build the same way — they differ only in the environment variables
+# Netlify injects (set the preview values in the Netlify UI, scoped to
+# "Deploy previews" / "Branch deploys").
+[context.production]
+command = "npm test && npm run build"
 
 # ---------------------------------------------------------------------------
 # Headers
