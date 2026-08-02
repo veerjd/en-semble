@@ -70,19 +70,27 @@ jobs:
             group: deploy-production
             cancel-in-progress: false
         steps:
-            # Fail fast with an actionable message when the Netlify credentials
-            # are missing — otherwise the CLI only errors after minutes of
-            # install/build with a generic "Authentication required".
-            - name: Check Netlify credentials
+            # Fail fast with an actionable message when a required secret is
+            # missing. Without this, missing Netlify credentials only error
+            # after minutes of install/build with a generic "Authentication
+            # required" — and missing Supabase values are worse: the build
+            # succeeds with empty strings baked into the runtime config, the
+            # deploy goes out, and every SSR request 500s because the Supabase
+            # client cannot be created without a URL/key.
+            - name: Check required secrets
               env:
                   NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
                   NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+                  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+                  SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+                  SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
               run: |
                   missing=""
-                  [ -z "$NETLIFY_AUTH_TOKEN" ] && missing="NETLIFY_AUTH_TOKEN"
-                  [ -z "$NETLIFY_SITE_ID" ] && missing="$missing NETLIFY_SITE_ID"
+                  for name in NETLIFY_AUTH_TOKEN NETLIFY_SITE_ID SUPABASE_URL SUPABASE_PUBLISHABLE_KEY SUPABASE_SECRET_KEY; do
+                      [ -z "${!name}" ] && missing="$missing $name"
+                  done
                   if [ -n "$missing" ]; then
-                      echo "::error::Missing GitHub Actions secret(s):$missing — add them in Settings → Secrets and variables → Actions. NETLIFY_AUTH_TOKEN is a personal access token from Netlify (User settings → Applications), NETLIFY_SITE_ID is the site's API ID (Site configuration → General)."
+                      echo "::error::Missing GitHub Actions secret(s):$missing — add them in Settings → Secrets and variables → Actions. NETLIFY_AUTH_TOKEN is a personal access token from Netlify (User settings → Applications), NETLIFY_SITE_ID is the site's API ID (Site configuration → General). SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY / SUPABASE_SECRET_KEY come from the Supabase dashboard (Project settings → API) and are baked into the build's runtime config — without them the deployed app 500s on every page."
                       exit 1
                   fi
 
@@ -142,7 +150,7 @@ jobs:
               run: |
                   set -e
                   for i in $(seq 1 12); do
-                      code=$(curl -fsS -o /dev/null -w '%{http_code}' "$URL/login" || true)
+                      code=$(curl -sS -o body.html -w '%{http_code}' "$URL/login" || true)
                       if [ "$code" = "200" ]; then
                           echo "app is up at $URL (deployed ${GITHUB_SHA::7})"
                           exit 0
@@ -150,4 +158,6 @@ jobs:
                       sleep 5
                   done
                   echo "app did not serve /login within 60s (last status: ${code:-none})" >&2
+                  echo "--- last response body (truncated) ---" >&2
+                  head -c 2000 body.html >&2 || true
                   exit 1
