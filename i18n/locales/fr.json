@@ -10,7 +10,8 @@
         "matches": "Matchs",
         "profile": "Profil",
         "invite": "Inviter",
-        "logout": "Se déconnecter"
+        "logout": "Se déconnecter",
+        "toggleTheme": "Basculer entre thème clair et sombre"
     },
     "auth": {
         "loginTitle": "Connexion",
@@ -62,7 +63,8 @@
         "sayHello": "Dites bonjour pour briser la glace !",
         "typeMessage": "Écrivez un message…",
         "sendFailed": "Le message n'a pas pu être envoyé. Réessayez.",
-        "back": "Retour"
+        "back": "Retour",
+        "send": "Envoyer"
     },
     "profile": {
         "title": "Votre profil",

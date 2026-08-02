@@ -89,75 +89,79 @@ const statusSeverity = (status: InviteDTO['status']) =>
 <template>
     <div class="max-w-3xl mx-auto p-4">
         <h1 class="text-2xl font-bold mb-2">{{ $t('invite.title') }}</h1>
-        <p class="text-gray-400 mb-1">{{ $t('invite.intro') }}</p>
-        <p class="text-gray-400 mb-6 text-sm">{{ $t('invite.copyOnce') }}</p>
+        <p class="text-muted-color mb-1">{{ $t('invite.intro') }}</p>
+        <p class="text-muted-color mb-6 text-sm">{{ $t('invite.copyOnce') }}</p>
 
-        <form
-            class="space-y-4 bg-slate-700 p-6 rounded-lg mb-8"
-            @submit.prevent="handleCreate"
-        >
-            <div>
-                <label for="emails" class="font-medium">
-                    {{ $t('invite.emails') }}
-                </label>
-                <Textarea
-                    id="emails"
-                    v-model="emailsText"
-                    rows="3"
-                    class="mt-1 block w-full"
-                />
-            </div>
+        <Card class="mb-8">
+            <template #content>
+                <form class="space-y-4" @submit.prevent="handleCreate">
+                    <div>
+                        <label for="emails" class="font-medium">
+                            {{ $t('invite.emails') }}
+                        </label>
+                        <Textarea
+                            id="emails"
+                            v-model="emailsText"
+                            rows="3"
+                            class="mt-1 block w-full"
+                        />
+                    </div>
 
-            <div class="flex flex-wrap gap-4 items-end">
-                <div v-if="!parsedEmails.length">
-                    <label for="count" class="font-medium block">
-                        {{ $t('invite.count') }}
-                    </label>
-                    <InputNumber
-                        id="count"
-                        v-model="count"
-                        :min="1"
-                        :max="100"
-                        class="mt-1"
-                    />
-                </div>
+                    <div class="flex flex-wrap gap-4 items-end">
+                        <div v-if="!parsedEmails.length">
+                            <label for="count" class="font-medium block">
+                                {{ $t('invite.count') }}
+                            </label>
+                            <InputNumber
+                                id="count"
+                                v-model="count"
+                                :min="1"
+                                :max="100"
+                                class="mt-1"
+                            />
+                        </div>
 
-                <div>
-                    <label for="expires" class="font-medium block">
-                        {{ $t('invite.expiresAt') }}
-                    </label>
-                    <DatePicker
-                        id="expires"
-                        v-model="expiresAt"
-                        show-time
-                        hour-format="24"
-                        :min-date="new Date()"
-                        class="mt-1"
-                    />
-                </div>
+                        <div>
+                            <label for="expires" class="font-medium block">
+                                {{ $t('invite.expiresAt') }}
+                            </label>
+                            <DatePicker
+                                id="expires"
+                                v-model="expiresAt"
+                                show-time
+                                hour-format="24"
+                                :min-date="new Date()"
+                                class="mt-1"
+                            />
+                        </div>
 
-                <Button
-                    type="submit"
-                    :label="$t('invite.create')"
-                    icon="pi pi-user-plus"
-                    :loading="creating"
-                />
-            </div>
-        </form>
+                        <Button
+                            type="submit"
+                            :label="$t('invite.create')"
+                            icon="pi pi-user-plus"
+                            :loading="creating"
+                        />
+                    </div>
+                </form>
+            </template>
+        </Card>
 
         <h2 class="text-xl font-semibold mb-4">
             {{ $t('invite.listTitle') }}
         </h2>
 
         <div v-if="isLoading" class="text-center py-8">
-            <i class="pi pi-spinner pi-spin text-2xl" />
+            <ProgressSpinner
+                style="width: 2rem; height: 2rem"
+                stroke-width="4"
+            />
         </div>
 
         <div v-else class="space-y-2">
             <div
                 v-for="invite in invites"
                 :key="invite.id"
-                class="bg-slate-700 p-4 rounded-lg flex flex-wrap items-center gap-3"
+                class="bg-surface-0 dark:bg-surface-900 border border-surface p-4 rounded-lg flex flex-wrap items-center gap-3"
             >
                 <Tag
                     :value="$t(`invite.status.${invite.status}`)"
@@ -166,7 +170,7 @@ const statusSeverity = (status: InviteDTO['status']) =>
                 <span class="flex-1 min-w-0 truncate">
                     {{ invite.email ?? $t('invite.anonymous') }}
                 </span>
-                <span class="text-sm text-gray-400">
+                <span class="text-sm text-muted-color">
                     {{ $t('invite.expiresAt') }}
                     {{ formatDate(invite.expiresAt) }}
                 </span>

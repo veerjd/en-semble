@@ -14,30 +14,33 @@ defineEmits<{ back: [] }>()
 
 <template>
     <div
-        class="bg-white border-b border-gray-200 p-4 flex items-center justify-between rounded-t-lg"
+        class="bg-surface-0 dark:bg-surface-900 border-b border-surface p-4 flex items-center justify-between rounded-t-lg"
     >
         <div class="flex items-center">
-            <button
+            <Button
                 v-if="showBackButton"
                 :aria-label="$t('chat.back')"
-                class="mr-4 p-2 hover:bg-gray-100 rounded-full"
+                icon="pi pi-arrow-left"
+                text
+                rounded
+                severity="secondary"
+                class="mr-4"
                 @click="$emit('back')"
-            >
-                <i class="pi pi-arrow-left text-gray-600" />
-            </button>
+            />
             <div v-if="user" class="flex items-center">
-                <div
-                    class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold mr-3"
-                >
-                    {{ user.username?.charAt(0).toUpperCase() }}
-                </div>
+                <Avatar
+                    :label="user.username?.charAt(0).toUpperCase()"
+                    shape="circle"
+                    size="large"
+                    class="mr-3 bg-primary text-primary-contrast"
+                />
                 <div>
-                    <h1 class="text-lg font-semibold text-gray-900">
+                    <h1 class="text-lg font-semibold text-color">
                         {{ user.username }}
                     </h1>
                     <p
                         v-if="user.bio"
-                        class="text-sm text-gray-500 truncate max-w-xs"
+                        class="text-sm text-muted-color truncate max-w-xs"
                     >
                         {{ user.bio }}
                     </p>

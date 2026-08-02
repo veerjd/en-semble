@@ -73,7 +73,7 @@ const handleLogin = async () => {
             />
         </form>
 
-        <p class="mt-6 text-center text-sm text-gray-400">
+        <p class="mt-6 text-center text-sm text-muted-color">
             {{ $t('auth.inviteOnly') }}
         </p>
     </div>

@@ -10,7 +10,8 @@
         "matches": "Matches",
         "profile": "Profile",
         "invite": "Invite",
-        "logout": "Log out"
+        "logout": "Log out",
+        "toggleTheme": "Toggle light/dark theme"
     },
     "auth": {
         "loginTitle": "Log in",
@@ -62,7 +63,8 @@
         "sayHello": "Say hello and break the ice!",
         "typeMessage": "Type a message…",
         "sendFailed": "Message could not be sent. Try again.",
-        "back": "Back"
+        "back": "Back",
+        "send": "Send"
     },
     "profile": {
         "title": "Your profile",

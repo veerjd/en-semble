@@ -146,7 +146,7 @@ const handleSave = async () => {
 
             <div>
                 <label class="font-medium">{{ $t('profile.interests') }}</label>
-                <p class="text-sm text-gray-400 mb-2">
+                <p class="text-sm text-muted-color mb-2">
                     {{ $t('profile.interestsHint') }}
                 </p>
 
