@@ -133,7 +133,10 @@ const visibleMatches = computed(() =>
         </div>
 
         <div v-if="isLoading" class="text-center py-8">
-            <i class="pi pi-spinner pi-spin text-2xl" />
+            <ProgressSpinner
+                style="width: 2rem; height: 2rem"
+                stroke-width="4"
+            />
         </div>
 
         <div v-else-if="visibleMatches.length" class="space-y-4">
@@ -148,7 +151,7 @@ const visibleMatches = computed(() =>
             />
         </div>
 
-        <p v-else class="text-center text-gray-400 py-8">
+        <p v-else class="text-center text-muted-color py-8">
             {{ $t('matches.empty') }}
         </p>
 

@@ -54,7 +54,10 @@ const handleRegister = async () => {
 <template>
     <div class="max-w-md w-full mx-auto p-8">
         <div v-if="checking" class="text-center">
-            <i class="pi pi-spinner pi-spin text-2xl" />
+            <ProgressSpinner
+                style="width: 2rem; height: 2rem"
+                stroke-width="4"
+            />
             <p class="mt-2">{{ $t('auth.checkingInvite') }}</p>
         </div>
 
@@ -66,7 +69,7 @@ const handleRegister = async () => {
             <h1 class="text-3xl font-bold mb-2 text-center">
                 {{ $t('auth.registerTitle') }}
             </h1>
-            <p class="text-center text-gray-400 mb-8">
+            <p class="text-center text-muted-color mb-8">
                 {{ $t('auth.registerFor', { space: lookup.spaceName }) }}
             </p>
 
@@ -84,7 +87,7 @@ const handleRegister = async () => {
                         autocomplete="username"
                         class="mt-1 block w-full"
                     />
-                    <p class="mt-1 text-sm text-gray-400">
+                    <p class="mt-1 text-sm text-muted-color">
                         {{ $t('auth.usernameHint') }}
                     </p>
                 </div>
@@ -116,7 +119,7 @@ const handleRegister = async () => {
                         autocomplete="new-password"
                         class="mt-1 block w-full"
                     />
-                    <p class="mt-1 text-sm text-gray-400">
+                    <p class="mt-1 text-sm text-muted-color">
                         {{ $t('auth.passwordHint') }}
                     </p>
                 </div>

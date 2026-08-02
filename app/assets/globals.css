@@ -15,18 +15,26 @@
     height: 10px;
 }
 
-/* Track */
+/* Track — follows the active PrimeVue theme in both modes */
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: var(--p-surface-100);
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: var(--p-surface-900);
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #666;
+    background: var(--p-surface-400);
     border-radius: 5px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: var(--p-surface-600);
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #333;
+    background: var(--p-surface-500);
 }

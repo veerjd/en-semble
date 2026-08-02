@@ -6,7 +6,7 @@ import './assets/globals.css'
 
 <template>
     <div
-        class="flex font-sans min-h-screen bg-slate-200 dark:bg-slate-800 dark:text-white text-gray-900"
+        class="flex font-sans min-h-screen bg-surface-100 dark:bg-surface-950 text-color"
     >
         <NuxtLayout>
             <NuxtPage />

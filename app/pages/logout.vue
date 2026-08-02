@@ -11,7 +11,7 @@ useState('me').value = null
 
 <template>
     <div
-        class="flex flex-col w-96 mx-auto p-8 dark:bg-slate-900 rounded-lg gap-6"
+        class="flex flex-col w-96 mx-auto p-8 bg-surface-0 dark:bg-surface-900 border border-surface rounded-lg gap-6"
     >
         <h1 v-if="error" class="text-xl font-bold">{{ error.message }}</h1>
         <h1 v-else class="text-xl font-bold">{{ $t('auth.loggedOut') }}</h1>

@@ -5,6 +5,6 @@
 
 <template>
     <div class="flex items-center justify-center min-h-[50vh]">
-        <i class="pi pi-spinner pi-spin text-2xl" />
+        <ProgressSpinner style="width: 2rem; height: 2rem" stroke-width="4" />
     </div>
 </template>
