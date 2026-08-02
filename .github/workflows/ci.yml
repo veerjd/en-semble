@@ -70,6 +70,22 @@ jobs:
             group: deploy-production
             cancel-in-progress: false
         steps:
+            # Fail fast with an actionable message when the Netlify credentials
+            # are missing — otherwise the CLI only errors after minutes of
+            # install/build with a generic "Authentication required".
+            - name: Check Netlify credentials
+              env:
+                  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+              run: |
+                  missing=""
+                  [ -z "$NETLIFY_AUTH_TOKEN" ] && missing="NETLIFY_AUTH_TOKEN"
+                  [ -z "$NETLIFY_SITE_ID" ] && missing="$missing NETLIFY_SITE_ID"
+                  if [ -n "$missing" ]; then
+                      echo "::error::Missing GitHub Actions secret(s):$missing — add them in Settings → Secrets and variables → Actions. NETLIFY_AUTH_TOKEN is a personal access token from Netlify (User settings → Applications), NETLIFY_SITE_ID is the site's API ID (Site configuration → General)."
+                      exit 1
+                  fi
+
             - uses: actions/checkout@v5
 
             - uses: actions/setup-node@v5
