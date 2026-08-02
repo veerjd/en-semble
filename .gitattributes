@@ -1,0 +1,25 @@
+# Normalize every text file to LF in the repository and on checkout.
+#
+# Without this, Windows clones (core.autocrlf=true) get CRLF working copies
+# while git stores LF. Prettier then reports every file as unformatted and
+# `npm run format` rewrites all of them, producing ~95 "modified" files that
+# git normalizes straight back to an empty diff. `end_of_line = lf` is already
+# declared in .editorconfig; this makes git enforce it.
+* text=auto eol=lf
+
+# Consumed by psql inside Linux containers — a stray CR breaks statements.
+supabase/migrations/*.sql text eol=lf
+supabase/seed.sql text eol=lf
+
+# Shell scripts, if any are added later, must keep LF for /bin/sh.
+*.sh text eol=lf
+
+# Binary — never touch line endings, never diff as text.
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
