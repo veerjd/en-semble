@@ -1,21 +1,17 @@
-import { serverSupabaseClient } from '#supabase/server'
-import type { InterestDTO } from '~/shared/types/InterestDTOs'
+import type { H3Event } from 'h3'
+import type { InterestDTO } from '~~/shared/types/api'
 
-export const getAllInterests = async (event: any): Promise<InterestDTO[]> => {
-    const supabase = await serverSupabaseClient(event)
-    const { data, error } = await supabase.from('interests').select('*')
+export const getAllInterests = async (
+    event: H3Event,
+): Promise<InterestDTO[]> => {
+    await requireUser(event)
+    const db = useDb(event)
 
-    if (error) {
-        throw createError({ statusCode: 500, message: error.message })
-    }
+    const { data, error } = await db
+        .from('interests')
+        .select('id, slug, label')
+        .order('label')
 
-    // Transform data to DTOs
-    const interests: InterestDTO[] = data.map((interest: any) => ({
-        id: interest.id,
-        slug: interest.slug,
-        category: interest.category,
-        created_at: interest.created_at,
-    }))
-
-    return interests
+    if (error) throw error
+    return data
 }

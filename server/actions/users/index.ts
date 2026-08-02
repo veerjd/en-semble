@@ -1,7 +1,0 @@
-export * from './deleteUser'
-export * from './getAllUsers'
-export * from './getSpaceUsers'
-export * from './getOneUser'
-export * from './patchUser'
-export * from './postUser'
-export * from './softDeleteUser'

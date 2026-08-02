@@ -1,15 +1,11 @@
 import Aura from '@primeuix/themes/aura'
-import Lara from '@primeuix/themes/lara'
 
 export default defineNuxtConfig({
-    // debug: true,
+    compatibilityDate: '2026-07-01',
     app: {
         head: {
             title: 'En-Semble',
         },
-    },
-    vue: {
-        propsDestructure: true,
     },
     components: [
         {
@@ -21,24 +17,18 @@ export default defineNuxtConfig({
         url: process.env.SUPABASE_URL,
         key: process.env.SUPABASE_ANON_KEY,
         serviceKey: process.env.SUPABASE_SERVICE_KEY,
+        types: '~~/shared/types/database.types.ts',
         redirectOptions: {
             login: '/login',
             callback: '/confirm',
             include: undefined,
-            exclude: ['/update-password', '/logout', '/api/*', '/signup*'],
+            exclude: ['/login', '/register/*', '/confirm', '/logout', '/api/*'],
             saveRedirectToCookie: true,
-        },
-    },
-    devtools: {
-        enabled: true,
-
-        timeline: {
-            enabled: true,
         },
     },
     typescript: {
         typeCheck: true,
-        strict: false,
+        strict: true,
     },
     css: ['primeicons/primeicons.css'],
     modules: [
@@ -49,6 +39,9 @@ export default defineNuxtConfig({
         '@nuxtjs/i18n',
         '@nuxt/icon',
     ],
+    colorMode: {
+        classSuffix: '',
+    },
     i18n: {
         defaultLocale: 'fr',
         strategy: 'no_prefix',
@@ -56,19 +49,17 @@ export default defineNuxtConfig({
             { code: 'en', file: 'en.json' },
             { code: 'fr', file: 'fr.json' },
         ],
-        bundle: {
-            optimizeTranslationDirective: false, // Add this to fix the warning
-        },
     },
     primevue: {
         autoImport: true,
-        usePrimeVue: true,
         options: {
             ripple: true,
             theme: {
                 preset: Aura,
-                darkModeSelector: 'media',
-                cssLayer: false,
+                options: {
+                    darkModeSelector: '.dark',
+                    cssLayer: false,
+                },
             },
         },
     },
@@ -83,12 +74,6 @@ export default defineNuxtConfig({
         plugins: {
             tailwindcss: {},
             autoprefixer: {},
-        },
-    },
-    vite: {
-        // Vite configuration options
-        optimizeDeps: {
-            include: ['jsonwebtoken'],
         },
     },
 })
