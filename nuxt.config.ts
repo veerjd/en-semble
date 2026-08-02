@@ -14,9 +14,20 @@ export default defineNuxtConfig({
         },
     ],
     supabase: {
-        url: process.env.SUPABASE_URL,
-        key: process.env.SUPABASE_ANON_KEY,
-        serviceKey: process.env.SUPABASE_SERVICE_KEY,
+        // Empty-string fallbacks keep these keys present in the serialized
+        // runtime config. Nitro's env overrides (NUXT_PUBLIC_SUPABASE_URL /
+        // NUXT_PUBLIC_SUPABASE_KEY / NUXT_SUPABASE_SERVICE_KEY) only apply to
+        // keys that already exist, so this is what lets Netlify inject values
+        // at function-invocation time rather than baking them at build time.
+        // Note: serverSupabaseServiceRole reads `secretKey || serviceKey`, so
+        // NUXT_SUPABASE_SECRET_KEY takes precedence if both are set.
+        url: process.env.SUPABASE_URL ?? '',
+        key: process.env.SUPABASE_PUBLISHABLE_KEY ?? '',
+        serviceKey: process.env.SUPABASE_SECRET_KEY ?? '',
+        // The module derives the session cookie name from the Supabase URL.
+        // Pin it explicitly so deploy previews and production share a stable
+        // cookie name regardless of which URL was present at build time.
+        cookiePrefix: process.env.NUXT_PUBLIC_SUPABASE_COOKIE_PREFIX ?? '',
         types: '~~/shared/types/database.types.ts',
         redirectOptions: {
             login: '/login',

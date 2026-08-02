@@ -19,6 +19,22 @@ create policy matches_select_participant on matches
     for select
     using (auth.uid() in (user1_id, user2_id));
 
+-- ...and the chats belonging to those matches. This policy is required even
+-- though chats is not in the realtime publication: the chat_messages policy
+-- below joins chats, and a policy subquery is evaluated as the CALLER under
+-- RLS. With RLS enabled and no policy, chats is deny-all, so that join matches
+-- nothing and chat_messages returns zero rows for its own participants.
+create policy chats_select_participant on chats
+    for select
+    using (
+        exists (
+            select 1
+            from matches m
+            where m.id = chats.match_id
+              and auth.uid() in (m.user1_id, m.user2_id)
+        )
+    );
+
 -- ...and the messages of chats they participate in.
 create policy chat_messages_select_participant on chat_messages
     for select
