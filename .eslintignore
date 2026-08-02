@@ -1,1 +1,10 @@
 /server/public
+
+# Build output — `dist` and `.netlify` are produced by the Netlify preset
+# (`npm run build`) and are generated, minified code; linting them is noise
+# and fails CI, which runs lint after build.
+dist
+.netlify
+.output
+.nuxt
+node_modules

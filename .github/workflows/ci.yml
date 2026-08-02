@@ -1,0 +1,131 @@
+name: CI + Deploy
+
+on:
+    pull_request:
+        branches: [master]
+    push:
+        branches: [master]
+    workflow_dispatch:
+
+jobs:
+    verify:
+        name: Typecheck, test, build, lint
+        runs-on: ubuntu-latest
+        # a newer push to the same branch/PR supersedes an in-flight run
+        concurrency:
+            group: verify-${{ github.ref }}
+            cancel-in-progress: true
+        steps:
+            - uses: actions/checkout@v5
+
+            # Node + npm pinned to match netlify.toml: the lockfile is
+            # maintained with npm 11, which npm 10's `npm ci` rejects.
+            - uses: actions/setup-node@v5
+              with:
+                  node-version: 22.19.0
+                  cache: npm
+
+            - name: Pin npm to 11
+              run: npm install -g npm@11
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Typecheck
+              run: npm run typecheck
+
+            - name: Test
+              run: npm run test
+
+            # Build with the same preset Netlify uses, so a preset-specific
+            # failure surfaces here rather than in the deploy.
+            - name: Build
+              env:
+                  NITRO_PRESET: netlify
+                  SUPABASE_URL: https://placeholder.supabase.co
+                  SUPABASE_PUBLISHABLE_KEY: sb_publishable_placeholder
+                  SUPABASE_SECRET_KEY: sb_secret_placeholder
+              run: npm run build
+
+            - name: Lint
+              run: npm run lint
+
+            # Migrations must apply cleanly from scratch. `db reset` runs every
+            # file in supabase/migrations plus seed.sql against a fresh DB.
+            - name: Start Supabase
+              run: npx supabase start -x studio,imgproxy,edge-runtime,realtime,storage-api
+
+            - name: Verify migrations apply from scratch
+              run: npx supabase db reset
+
+    deploy:
+        name: Deploy to Netlify
+        # deploy runs only for commits on master (push or manual dispatch),
+        # never for PR runs — Netlify's own Deploy Previews cover PRs
+        if: github.ref == 'refs/heads/master'
+        needs: verify
+        runs-on: ubuntu-latest
+        # never run two deploys at once; queue instead of cancelling mid-deploy
+        concurrency:
+            group: deploy-production
+            cancel-in-progress: false
+        steps:
+            - uses: actions/checkout@v5
+
+            - uses: actions/setup-node@v5
+              with:
+                  node-version: 22.19.0
+                  cache: npm
+
+            - name: Pin npm to 11
+              run: npm install -g npm@11
+
+            - name: Install dependencies
+              run: npm ci
+
+            # Public values are read from the runtime config by the Nitro
+            # function at invocation time; the secret key never reaches the
+            # client bundle. Both are also set in the Netlify UI so that
+            # UI-triggered rebuilds behave identically.
+            - name: Build
+              env:
+                  NITRO_PRESET: netlify
+                  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+                  SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+                  SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+              run: npm run build
+
+            # `npm run build` above already produced dist/ and the function in
+            # .netlify/functions-internal/server (with its own `path: "/*"`
+            # route config). The CLI picks the internal functions directory up
+            # on its own — passing --functions here would point it at the
+            # wrong level and publish zero functions.
+            - name: Deploy
+              id: netlify
+              env:
+                  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+                  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+              run: |
+                  set -e
+                  npx --yes netlify-cli@27 deploy \
+                      --prod \
+                      --dir=dist \
+                      --message="${GITHUB_SHA::7} — ${GITHUB_REF_NAME}" \
+                      --json > deploy.json
+                  echo "url=$(node -p "const d=require('./deploy.json');d.ssl_url||d.url")" >> "$GITHUB_OUTPUT"
+
+            - name: Smoke check
+              env:
+                  URL: ${{ steps.netlify.outputs.url }}
+              run: |
+                  set -e
+                  for i in $(seq 1 12); do
+                      code=$(curl -fsS -o /dev/null -w '%{http_code}' "$URL/login" || true)
+                      if [ "$code" = "200" ]; then
+                          echo "app is up at $URL (deployed ${GITHUB_SHA::7})"
+                          exit 0
+                      fi
+                      sleep 5
+                  done
+                  echo "app did not serve /login within 60s (last status: ${code:-none})" >&2
+                  exit 1

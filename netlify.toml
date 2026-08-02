@@ -1,0 +1,44 @@
+# Netlify deployment for En-Semble (Nuxt 4 + Nitro `netlify` preset).
+#
+# Nitro auto-detects the Netlify build environment and emits:
+#   dist/                              -> static assets (publish dir)
+#   .netlify/functions-internal/server -> the SSR/API serverless function
+# Everything below is pinned explicitly rather than relying on Netlify's
+# framework auto-detection, so the build is reproducible and reviewable.
+
+[build]
+command = "npm run build"
+publish = "dist"
+
+[build.environment]
+# Must match `engines.node` in package.json (Nuxt 4.5 requires >= 22.19).
+NODE_VERSION = "22.19.0"
+# The lockfile is maintained with npm 11; npm 10's `npm ci` rejects it.
+NPM_VERSION = "11"
+# nuxt.config sets typescript.typeCheck = true, so `nuxt build` runs vue-tsc
+# in-process on top of the Vite/Nitro build. Headroom for that on Netlify's
+# default build image.
+NODE_OPTIONS = "--max-old-space-size=4096"
+
+# `npm ci` needs devDependencies (nuxt itself is a devDependency here).
+NPM_FLAGS = "--include=dev"
+
+# Deploy previews and branch deploys build the same way as production; they
+# differ only in the environment variables Netlify injects (set the preview
+# values in the Netlify UI, scoped to "Deploy previews" / "Branch deploys").
+
+# ---------------------------------------------------------------------------
+# Headers
+#
+# Nitro already emits dist/_headers with immutable caching for /_nuxt/*.
+# These add security headers for document responses only; asset caching is
+# left to the generated _headers file.
+# ---------------------------------------------------------------------------
+
+[[headers]]
+for = "/*"
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "strict-origin-when-cross-origin"
+Permissions-Policy = "camera=(), microphone=(), geolocation=()"
