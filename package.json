@@ -4,6 +4,7 @@
     "scripts": {
         "build": "nuxt build",
         "dev": "nuxt dev",
+        "dev:prod": "nuxt dev --dotenv .env.prod",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
@@ -45,5 +46,11 @@
         "primeicons": "^7.0.0",
         "primevue": "^4.5.5",
         "zod": "^4.4.3"
+    },
+    "overrides": {
+        "esbuild": "^0.28.0"
+    },
+    "engines": {
+        "node": ">=22.19.0"
     }
 }
