@@ -116,6 +116,11 @@ jobs:
             # route config). The CLI picks the internal functions directory up
             # on its own — passing --functions here would point it at the
             # wrong level and publish zero functions.
+            #
+            # --no-build: netlify-cli runs the site build by default, using the
+            # env vars from the Netlify UI instead of this job's secrets. The
+            # artifact was already built above with the right env — deploy must
+            # only upload it, never rebuild.
             - name: Deploy
               id: netlify
               env:
@@ -124,6 +129,7 @@ jobs:
               run: |
                   set -e
                   npx --yes netlify-cli@27 deploy \
+                      --no-build \
                       --prod \
                       --dir=dist \
                       --message="${GITHUB_SHA::7} — ${GITHUB_REF_NAME}" \
