@@ -3,6 +3,7 @@ definePageMeta({ layout: 'unauthenticated' })
 
 const { t } = useI18n()
 const client = useSupabaseClient()
+const redirect = useSupabaseCookieRedirect()
 
 const email = ref('')
 const password = ref('')
@@ -19,7 +20,9 @@ const handleLogin = async () => {
             password: password.value,
         })
         if (authError) throw authError
-        await navigateTo('/')
+        // Continue to wherever the auth guard bounced the user from, or let
+        // the space middleware route `/` to their space home.
+        await navigateTo(redirect.pluck() ?? '/')
     } catch {
         error.value = t('auth.loginFailed')
     } finally {
