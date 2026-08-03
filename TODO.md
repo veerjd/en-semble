@@ -21,6 +21,7 @@ Intended outcome: a user can hold profiles in several spaces from one login, arr
 | Interests at signup    | Chosen **once** on the template; copied into each space instance on join                                                                                                            |
 | Existing data          | **Clean rebuild** — rewrite the migration files in place, no backfill                                                                                                               |
 | Active-space transport | `X-Space-Slug` header, attached by a `$fetch` plugin. Enforced in `requireSpaceMember`, **not** `requireUser`, so pre-space routes are exempt structurally                          |
+| Active-space selection | `/` routes by membership count: one → that space's home; several → a template-scoped `/spaces` picker (also the navbar switcher's "all spaces" target)                              |
 | Onboarding location    | Dedicated route behind a middleware gate (survives refresh/abandon)                                                                                                                 |
 | Interest picker        | Category-grouped browse + search. **Must not** render the full catalog — it is already 200 and will grow                                                                            |
 | "Maybe later"          | **Defer** — hidden temporarily, not blacklisted, reversible to accepted                                                                                                             |
@@ -221,7 +222,8 @@ export interface MeDTO {
 
 **Invariant to preserve:** anything comparing against a `matches`/`chat_messages` row must use the _instance_ id, never `MeDTO.id`. `MessageList.vue:67,74,83` and `useRealtimeMatches.ts:18-19` compare ids today and would break **visually only** (message bubbles align to the wrong side) with no error. Add an explicit `activeProfileId` to the active-space state and use it at those four sites.
 
--   `app/middleware/space.global.ts:41-43` — stop force-redirecting out of foreign spaces; check `to.params.space` against the membership _list_, set active space, and only redirect when the user genuinely isn't a member.
+-   `app/middleware/space.global.ts:41-43` — stop force-redirecting out of foreign spaces; check `to.params.space` against the membership _list_, set active space, and only redirect when the user genuinely isn't a member. `/` stops hardcoding a single space home: one membership → `/{slug}/matches`; several → `/spaces`. Keep gating on `useSupabaseSession()`, not `useSupabaseUser()` — the user ref is filled asynchronously after sign-in (via `getClaims`), and checking it reintroduces the login-lands-on-a-spinner race fixed on `claude/login-redirect-bug-evb3f9`.
+-   `app/pages/spaces.vue` (new) — the space-selection page. Template-scoped, so it sits **outside** `/[space]/` (same reasoning as `/onboarding`): lists the account's memberships (space name + per-space username) and navigates to `/{slug}/matches` on pick. Login lands here only via the `/` branching above — users with a single membership never see it. Also the destination of the navbar switcher's "all spaces" entry.
 -   `app/components/Navbar.vue:4,17` — `me.space.slug`/`.name` become the active membership; add a space switcher when `memberships.length > 1`.
 -   `app/plugins/api-space.ts` (new) — `$fetch` interceptor attaching `X-Space-Slug`. SSR needs the same header threaded through `useRequestFetch`, so set it in the plugin for both client and server contexts.
 -   `supabase/seed.sql` — rewrite; it hardcodes `users.id` = auth ids at `:49-75`.
@@ -345,6 +347,7 @@ If step 1 works but step 3 doesn't, the `chats` SELECT policy is the culprit —
 
 -   Register via `/register/dev-invite-token` → onboarding → matches.
 -   Create a second space + invite. While logged in, open the invite → join flow, no password prompt, username prefilled.
+-   Log in with two memberships → land on `/spaces`; pick one → that space's `/matches`. With a single membership the picker is skipped entirely (login goes straight into the space).
 -   Switch spaces in the navbar; confirm matches/chats/invites are scoped and never leak across.
 -   Confirm a request with a missing or foreign `X-Space-Slug` gets `400 space_required` / `403 not_space_member`.
 -   Confirm `/api/user/me` works with **no** header and lists both memberships.

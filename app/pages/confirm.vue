@@ -1,19 +1,21 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'unauthenticated' })
 
-const user = useSupabaseUser()
+// The session appears synchronously on SIGNED_IN (useSupabaseUser fills in
+// later, after an async getClaims call), so watch the session to leave this
+// page as soon as auth completes.
+const session = useSupabaseSession()
 
-// Get redirect path from cookies
-const cookieName = useRuntimeConfig().public.supabase.cookieName
-const redirectPath = useCookie(`${cookieName}-redirect-path`).value
+// useSupabaseCookieRedirect reads the same cookie the auth guard writes
+// (saveRedirectToCookie stores it under the configured cookie prefix).
+const redirect = useSupabaseCookieRedirect()
 
 watch(
-    user,
+    session,
     () => {
-        if (user.value) {
+        if (session.value) {
             // Clear cookie and continue where the user was headed.
-            useCookie(`${cookieName}-redirect-path`).value = null
-            return navigateTo(redirectPath ?? '/')
+            return navigateTo(redirect.pluck() ?? '/')
         }
     },
     { immediate: true },

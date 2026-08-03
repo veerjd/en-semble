@@ -14,8 +14,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
         return
     }
 
-    const authUser = useSupabaseUser()
-    if (!authUser.value) return // supabase module will redirect to /login
+    // Gate on the session, not useSupabaseUser(): the supabase module sets
+    // the session synchronously on SIGNED_IN but fills the user via an async
+    // getClaims() call, so right after signInWithPassword the user is still
+    // null while the session exists. The module's own guard checks the
+    // session too — checking the user here would let `/` render (spinner)
+    // with neither middleware redirecting.
+    const session = useSupabaseSession()
+    if (!session.value) return // supabase module will redirect to /login
 
     const { me, fetchMe } = useMe()
     if (!me.value) {
